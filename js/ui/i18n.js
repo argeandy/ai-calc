@@ -5,7 +5,7 @@
 export const TRANSLATIONS = {
   de: {
     // Header & Meta
-    appTitle: 'AI Hardware & Sizing Calculator',
+    appTitle: 'Insight AI Hardware & Sizing Calculator',
     appSubtitle: 'Dimensionierung & TCO-Rechner für LLM-Inferenz, vLLM-Cluster und GPU-Infrastruktur',
     langButtonLabel: 'DE',
     themeToggleTitle: 'Theme wechseln (Dark / Light)',
@@ -149,7 +149,7 @@ export const TRANSLATIONS = {
   },
   en: {
     // Header & Meta
-    appTitle: 'AI Hardware & Sizing Calculator',
+    appTitle: 'Insight AI Hardware & Sizing Calculator',
     appSubtitle: 'Sizing & TCO Calculator for LLM Inference, vLLM Clusters, and GPU Infrastructure',
     langButtonLabel: 'EN',
     themeToggleTitle: 'Toggle Theme (Dark / Light)',
