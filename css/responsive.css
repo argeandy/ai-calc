@@ -1,0 +1,129 @@
+/* ==========================================================================
+   AI Hardware Sizing Calculator - Responsive Breakpoints & Print Styles
+   ========================================================================== */
+
+/* Large Tablets & Small Desktops (<= 1180px) */
+@media (max-width: 1180px) {
+  .calculator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .config-sidebar {
+    order: 2;
+  }
+
+  .results-main {
+    order: 1;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .highlights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tco-cards-comparison-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tco-cost-sliders-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cloud-cards-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Devices (<= 768px) */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 1rem;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-controls {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .nav-tabs-bar {
+    flex-wrap: wrap;
+  }
+
+  .nav-tab-btn {
+    flex: 1 1 45%;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vram-legend-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .export-header-panel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .export-actions-row {
+    width: 100%;
+  }
+
+  .export-actions-row .btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ==========================================================================
+   Print Stylesheet for Clean PDF Exports
+   ========================================================================== */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    background-image: none !important;
+  }
+
+  .app-header, .header-controls, .nav-tabs-bar, .config-sidebar, .export-actions-row, .tco-cost-sliders-grid, .btn, .app-toast {
+    display: none !important;
+  }
+
+  .calculator-layout {
+    display: block !important;
+  }
+
+  .results-main, .tab-pane {
+    display: flex !important;
+  }
+
+  .glass-card, .tco-card, .server-node-card, .markdown-preview-box {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    color: #000000 !important;
+  }
+
+  .vram-total-value, .metric-val, .tco-card-price {
+    color: #000000 !important;
+  }
+
+  .markdown-code {
+    max-height: none !important;
+    color: #000000 !important;
+    background: #f8fafc !important;
+    white-space: pre-wrap !important;
+  }
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Hardware & Sizing Calculator - Interaktiver Client-Side Rechner zur Dimensionierung von GPU-Infrastruktur, VRAM-Bedarf, Durchsatz und TCO für LLMs (vLLM, TensorRT-LLM).">
+  <meta name="author" content="AI Hardware Architect">
+  <title>AI Hardware & Sizing Calculator | LLM GPU Infrastructure Planning</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Main Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon-wrapper" aria-hidden="true">⚡</div>
+        <div class="brand-titles">
+          <h1 data-i18n="appTitle">AI Hardware & Sizing Calculator</h1>
+          <p data-i18n="appSubtitle">Dimensionierung & TCO-Rechner für LLM-Inferenz, vLLM-Cluster und GPU-Infrastruktur</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button type="button" class="btn-icon" id="lang-toggle-btn" title="Sprache wechseln (DE / EN)" aria-label="Sprache wechseln">
+          🌐 <span id="lang-label" style="font-size: 0.75rem; font-weight: 700; margin-left: 2px;">DE</span>
+        </button>
+        <button type="button" class="btn-icon" id="theme-toggle-btn" title="Theme wechseln (Dark / Light)" aria-label="Theme wechseln">
+          <span id="theme-icon">☀️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-bar" aria-label="Hauptnavigation">
+      <button type="button" class="nav-tab-btn active" data-tab="sizing">
+        <span>⚡</span> <span data-i18n="tabSizing">Dimensionierung & Sizing</span>
+      </button>
+      <button type="button" class="nav-tab-btn" data-tab="tco">
+        <span>💰</span> <span data-i18n="tabTco">TCO & Kostenanalyse</span>
+      </button>
+      <button type="button" class="nav-tab-btn" data-tab="topology">
+        <span>🖥️</span> <span data-i18n="tabTopology">Cluster & Topologie</span>
+      </button>
+      <button type="button" class="nav-tab-btn" data-tab="export">
+        <span>📄</span> <span data-i18n="tabExport">Export & Report (ADR)</span>
+      </button>
+    </nav>
+
+    <!-- Main Workspace Layout -->
+    <main class="calculator-layout" style="margin-top: 1.5rem;">
+      <!-- Left Configuration Sidebar -->
+      <aside class="config-sidebar" aria-label="Konfigurations-Panel">
+        <!-- Workload Presets -->
+        <div class="glass-card">
+          <div class="card-header">
+            <h2 class="card-title"><span>🎯</span> <span data-i18n="presetsTitle">Usecase-Vorlagen</span></h2>
+          </div>
+          <div class="presets-grid" id="presets-grid">
+            <!-- Dynamically injected preset buttons -->
+          </div>
+        </div>
+
+        <!-- Parameters Accordion / Card -->
+        <div class="glass-card">
+          <!-- 1. Traffic Profile -->
+          <div class="card-header">
+            <h2 class="card-title"><span>👥</span> <span data-i18n="trafficTitle">1. Benutzer & Lastprofil</span></h2>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="total-users-slider" class="form-label" data-i18n="totalUsers">Potenzielle Benutzer (Total)</label>
+              <input type="number" id="total-users-input" class="form-number-input" min="1" max="1000000" step="10" value="1000">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="total-users-slider" class="form-range" min="10" max="50000" step="10" value="1000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="req-user-slider" class="form-label" data-i18n="reqPerUser">Anfragen / Benutzer / Tag</label>
+              <input type="number" id="req-user-input" class="form-number-input" min="0.1" max="500" step="1" value="20">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="req-user-slider" class="form-range" min="1" max="200" step="1" value="20">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="work-hours-slider" class="form-label" data-i18n="workHours">Aktive Arbeitsstunden / Tag</label>
+              <input type="number" id="work-hours-input" class="form-number-input" min="1" max="24" step="1" value="8">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="work-hours-slider" class="form-range" min="1" max="24" step="1" value="8">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="peak-multiplier-slider" class="form-label" data-i18n="peakMultiplier">Peak-Faktor (Spitzenlast Multiplikator)</label>
+              <input type="number" id="peak-multiplier-input" class="form-number-input" min="1.0" max="10.0" step="0.1" value="2.5">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="peak-multiplier-slider" class="form-range" min="1.0" max="6.0" step="0.1" value="2.5">
+            </div>
+          </div>
+
+          <!-- 2. Token & Latency Parameters -->
+          <div class="card-header" style="margin-top: 1.5rem;">
+            <h2 class="card-title"><span>📝</span> <span data-i18n="tokenTitle">2. Token & Latenz-Ziele</span></h2>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="input-tokens-slider" class="form-label" data-i18n="inputTokens">Eingabe-Tokens (Prompt & RAG Context)</label>
+              <input type="number" id="input-tokens-input" class="form-number-input" min="10" max="131072" step="100" value="3500">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="input-tokens-slider" class="form-range" min="100" max="32768" step="100" value="3500">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="output-tokens-slider" class="form-label" data-i18n="outputTokens">Ausgabe-Tokens (Completion)</label>
+              <input type="number" id="output-tokens-input" class="form-number-input" min="10" max="16384" step="50" value="450">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="output-tokens-slider" class="form-range" min="50" max="4096" step="25" value="450">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="target-ttft-slider" class="form-label" data-i18n="targetTtft">Ziel TTFT (Time to First Token in ms)</label>
+              <input type="number" id="target-ttft-input" class="form-number-input" min="50" max="5000" step="50" value="600">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="target-ttft-slider" class="form-range" min="100" max="2500" step="50" value="600">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="target-tps-slider" class="form-label" data-i18n="targetTps">Ziel-Generierungsrate (tok/s pro Stream)</label>
+              <input type="number" id="target-tps-input" class="form-number-input" min="5" max="150" step="5" value="35">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="target-tps-slider" class="form-range" min="10" max="100" step="5" value="35">
+            </div>
+          </div>
+
+          <!-- 3. Model & Quantization Selection -->
+          <div class="card-header" style="margin-top: 1.5rem;">
+            <h2 class="card-title"><span>🤖</span> <span data-i18n="modelTitle">3. LLM & Quantisierung</span></h2>
+          </div>
+
+          <div class="form-group">
+            <label for="model-select" class="form-label" data-i18n="selectModel" style="margin-bottom: 0.35rem; display: block;">Modell auswählen</label>
+            <select id="model-select" class="form-select"></select>
+          </div>
+
+          <!-- Custom Model Fields (Conditional) -->
+          <div id="custom-model-fields" class="custom-model-grid" style="display: none;">
+            <div>
+              <label for="custom-params" class="form-label" data-i18n="customParams">Parameter (B)</label>
+              <input type="number" id="custom-params" class="form-number-input" style="width: 100%;" value="70" step="1">
+            </div>
+            <div>
+              <label for="custom-layers" class="form-label" data-i18n="customLayers">Layers</label>
+              <input type="number" id="custom-layers" class="form-number-input" style="width: 100%;" value="80" step="1">
+            </div>
+            <div>
+              <label for="custom-kv-heads" class="form-label" data-i18n="customKvHeads">KV-Heads (GQA)</label>
+              <input type="number" id="custom-kv-heads" class="form-number-input" style="width: 100%;" value="8" step="1">
+            </div>
+            <div>
+              <label for="custom-hidden-size" class="form-label" data-i18n="customHiddenSize">Hidden Size</label>
+              <input type="number" id="custom-hidden-size" class="form-number-input" style="width: 100%;" value="8192" step="256">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="quant-select" class="form-label" data-i18n="quantization" style="margin-bottom: 0.35rem; display: block;">Gewichte-Quantisierung</label>
+            <select id="quant-select" class="form-select"></select>
+          </div>
+
+          <div class="form-group">
+            <label for="kv-quant-select" class="form-label" data-i18n="kvQuantization" style="margin-bottom: 0.35rem; display: block;">KV-Cache Präzision</label>
+            <select id="kv-quant-select" class="form-select"></select>
+          </div>
+
+          <!-- 4. Engine & Infrastructure -->
+          <div class="card-header" style="margin-top: 1.5rem;">
+            <h2 class="card-title"><span>⚙️</span> <span data-i18n="infraParamsTitle">4. Engine & PagedAttention</span></h2>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="gpu-mem-util-slider" class="form-label" data-i18n="gpuMemUtil">vLLM GPU Memory Utilization (Headroom)</label>
+              <input type="number" id="gpu-mem-util-input" class="form-number-input" min="0.70" max="0.95" step="0.01" value="0.90">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="gpu-mem-util-slider" class="form-range" min="0.75" max="0.95" step="0.01" value="0.90">
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Results Container -->
+      <section class="results-main" aria-label="Berechnungsergebnisse">
+        <!-- Tab 1: Sizing & Capacity -->
+        <div id="tab-sizing" class="tab-pane active">
+          <!-- VRAM Breakdown Card -->
+          <div class="glass-card" id="vram-breakdown-card">
+            <!-- Dynamically rendered VRAM details and bar -->
+          </div>
+
+          <!-- Traffic & Throughput Metrics Grid -->
+          <div class="metrics-grid" id="metrics-grid">
+            <!-- Dynamically rendered metrics -->
+          </div>
+
+          <!-- Hardware Recommendations Section -->
+          <div id="gpu-matrix-section">
+            <!-- Dynamically rendered highlights and table -->
+          </div>
+        </div>
+
+        <!-- Tab 2: TCO & Cost Analysis -->
+        <div id="tab-tco" class="tab-pane">
+          <div id="tco-tab-content">
+            <!-- Dynamically rendered TCO calculators -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Cluster & Topology -->
+        <div id="tab-topology" class="tab-pane">
+          <div id="topology-tab-content">
+            <!-- Dynamically rendered Cluster Topology visualizer -->
+          </div>
+        </div>
+
+        <!-- Tab 4: Export & Report (ADR) -->
+        <div id="tab-export" class="tab-pane">
+          <div id="export-tab-content">
+            <!-- Dynamically rendered Export and ADR Report -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast notification element -->
+  <div id="app-toast" class="app-toast"></div>
+
+  <!-- App Bootstrap JS -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
