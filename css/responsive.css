@@ -96,7 +96,14 @@
     background-image: none !important;
   }
 
-  .app-header, .header-controls, .nav-tabs-bar, .config-sidebar, .export-actions-row, .tco-cost-sliders-grid, .btn, .app-toast {
+  .app-header,
+  .header-controls,
+  .nav-tabs-bar,
+  .config-sidebar,
+  .export-actions-row,
+  .tco-cost-sliders-grid,
+  .btn,
+  .app-toast {
     display: none !important;
   }
 
@@ -104,11 +111,15 @@
     display: block !important;
   }
 
-  .results-main, .tab-pane {
+  .results-main,
+  .tab-pane {
     display: flex !important;
   }
 
-  .glass-card, .tco-card, .server-node-card, .markdown-preview-box {
+  .glass-card,
+  .tco-card,
+  .server-node-card,
+  .markdown-preview-box {
     background: #ffffff !important;
     border: 1px solid #cccccc !important;
     box-shadow: none !important;
@@ -116,7 +127,9 @@
     color: #000000 !important;
   }
 
-  .vram-total-value, .metric-val, .tco-card-price {
+  .vram-total-value,
+  .metric-val,
+  .tco-card-price {
     color: #000000 !important;
   }
 
