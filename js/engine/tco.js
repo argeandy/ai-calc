@@ -62,8 +62,12 @@ export class TcoCalculator {
     const monthlyOutputTokens = dailyOutputTokens * monthlyDays;
     const monthlyTotalTokens = monthlyInputTokens + monthlyOutputTokens;
 
-    // 1. On-Premises Monthly Cost
+    // 1. On-Premises Monthly Cost with Itemized Capex
     const hardwareCapex = gpuRec.hardwareCapex;
+    const gpuCapex = gpuRec.gpuCapex;
+    const serverNodesCapex = gpuRec.serverNodesCapex;
+    const networkingCapex = gpuRec.networkingCapex;
+
     const monthlyDepreciation = hardwareCapex / (hardwareAmortizationYears * 12);
     
     // Electricity Consumption (Power in kW * 24h * 30.5 days * PUE)
@@ -88,7 +92,6 @@ export class TcoCalculator {
       const costPer1kTokens = monthlyTotalTokens > 0 ? (monthlyTotalCost / (monthlyTotalTokens / 1000)) : 0;
 
       // Break-even vs On-Premises Capex & Opex
-      // Monthly savings by self-hosting = monthlyTotalCost - (monthlyElectricityCost + monthlyMaintenanceCost)
       const monthlySelfHostOpex = monthlyElectricityCost + monthlyMaintenanceCost;
       const monthlyNetSavingsVsCapex = monthlyTotalCost - monthlySelfHostOpex;
       const breakEvenMonths = monthlyNetSavingsVsCapex > 0 
@@ -111,12 +114,17 @@ export class TcoCalculator {
       },
       onPrem: {
         capexTotal: Math.round(hardwareCapex),
+        gpuCapex: Math.round(gpuCapex),
+        serverNodesCapex: Math.round(serverNodesCapex),
+        networkingCapex: Math.round(networkingCapex),
         monthlyDepreciation: Math.round(monthlyDepreciation),
         monthlyElectricityCost: Math.round(monthlyElectricityCost),
         monthlyMaintenanceCost: Math.round(monthlyMaintenanceCost),
         totalMonthlyCost: Math.round(onPremTotalMonthlyCost),
         costPer1kTokens: Number(onPremCostPer1kTokens.toFixed(4)),
-        effectiveMonthlyKwh: Math.round(effectiveMonthlyKwh)
+        effectiveMonthlyKwh: Math.round(effectiveMonthlyKwh),
+        serverChassisName: gpuRec.serverChassis.name,
+        nodesNeeded: gpuRec.nodesNeeded
       },
       cloud: {
         monthlyOnDemand: Math.round(cloudMonthlyOnDemand),

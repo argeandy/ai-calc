@@ -9,6 +9,7 @@ export class ExportManager {
   static generateMarkdownReport(calcResult, tcoResult, state, model, quant, kvQuant, selectedGpuRec, lang = 'de') {
     const timestamp = new Date().toISOString().split('T')[0];
     const rec = selectedGpuRec || calcResult.highlights.bestEnterprise;
+    const server = rec.serverChassis;
     const isEn = lang === 'en';
 
     if (isEn) {
@@ -18,10 +19,12 @@ export class ExportManager {
 ## 1. Executive Summary & Recommendation
 - **Target Model**: ${model.name} (${model.parameters}B Parameters, ${model.isMoE ? `${model.activeParameters}B Active MoE` : 'Dense'})
 - **Quantization**: Weights: ${quant.name} | KV Cache: ${kvQuant.name}
-- **Recommended Hardware**: **${rec.totalGpusNeeded}x ${rec.gpu.name}** across **${rec.nodesNeeded} Node(s)**
+- **Recommended Compute Infrastructure**: **${rec.totalGpusNeeded}x ${rec.gpu.name}** housed in **${rec.nodesNeeded}x ${server.name}**
+- **Server Host Specs**: ${server.hostCpu} | ${server.hostMemory} | ${server.hostStorage}
 - **Parallelism Strategy**: Tensor Parallelism (TP=${rec.tp}), Pipeline Parallelism (PP=${rec.pp}), Data Parallelism Replicas (DP=${rec.dpReplicas})
 - **Estimated Generation Speed**: ~**${rec.singleStreamDecodeTps} tokens/s** per stream (Est. TTFT: ~**${rec.estimatedTtftMs} ms**)
-- **Estimated Monthly TCO (On-Prem 3-Year)**: ~**€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()} / month** (Capex: €${tcoResult.onPrem.capexTotal.toLocaleString()})
+- **Turnkey On-Premises Capex**: **€${tcoResult.onPrem.capexTotal.toLocaleString()}** (GPUs: €${tcoResult.onPrem.gpuCapex.toLocaleString()} | Server Nodes: €${tcoResult.onPrem.serverNodesCapex.toLocaleString()}${tcoResult.onPrem.networkingCapex > 0 ? ` | Switching: €${tcoResult.onPrem.networkingCapex.toLocaleString()}` : ''})
+- **Estimated Monthly TCO (On-Prem 3-Year)**: ~**€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()} / month**
 
 ---
 
@@ -60,22 +63,23 @@ export class ExportManager {
 
 ---
 
-## 5. Hardware Sizing & Cluster Topology
+## 5. Hardware Sizing & Server Architecture
 - **Selected GPU Model**: ${rec.gpu.name} (${rec.gpu.vram} GB ${rec.gpu.vramType}, ${rec.gpu.bandwidth} GB/s Memory Bandwidth)
-- **Total VRAM in Cluster**: ${rec.totalVramAvailableGb} GB (Memory Utilization: ${rec.vramUtilizationPercent}%)
-- **Interconnect**: ${rec.gpu.interconnect}
-- **Total Power Consumption**: ~**${rec.totalPowerKw.toFixed(1)} kW** (${rec.nodesNeeded} Server Node(s))
+- **Host Server Nodes**: ${rec.nodesNeeded}x ${server.name} (${server.vendor}, ${server.formFactor})
+- **Host CPUs & Memory**: ${server.hostCpu}, ${server.hostMemory}
+- **Storage & Power**: ${server.hostStorage}, ${server.psu}
+- **Total Power Consumption**: ~**${rec.totalPowerKw.toFixed(1)} kW**
 
 ---
 
-## 6. Financial Analysis (TCO Comparison)
-| Deployment Model | Monthly Cost | Cost / 1k Tokens | Amortization / Break-Even |
-| :--- | :--- | :--- | :--- |
-| **On-Premises Dedicated** | **€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()}** | €${tcoResult.onPrem.costPer1kTokens.toFixed(4)} | Baseline Capex €${tcoResult.onPrem.capexTotal.toLocaleString()} |
-| **Cloud 1-Year Reserved** | **€${tcoResult.cloud.monthlyReserved1Yr.toLocaleString()}** | €${tcoResult.cloud.costPer1kTokens1Yr.toFixed(4)} | Zero Capex |
-| **Cloud On-Demand** | **€${tcoResult.cloud.monthlyOnDemand.toLocaleString()}** | - | Maximum flexibility |
-| **Commercial APIs (GPT-4o)** | ~€${tcoResult.apis[0]?.monthlyTotalCost.toLocaleString() || 'N/A'} | €${tcoResult.apis[0]?.costPer1kTokens || 'N/A'} | ${tcoResult.apis[0]?.breakEvenMonths ? `${tcoResult.apis[0].breakEvenMonths} Months` : 'N/A'} |
-| **Hosted Open Model (Together)** | ~€${tcoResult.apis[4]?.monthlyTotalCost.toLocaleString() || 'N/A'} | €${tcoResult.apis[4]?.costPer1kTokens || 'N/A'} | ${tcoResult.apis[4]?.breakEvenMonths ? `${tcoResult.apis[4].breakEvenMonths} Months` : 'N/A'} |
+## 6. Financial Analysis & Itemized Capex (TCO Comparison)
+| Cost Component | On-Premises Amount | Description |
+| :--- | :--- | :--- |
+| **GPU Accelerators** | **€${tcoResult.onPrem.gpuCapex.toLocaleString()}** | ${rec.totalGpusNeeded}x ${rec.gpu.name} |
+| **Host Server Nodes** | **€${tcoResult.onPrem.serverNodesCapex.toLocaleString()}** | ${rec.nodesNeeded}x ${server.name} |
+| **Cluster Switching & Rack** | **€${tcoResult.onPrem.networkingCapex.toLocaleString()}** | 400G InfiniBand/RoCE Spine-Leaf switches |
+| **Total Turnkey Capex** | **€${tcoResult.onPrem.capexTotal.toLocaleString()}** | Complete on-prem acquisition |
+| **Total Monthly Cost (3-Yr)** | **€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()} / mo** | Depreciation + Power + 12% Maint |
 
 ---
 
@@ -94,10 +98,12 @@ export class ExportManager {
 ## 1. Zusammenfassung & Empfehlung
 - **Ziel-Modell**: ${model.name} (${model.parameters}B Parameter, ${model.isMoE ? `${model.activeParameters}B Active MoE` : 'Dense'})
 - **Quantisierung**: Gewichte: ${quant.name} | KV Cache: ${kvQuant.name}
-- **Empfohlene Hardware**: **${rec.totalGpusNeeded}x ${rec.gpu.name}** verteilt auf **${rec.nodesNeeded} Node(s)**
+- **Empfohlene Recheninfrastruktur**: **${rec.totalGpusNeeded}x ${rec.gpu.name}** in **${rec.nodesNeeded}x ${server.name}**
+- **Host-Server Spezifikationen**: ${server.hostCpu} | ${server.hostMemory} | ${server.hostStorage}
 - **Parallelismus-Strategie**: Tensor Parallelism (TP=${rec.tp}), Pipeline Parallelism (PP=${rec.pp}), Data Parallelism Replicas (DP=${rec.dpReplicas})
 - **Geschätzte Generierungsrate**: ~**${rec.singleStreamDecodeTps} tokens/s** pro Stream (Est. TTFT: ~**${rec.estimatedTtftMs} ms**)
-- **Geschätzte monatliche TCO (On-Prem 3J)**: ~**€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()} / Monat** (Capex: €${tcoResult.onPrem.capexTotal.toLocaleString()})
+- **Gesamter Turnkey-Capex**: **€${tcoResult.onPrem.capexTotal.toLocaleString()}** (GPUs: €${tcoResult.onPrem.gpuCapex.toLocaleString()} | Server-Nodes: €${tcoResult.onPrem.serverNodesCapex.toLocaleString()}${tcoResult.onPrem.networkingCapex > 0 ? ` | Switching: €${tcoResult.onPrem.networkingCapex.toLocaleString()}` : ''})
+- **Geschätzte monatliche TCO (On-Prem 3J)**: ~**€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()} / Monat**
 
 ---
 
@@ -136,22 +142,23 @@ export class ExportManager {
 
 ---
 
-## 5. Hardware-Sizing & Cluster-Topologie
+## 5. Hardware-Sizing & Server-Architektur
 - **Gewähltes GPU-Modell**: ${rec.gpu.name} (${rec.gpu.vram} GB ${rec.gpu.vramType}, ${rec.gpu.bandwidth} GB/s Speicherbandbreite)
-- **Gesamter VRAM im Cluster**: ${rec.totalVramAvailableGb} GB (VRAM-Auslastung: ${rec.vramUtilizationPercent}%)
-- **Interconnect**: ${rec.gpu.interconnect}
-- **Gesamte Leistungsaufnahme**: ~**${rec.totalPowerKw.toFixed(1)} kW** (${rec.nodesNeeded} Server Node(s))
+- **Host-Server Nodes**: ${rec.nodesNeeded}x ${server.name} (${server.vendor}, ${server.formFactor})
+- **Host-CPUs & Arbeitsspeicher**: ${server.hostCpu}, ${server.hostMemory}
+- **NVMe-Storage & Netzteile**: ${server.hostStorage}, ${server.psu}
+- **Gesamte Leistungsaufnahme**: ~**${rec.totalPowerKw.toFixed(1)} kW**
 
 ---
 
-## 6. Finanzanalyse (TCO-Vergleich)
-| Bereitstellungsmodell | Monatliche Kosten | Kosten / 1k Tokens | Amortisation / Break-Even |
-| :--- | :--- | :--- | :--- |
-| **On-Premises Eigenbetrieb** | **€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()}** | €${tcoResult.onPrem.costPer1kTokens.toFixed(4)} | Basis-Capex €${tcoResult.onPrem.capexTotal.toLocaleString()} |
-| **Cloud 1-Jahr Reserved** | **€${tcoResult.cloud.monthlyReserved1Yr.toLocaleString()}** | €${tcoResult.cloud.costPer1kTokens1Yr.toFixed(4)} | Kein Capex |
-| **Cloud On-Demand** | **€${tcoResult.cloud.monthlyOnDemand.toLocaleString()}** | - | Maximale Flexibilität |
-| **Kommerzielle APIs (GPT-4o)** | ~€${tcoResult.apis[0]?.monthlyTotalCost.toLocaleString() || 'N/A'} | €${tcoResult.apis[0]?.costPer1kTokens || 'N/A'} | ${tcoResult.apis[0]?.breakEvenMonths ? `${tcoResult.apis[0].breakEvenMonths} Monate` : 'N/A'} |
-| **Hosted Open Model (Together)** | ~€${tcoResult.apis[4]?.monthlyTotalCost.toLocaleString() || 'N/A'} | €${tcoResult.apis[4]?.costPer1kTokens || 'N/A'} | ${tcoResult.apis[4]?.breakEvenMonths ? `${tcoResult.apis[4].breakEvenMonths} Monate` : 'N/A'} |
+## 6. Finanzanalyse & Aufgeschlüsselter Capex (TCO-Vergleich)
+| Kostenkomponente | Betrag (On-Premises) | Beschreibung |
+| :--- | :--- | :--- |
+| **GPU-Beschleuniger** | **€${tcoResult.onPrem.gpuCapex.toLocaleString()}** | ${rec.totalGpusNeeded}x ${rec.gpu.name} |
+| **Host-Server Nodes** | **€${tcoResult.onPrem.serverNodesCapex.toLocaleString()}** | ${rec.nodesNeeded}x ${server.name} |
+| **Cluster-Netzwerk & Switches** | **€${tcoResult.onPrem.networkingCapex.toLocaleString()}** | 400G InfiniBand/RoCE Spine-Leaf |
+| **Gesamte Investitionskosten (Capex)** | **€${tcoResult.onPrem.capexTotal.toLocaleString()}** | Vollständige Turnkey-Beschaffung |
+| **Gesamte monatliche Kosten (3J)** | **€${tcoResult.onPrem.totalMonthlyCost.toLocaleString()} / Mo** | Abschreibung + Strom + 12% Wartung |
 
 ---
 
@@ -168,7 +175,7 @@ export class ExportManager {
    */
   static downloadJsonConfig(state, calcResult) {
     const data = {
-      version: '1.0.0',
+      version: '1.1.0',
       exportedAt: new Date().toISOString(),
       configuration: state,
       summary: {
@@ -177,7 +184,10 @@ export class ExportManager {
         bestEnterprise: {
           gpu: calcResult.highlights.bestEnterprise.gpu.name,
           count: calcResult.highlights.bestEnterprise.totalGpusNeeded,
-          tp: calcResult.highlights.bestEnterprise.tp
+          serverChassis: calcResult.highlights.bestEnterprise.serverChassis.name,
+          nodes: calcResult.highlights.bestEnterprise.nodesNeeded,
+          tp: calcResult.highlights.bestEnterprise.tp,
+          capexTotal: calcResult.highlights.bestEnterprise.hardwareCapex
         }
       }
     };
@@ -196,7 +206,7 @@ export class ExportManager {
   /**
    * Copy Text to Clipboard with Toast Notification
    */
-  static async copyToClipboard(text, successMessage = 'Copied!') {
+  static async copyToClipboard(text, successMessage = 'Kopiert!') {
     try {
       await navigator.clipboard.writeText(text);
       this.showToast(successMessage);

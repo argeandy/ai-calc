@@ -9,6 +9,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA B200 SXM',
     vendor: 'NVIDIA',
     tier: 'Frontier Datacenter',
+    serverChassisId: 'dell-xe9680',
     vram: 192, // GB
     vramType: 'HBM3e',
     bandwidth: 8000, // GB/s (8.0 TB/s)
@@ -18,7 +19,7 @@ export const GPU_CATALOG = [
     interconnect: 'NVLink 5 (1800 GB/s bidirectional)',
     interconnectBandwidth: 1800,
     maxPerNode: 8,
-    capexPrice: 42000, // EUR/USD estimated
+    capexPrice: 42000, // EUR/USD estimated per GPU
     cloudHourlyOnDemand: 5.50,
     cloudHourly1YrReserved: 3.60,
     description: 'Blackwell architecture flagship. 192GB HBM3e and unprecedented 8 TB/s memory bandwidth for trillion-parameter models.',
@@ -29,6 +30,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA H200 SXM (141GB)',
     vendor: 'NVIDIA',
     tier: 'Enterprise Datacenter',
+    serverChassisId: 'dell-xe9680',
     vram: 141,
     vramType: 'HBM3e',
     bandwidth: 4800, // 4.8 TB/s
@@ -49,6 +51,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA H100 SXM (80GB)',
     vendor: 'NVIDIA',
     tier: 'Enterprise Datacenter',
+    serverChassisId: 'dell-xe9680',
     vram: 80,
     vramType: 'HBM3',
     bandwidth: 3350, // 3.35 TB/s
@@ -69,6 +72,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA A100 SXM (80GB)',
     vendor: 'NVIDIA',
     tier: 'Enterprise Datacenter (Ampere)',
+    serverChassisId: 'dell-xe9680',
     vram: 80,
     vramType: 'HBM2e',
     bandwidth: 2039, // 2.0 TB/s
@@ -89,6 +93,7 @@ export const GPU_CATALOG = [
     name: 'AMD Instinct MI300X (192GB)',
     vendor: 'AMD',
     tier: 'Enterprise Datacenter',
+    serverChassisId: 'supermicro-8u-hgx',
     vram: 192,
     vramType: 'HBM3',
     bandwidth: 5300, // 5.3 TB/s
@@ -111,6 +116,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA L40S (48GB)',
     vendor: 'NVIDIA',
     tier: 'Enterprise Scale-Out Inference',
+    serverChassisId: 'dell-r760xa',
     vram: 48,
     vramType: 'GDDR6 ECC',
     bandwidth: 864, // GB/s
@@ -119,7 +125,7 @@ export const GPU_CATALOG = [
     tdp: 350,
     interconnect: 'PCIe Gen4/5 (64 GB/s)',
     interconnectBandwidth: 64,
-    maxPerNode: 8,
+    maxPerNode: 4,
     capexPrice: 7500,
     cloudHourlyOnDemand: 1.10,
     cloudHourly1YrReserved: 0.70,
@@ -131,6 +137,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA L4 (24GB)',
     vendor: 'NVIDIA',
     tier: 'Compact Inference',
+    serverChassisId: 'dell-r760xa',
     vram: 24,
     vramType: 'GDDR6',
     bandwidth: 300, // GB/s
@@ -139,7 +146,7 @@ export const GPU_CATALOG = [
     tdp: 72, // Ultra low power 72W
     interconnect: 'PCIe Gen4 (32 GB/s)',
     interconnectBandwidth: 32,
-    maxPerNode: 8,
+    maxPerNode: 4,
     capexPrice: 2600,
     cloudHourlyOnDemand: 0.45,
     cloudHourly1YrReserved: 0.28,
@@ -150,7 +157,8 @@ export const GPU_CATALOG = [
     id: 'rtx-6000-ada',
     name: 'NVIDIA RTX 6000 Ada (48GB)',
     vendor: 'NVIDIA',
-    tier: 'Professional Workstation',
+    tier: 'Professional Workstation / Server',
+    serverChassisId: 'dell-r760xa',
     vram: 48,
     vramType: 'GDDR6 ECC',
     bandwidth: 960, // GB/s
@@ -173,6 +181,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA RTX 5090 (32GB)',
     vendor: 'NVIDIA',
     tier: 'Consumer Flagship',
+    serverChassisId: 'dell-precision-7960',
     vram: 32,
     vramType: 'GDDR7',
     bandwidth: 1792, // GB/s GDDR7
@@ -193,6 +202,7 @@ export const GPU_CATALOG = [
     name: 'NVIDIA RTX 4090 (24GB)',
     vendor: 'NVIDIA',
     tier: 'Consumer Workstation',
+    serverChassisId: 'dell-precision-7960',
     vram: 24,
     vramType: 'GDDR6X',
     bandwidth: 1008, // GB/s
@@ -201,7 +211,7 @@ export const GPU_CATALOG = [
     tdp: 450,
     interconnect: 'PCIe Gen4 (32 GB/s)',
     interconnectBandwidth: 32,
-    maxPerNode: 4,
+    maxPerNode: 2,
     capexPrice: 1900,
     cloudHourlyOnDemand: 0.50,
     cloudHourly1YrReserved: 0.35,
@@ -215,6 +225,7 @@ export const GPU_CATALOG = [
     name: 'Apple Mac Studio (M4 Ultra 192GB)',
     vendor: 'Apple',
     tier: 'Unified Memory Workstation',
+    serverChassisId: 'apple-silicon-studio',
     vram: 192,
     vramType: 'Unified LPDDR5X',
     bandwidth: 800, // GB/s
@@ -235,6 +246,7 @@ export const GPU_CATALOG = [
     name: 'Apple Mac Studio (M2/M3 Ultra 128GB)',
     vendor: 'Apple',
     tier: 'Unified Memory Workstation',
+    serverChassisId: 'apple-silicon-studio',
     vram: 128,
     vramType: 'Unified LPDDR5',
     bandwidth: 800,

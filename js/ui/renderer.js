@@ -1,6 +1,6 @@
 /**
  * Dynamic UI Renderer for AI Hardware Sizing Calculator
- * Safe DOM manipulation and 100% Bilingual (DE / EN)
+ * Safe DOM manipulation, Server Chassis Integration and 100% Bilingual (DE / EN)
  */
 
 import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js';
@@ -295,8 +295,8 @@ export class UIRenderer {
           <div class="highlight-badge-pill"><span class="badge-icon">${icon}</span> ${t(badgeKey)}</div>
           <div class="highlight-gpu-name">${rec.totalGpusNeeded}x ${rec.gpu.name}</div>
           <div class="highlight-specs-row">
-            <span>💾 ${rec.totalVramAvailableGb} GB VRAM (${rec.vramUtilizationPercent}% ${t('vramUtilization')})</span>
-            <span>⚡ TP=${rec.tp}${rec.pp > 1 ? `, PP=${rec.pp}` : ''}${rec.dpReplicas > 1 ? `, DP=${rec.dpReplicas}` : ''}</span>
+            <span>🖥️ <strong>${rec.nodesNeeded}x ${rec.serverChassis.name}</strong></span>
+            <span>💾 ${rec.totalVramAvailableGb} GB VRAM (${rec.vramUtilizationPercent}% ${t('vramUtilization')}) | TP=${rec.tp}${rec.pp > 1 ? `, PP=${rec.pp}` : ''}${rec.dpReplicas > 1 ? `, DP=${rec.dpReplicas}` : ''}</span>
           </div>
           <div class="highlight-perf-row">
             <div class="perf-metric">
@@ -308,8 +308,8 @@ export class UIRenderer {
               <span class="p-val">${rec.estimatedTtftMs} ms</span>
             </div>
             <div class="perf-metric">
-              <span class="p-label">${t('powerLabel')}</span>
-              <span class="p-val">${rec.totalPowerKw.toFixed(1)} kW</span>
+              <span class="p-label">${t('colCapex')}:</span>
+              <span class="p-val">€${rec.hardwareCapex.toLocaleString()}</span>
             </div>
           </div>
         </div>
@@ -333,6 +333,7 @@ export class UIRenderer {
           <tr>
             <th>${t('colGpuName')}</th>
             <th>${t('colGpuCount')}</th>
+            <th>${t('colServerChassis')}</th>
             <th>${t('colTopology')}</th>
             <th>${t('colVramTotal')}</th>
             <th>${t('colVramUtil')}</th>
@@ -365,7 +366,12 @@ export class UIRenderer {
           </td>
           <td class="col-count">
             <span class="gpu-count-badge">${rec.totalGpusNeeded}x</span>
-            <small class="nodes-hint">(${rec.nodesNeeded} Node${rec.nodesNeeded > 1 ? 's' : ''})</small>
+          </td>
+          <td class="col-server">
+            <div class="server-cell">
+              <strong>${rec.nodesNeeded}x ${rec.serverChassis.name.split(' (')[0]}</strong>
+              <small class="nodes-hint">${rec.serverChassis.hostCpu.split(' (')[0]}</small>
+            </div>
           </td>
           <td class="col-topology">
             <div class="topo-cell">
@@ -392,7 +398,9 @@ export class UIRenderer {
             </span>
           </td>
           <td class="col-power">${rec.totalPowerKw.toFixed(1)} kW</td>
-          <td class="col-capex">€${rec.hardwareCapex.toLocaleString()}</td>
+          <td class="col-capex" title="GPUs: €${rec.gpuCapex.toLocaleString()} | Server: €${rec.serverNodesCapex.toLocaleString()}${rec.networkingCapex > 0 ? ` | Switch: €${rec.networkingCapex.toLocaleString()}` : ''}">
+            <strong>€${rec.hardwareCapex.toLocaleString()}</strong>
+          </td>
           <td class="col-cloud">€${Math.round(rec.cloudMonthlyReserved1Yr).toLocaleString()} <small>/Mo</small></td>
           <td class="col-sla">
             <span class="sla-badge ${slaClass}">${slaText}</span>
@@ -421,7 +429,7 @@ export class UIRenderer {
     container.innerHTML = `
       <div class="tco-header-panel">
         <div class="tco-selected-gpu">
-          <h3>${t('tcoSelectedTitle')} <span class="accent-text">${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}</span></h3>
+          <h3>${t('tcoSelectedTitle')} <span class="accent-text">${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}</span> in <span class="accent-text">${selectedGpuRec.nodesNeeded}x ${selectedGpuRec.serverChassis.name}</span></h3>
           <p>${lang === 'en' 
             ? `Based on ${calcResult.traffic.totalDailyRequests.toLocaleString()} requests/day (${tcoResult.monthlyTokens.totalMillions} Million Tokens/month)`
             : `Basierend auf ${calcResult.traffic.totalDailyRequests.toLocaleString()} Anfragen/Tag (${tcoResult.monthlyTokens.totalMillions} Millionen Tokens/Monat)`
@@ -432,7 +440,7 @@ export class UIRenderer {
           <select id="tco-gpu-select" class="form-select">
             ${calcResult.gpuRecommendations.map(r => `
               <option value="${r.gpu.id}" ${r.gpu.id === state.costParams.selectedGpuId ? 'selected' : ''}>
-                ${r.totalGpusNeeded}x ${r.gpu.name} (€${r.hardwareCapex.toLocaleString()} Capex)
+                ${r.totalGpusNeeded}x ${r.gpu.name} in ${r.nodesNeeded}x ${r.serverChassis.name.split(' (')[0]} (Capex: €${r.hardwareCapex.toLocaleString()})
               </option>
             `).join('')}
           </select>
@@ -464,11 +472,25 @@ export class UIRenderer {
           </div>
           <div class="tco-price-per-token">€${tcoResult.onPrem.costPer1kTokens.toFixed(4)} ${t('per1kTokens')}</div>
           <div class="tco-breakdown-list">
-            <div class="tco-breakdown-row">
+            <div class="tco-breakdown-row highlight-row">
               <span>${t('capexTotal')}</span>
               <strong>€${tcoResult.onPrem.capexTotal.toLocaleString()}</strong>
             </div>
-            <div class="tco-breakdown-row">
+            <div class="tco-sub-item">
+              <span>${t('gpuCapexItem')} (${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}):</span>
+              <span>€${tcoResult.onPrem.gpuCapex.toLocaleString()}</span>
+            </div>
+            <div class="tco-sub-item">
+              <span>${t('serverCapexItem')} (${selectedGpuRec.nodesNeeded}x ${selectedGpuRec.serverChassis.name.split(' (')[0]}):</span>
+              <span>€${tcoResult.onPrem.serverNodesCapex.toLocaleString()}</span>
+            </div>
+            ${tcoResult.onPrem.networkingCapex > 0 ? `
+              <div class="tco-sub-item">
+                <span>${t('networkCapexItem')}</span>
+                <span>€${tcoResult.onPrem.networkingCapex.toLocaleString()}</span>
+              </div>
+            ` : ''}
+            <div class="tco-breakdown-row" style="margin-top: 0.5rem;">
               <span>${t('monthlyDeprec')} (${state.costParams.hardwareAmortizationYears}${lang === 'en' ? 'Yr' : 'J'}):</span>
               <span>€${tcoResult.onPrem.monthlyDepreciation.toLocaleString()} / Mo</span>
             </div>
@@ -551,6 +573,7 @@ export class UIRenderer {
   static renderTopologyTab(state, calcResult, container) {
     if (!container) return;
     const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise;
+    const serverChassis = selectedGpuRec.serverChassis;
     const cloudMapping = CLOUD_INSTANCE_MAPPINGS[selectedGpuRec.gpu.id] || { aws: 'Custom Instance', azure: 'Custom VM', gcp: 'Custom Compute' };
     const lang = getLanguage();
 
@@ -558,12 +581,13 @@ export class UIRenderer {
       <div class="topology-header">
         <h3>${t('topologyTitle')}</h3>
         <p>${lang === 'en'
-          ? `Visual partitioning of <strong>${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}</strong> across <strong>${selectedGpuRec.nodesNeeded} Server Node(s)</strong>`
-          : `Visuelle Aufteilung von <strong>${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}</strong> auf <strong>${selectedGpuRec.nodesNeeded} Server Node(s)</strong>`
+          ? `Visual partitioning of <strong>${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}</strong> across <strong>${selectedGpuRec.nodesNeeded}x ${serverChassis.name}</strong>`
+          : `Visuelle Aufteilung von <strong>${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}</strong> auf <strong>${selectedGpuRec.nodesNeeded}x ${serverChassis.name}</strong>`
         }</p>
       </div>
 
       <div class="topo-summary-chips">
+        <div class="chip"><span>Server Chassis:</span> <strong>${serverChassis.vendor} (${serverChassis.formFactor})</strong></div>
         <div class="chip"><span>Tensor Parallelism:</span> <strong>TP = ${selectedGpuRec.tp}</strong></div>
         <div class="chip"><span>Pipeline Parallelism:</span> <strong>PP = ${selectedGpuRec.pp}</strong></div>
         <div class="chip"><span>Data Parallel Replicas:</span> <strong>DP = ${selectedGpuRec.dpReplicas}</strong></div>
@@ -572,22 +596,51 @@ export class UIRenderer {
 
       <div class="cluster-nodes-visual">
         ${Array.from({ length: selectedGpuRec.nodesNeeded }).map((_, nodeIdx) => {
+          const maxGpus = selectedGpuRec.gpu.maxPerNode || serverChassis.maxGpus || 8;
           const gpusInThisNode = Math.min(
-            selectedGpuRec.gpu.maxPerNode || 8,
-            selectedGpuRec.totalGpusNeeded - (nodeIdx * (selectedGpuRec.gpu.maxPerNode || 8))
+            maxGpus,
+            selectedGpuRec.totalGpusNeeded - (nodeIdx * maxGpus)
           );
           return `
             <div class="server-node-card">
               <div class="node-header">
                 <div class="node-title">
-                  <span class="node-icon">🖧</span>
-                  <strong>${t('serverNode')} #${nodeIdx + 1}</strong>
+                  <span class="node-icon">🖥️</span>
+                  <strong>${serverChassis.name} - Node #${nodeIdx + 1}</strong>
                 </div>
-                <span class="node-specs">Dual AMD EPYC / Intel Xeon + ${selectedGpuRec.gpu.interconnect.includes('NVLink') ? 'NVLink NVSwitch Mesh' : 'PCIe Gen5 Switch'}</span>
+                <div class="server-chassis-specs-badge">
+                  <span>${serverChassis.vendor}</span> • <span>${serverChassis.formFactor}</span>
+                </div>
               </div>
-              <div class="node-gpus-grid">
+
+              <!-- Host Specifications Bar -->
+              <div class="node-host-specs-grid">
+                <div class="host-spec-item">
+                  <span class="spec-label">${t('hostCpuLabel')}</span>
+                  <span class="spec-value">${serverChassis.hostCpu}</span>
+                </div>
+                <div class="host-spec-item">
+                  <span class="spec-label">${t('hostMemoryLabel')}</span>
+                  <span class="spec-value">${serverChassis.hostMemory}</span>
+                </div>
+                <div class="host-spec-item">
+                  <span class="spec-label">${t('hostStorageLabel')}</span>
+                  <span class="spec-value">${serverChassis.hostStorage}</span>
+                </div>
+                <div class="host-spec-item">
+                  <span class="spec-label">${t('hostNetworkingLabel')}</span>
+                  <span class="spec-value">${serverChassis.networking}</span>
+                </div>
+                <div class="host-spec-item">
+                  <span class="spec-label">${t('hostPsuLabel')}</span>
+                  <span class="spec-value">${serverChassis.psu}</span>
+                </div>
+              </div>
+
+              <!-- GPU Bay Visual -->
+              <div class="node-gpus-grid" style="margin-top: 1rem;">
                 ${Array.from({ length: gpusInThisNode }).map((_, gpuIdx) => {
-                  const globalGpuNum = (nodeIdx * (selectedGpuRec.gpu.maxPerNode || 8)) + gpuIdx + 1;
+                  const globalGpuNum = (nodeIdx * maxGpus) + gpuIdx + 1;
                   return `
                     <div class="gpu-die-box">
                       <div class="die-header">

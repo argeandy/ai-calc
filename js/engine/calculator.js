@@ -1,6 +1,7 @@
 /**
  * AI Hardware Sizing and Compute Calculation Engine
  */
+import { SERVER_CHASSIS_CATALOG } from '../data/servers.js';
 
 export class HardwareCalculator {
   /**
@@ -57,13 +58,11 @@ export class HardwareCalculator {
 
     if (model.id === 'deepseek-v3' || model.id === 'deepseek-r1') {
       // DeepSeek MLA (Multi-Head Latent Attention): Compressed KV vector + Decoupled RoPE vector
-      // Effective KV dimension is ~576 elements per layer
       bytesPerToken = layers * 576 * kvBytes;
     } else {
       // Standard GQA / MHA
       const kvHeads = model.kvHeads || (model.attentionHeads / 4);
       const headDim = model.headDim || (model.hiddenSize / model.attentionHeads);
-      // 2 for Key and Value
       bytesPerToken = 2 * layers * kvHeads * headDim * kvBytes;
     }
 
@@ -77,27 +76,27 @@ export class HardwareCalculator {
     const avgKvCacheTotalGb = avgConcurrentStreams * kvPerStreamGb * pagedAttentionOverhead;
 
     // C. Activation & Framework Buffer
-    // Base CUDA Context + Activation Working Memory
     const activationBufferGb = Math.max(2.0, weightsVramGb * 0.06 + (peakConcurrentStreams * 0.05));
 
     // D. Total Required VRAM
     const totalVramRequiredRawGb = weightsVramGb + peakKvCacheTotalGb + activationBufferGb;
     const totalVramRecommendedGb = totalVramRequiredRawGb / gpuMemoryUtilization;
 
-    // 3. GPU Sizing for each GPU Option
+    // 3. GPU & Server Sizing for each GPU Option
     const gpuRecommendations = gpuCatalog.map(gpu => {
+      // Look up associated server chassis model
+      const serverChassis = SERVER_CHASSIS_CATALOG.find(s => s.id === gpu.serverChassisId) || SERVER_CHASSIS_CATALOG[0];
+
       // Minimum GPUs to fit total VRAM
       let minGpusForVram = Math.ceil(totalVramRecommendedGb / gpu.vram);
       
       // Enforce realistic Tensor Parallelism (TP) constraints
-      // Standard TP values: 1, 2, 4, 8
       let tp = 1;
       if (minGpusForVram <= 1) tp = 1;
       else if (minGpusForVram <= 2) tp = 2;
       else if (minGpusForVram <= 4) tp = 4;
       else if (minGpusForVram <= 8) tp = 8;
       else {
-        // Exceeds 8 GPUs -> Multi-Node Pipeline Parallelism or TP8 + PP
         tp = 8;
       }
 
@@ -109,9 +108,7 @@ export class HardwareCalculator {
       let gpusPerInstance = tp * pp;
 
       // Bandwidth & Token Generation Speed Estimate
-      // Decode phase is memory bandwidth bound: speed = Aggregate Bandwidth / Active Model Bytes
       const activeWeightsGb = (activeParamsBillion * 1e9 * bytesPerParam) / (1024 ** 3);
-      // Efficiency factor based on TP and interconnect
       let interconnectEfficiency = 0.95;
       if (gpu.interconnect.includes('PCIe') && tp > 1) {
         interconnectEfficiency = Math.max(0.70, 0.92 - (tp * 0.04));
@@ -120,21 +117,15 @@ export class HardwareCalculator {
       }
 
       const aggregateBandwidthGbS = gpusPerInstance * gpu.bandwidth * interconnectEfficiency;
-      
-      // Single Stream Theoretical Decode Speed (tokens/s)
       const singleStreamDecodeTps = Math.round(aggregateBandwidthGbS / Math.max(1, activeWeightsGb));
 
       // Prefill Time (TTFT) estimation:
-      // Prefill is compute-bound: 2 * Active_Params * Input_Tokens / Cluster_TFLOPS
-      // Model Flops Utilization (MFU) for prefill ~ 40-45%
       const effectiveTflops = gpusPerInstance * (quant.id === 'fp8' ? gpu.fp8Tflops : gpu.fp16Tflops) * 0.42;
       const prefillFlopsRequired = 2 * (activeParamsBillion * 1e9) * inputTokens;
       const prefillTimeSec = prefillFlopsRequired / (effectiveTflops * 1e12);
-      const estimatedTtftMs = Math.round(prefillTimeSec * 1000 + 20); // +20ms scheduling/KV alloc
+      const estimatedTtftMs = Math.round(prefillTimeSec * 1000 + 20);
 
       // Max Batch Size & Cluster Throughput
-      // With vLLM / continuous batching, memory bandwidth is amortized:
-      // Batched throughput increases up to compute ceiling
       const maxBatchThroughputTps = Math.round(
         Math.min(
           singleStreamDecodeTps * Math.min(peakConcurrentStreams, 48),
@@ -142,22 +133,31 @@ export class HardwareCalculator {
         )
       );
 
-      // Check if cluster satisfies peak output tokens/sec requirement
       let dpReplicas = 1;
       if (maxBatchThroughputTps < peakOutputTokensPerSec) {
         dpReplicas = Math.ceil(peakOutputTokensPerSec / Math.max(1, maxBatchThroughputTps));
       }
 
       const totalGpusNeeded = gpusPerInstance * dpReplicas;
-      const nodesNeeded = Math.ceil(totalGpusNeeded / (gpu.maxPerNode || 8));
+      const maxGpusPerNode = gpu.maxPerNode || serverChassis.maxGpus || 8;
+      const nodesNeeded = Math.ceil(totalGpusNeeded / maxGpusPerNode);
 
       // Power and TDP
       const totalGpuPowerWatts = totalGpusNeeded * gpu.tdp;
-      const serverHostOverheadWatts = nodesNeeded * 600; // CPU, RAM, NVMe, fans
+      const serverHostOverheadWatts = nodesNeeded * (serverChassis.hostIdlePowerWatts || 700);
       const totalPowerKw = (totalGpuPowerWatts + serverHostOverheadWatts) / 1000;
 
-      // Capex & Cloud Costs
-      const hardwareCapex = totalGpusNeeded * gpu.capexPrice + (nodesNeeded * 12000); // GPU + Server chassis
+      // Itemized Capex Breakdown:
+      // 1. GPU Hardware Capex
+      const gpuCapex = totalGpusNeeded * gpu.capexPrice;
+      // 2. Server Chassis Capex (Dell PowerEdge / Supermicro Host nodes)
+      const serverNodesCapex = nodesNeeded * serverChassis.baseChassisPrice;
+      // 3. Cluster Inter-Node High-Speed Switching (e.g. 400G InfiniBand Spine/Leaf switches if nodes > 1)
+      const networkingCapex = nodesNeeded > 1 ? (nodesNeeded * 4000 + 8000) : 0;
+      // Total Turnkey Capex
+      const hardwareCapex = gpuCapex + serverNodesCapex + networkingCapex;
+
+      // Cloud Costs
       const cloudMonthlyOnDemand = totalGpusNeeded * gpu.cloudHourlyOnDemand * 730;
       const cloudMonthlyReserved1Yr = totalGpusNeeded * gpu.cloudHourly1YrReserved * 730;
 
@@ -168,6 +168,7 @@ export class HardwareCalculator {
 
       return {
         gpu,
+        serverChassis,
         minGpusForVram,
         tp,
         pp,
@@ -181,6 +182,10 @@ export class HardwareCalculator {
         estimatedTtftMs,
         maxBatchThroughputTps,
         totalPowerKw,
+        // Itemized Capex details
+        gpuCapex,
+        serverNodesCapex,
+        networkingCapex,
         hardwareCapex,
         cloudMonthlyOnDemand,
         cloudMonthlyReserved1Yr,
