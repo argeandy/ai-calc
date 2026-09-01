@@ -1,6 +1,6 @@
 /**
  * Dynamic UI Renderer for AI Hardware Sizing Calculator
- * Safe DOM manipulation, Server Chassis Integration and 100% Bilingual (DE / EN)
+ * Safe DOM manipulation, Server Chassis & Rack Units Integration, 100% Bilingual (DE / EN)
  */
 
 import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js';
@@ -281,6 +281,7 @@ export class UIRenderer {
     const recommendations = calcResult.gpuRecommendations;
     const highlights = calcResult.highlights;
     const lang = getLanguage();
+    const ruUnit = lang === 'en' ? 'RU' : 'HE';
 
     container.innerHTML = '';
 
@@ -296,7 +297,8 @@ export class UIRenderer {
           <div class="highlight-gpu-name">${rec.totalGpusNeeded}x ${rec.gpu.name}</div>
           <div class="highlight-specs-row">
             <span>🖥️ <strong>${rec.nodesNeeded}x ${rec.serverChassis.name}</strong></span>
-            <span>💾 ${rec.totalVramAvailableGb} GB VRAM (${rec.vramUtilizationPercent}% ${t('vramUtilization')}) | TP=${rec.tp}${rec.pp > 1 ? `, PP=${rec.pp}` : ''}${rec.dpReplicas > 1 ? `, DP=${rec.dpReplicas}` : ''}</span>
+            <span>📦 <strong>${rec.totalRackUnits} ${ruUnit}</strong> (${rec.racks42uNeeded}x 42U Rack${rec.racks42uNeeded > 1 ? 's' : ''}) | 💾 ${rec.totalVramAvailableGb} GB VRAM (${rec.vramUtilizationPercent}% ${t('vramUtilization')})</span>
+            <span>⚡ TP=${rec.tp}${rec.pp > 1 ? `, PP=${rec.pp}` : ''}${rec.dpReplicas > 1 ? `, DP=${rec.dpReplicas}` : ''}</span>
           </div>
           <div class="highlight-perf-row">
             <div class="perf-metric">
@@ -334,6 +336,8 @@ export class UIRenderer {
             <th>${t('colGpuName')}</th>
             <th>${t('colGpuCount')}</th>
             <th>${t('colServerChassis')}</th>
+            <th>${t('colRackUnits')}</th>
+            <th>${t('colRacksCount')}</th>
             <th>${t('colTopology')}</th>
             <th>${t('colVramTotal')}</th>
             <th>${t('colVramUtil')}</th>
@@ -372,6 +376,12 @@ export class UIRenderer {
               <strong>${rec.nodesNeeded}x ${rec.serverChassis.name.split(' (')[0]}</strong>
               <small class="nodes-hint">${rec.serverChassis.hostCpu.split(' (')[0]}</small>
             </div>
+          </td>
+          <td class="col-ru">
+            <span class="ru-badge"><strong>${rec.totalRackUnits}</strong> ${ruUnit}</span>
+          </td>
+          <td class="col-racks">
+            <span class="racks-badge"><strong>${rec.racks42uNeeded}x</strong> 42U</span>
           </td>
           <td class="col-topology">
             <div class="topo-cell">
@@ -425,14 +435,15 @@ export class UIRenderer {
     const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise;
     const tcoResult = TcoCalculator.calculateTco(calcResult, selectedGpuRec, state.costParams);
     const lang = getLanguage();
+    const ruUnit = lang === 'en' ? 'RU' : 'HE';
 
     container.innerHTML = `
       <div class="tco-header-panel">
         <div class="tco-selected-gpu">
           <h3>${t('tcoSelectedTitle')} <span class="accent-text">${selectedGpuRec.totalGpusNeeded}x ${selectedGpuRec.gpu.name}</span> in <span class="accent-text">${selectedGpuRec.nodesNeeded}x ${selectedGpuRec.serverChassis.name}</span></h3>
           <p>${lang === 'en' 
-            ? `Based on ${calcResult.traffic.totalDailyRequests.toLocaleString()} requests/day (${tcoResult.monthlyTokens.totalMillions} Million Tokens/month)`
-            : `Basierend auf ${calcResult.traffic.totalDailyRequests.toLocaleString()} Anfragen/Tag (${tcoResult.monthlyTokens.totalMillions} Millionen Tokens/Monat)`
+            ? `Based on ${calcResult.traffic.totalDailyRequests.toLocaleString()} requests/day (${tcoResult.monthlyTokens.totalMillions} Million Tokens/month) • ${selectedGpuRec.totalRackUnits} ${ruUnit} in ${selectedGpuRec.racks42uNeeded}x 42U Rack`
+            : `Basierend auf ${calcResult.traffic.totalDailyRequests.toLocaleString()} Anfragen/Tag (${tcoResult.monthlyTokens.totalMillions} Millionen Tokens/Monat) • ${selectedGpuRec.totalRackUnits} ${ruUnit} in ${selectedGpuRec.racks42uNeeded}x 42U Rack`
           }</p>
         </div>
         <div class="tco-gpu-switcher">
@@ -440,7 +451,7 @@ export class UIRenderer {
           <select id="tco-gpu-select" class="form-select">
             ${calcResult.gpuRecommendations.map(r => `
               <option value="${r.gpu.id}" ${r.gpu.id === state.costParams.selectedGpuId ? 'selected' : ''}>
-                ${r.totalGpusNeeded}x ${r.gpu.name} in ${r.nodesNeeded}x ${r.serverChassis.name.split(' (')[0]} (Capex: €${r.hardwareCapex.toLocaleString()})
+                ${r.totalGpusNeeded}x ${r.gpu.name} in ${r.nodesNeeded}x ${r.serverChassis.name.split(' (')[0]} (${r.totalRackUnits} ${ruUnit}, Capex: €${r.hardwareCapex.toLocaleString()})
               </option>
             `).join('')}
           </select>
@@ -568,7 +579,7 @@ export class UIRenderer {
   }
 
   /**
-   * Render Cluster & Topology Tab
+   * Render Cluster & Topology Tab with Rack Allocation
    */
   static renderTopologyTab(state, calcResult, container) {
     if (!container) return;
@@ -576,6 +587,7 @@ export class UIRenderer {
     const serverChassis = selectedGpuRec.serverChassis;
     const cloudMapping = CLOUD_INSTANCE_MAPPINGS[selectedGpuRec.gpu.id] || { aws: 'Custom Instance', azure: 'Custom VM', gcp: 'Custom Compute' };
     const lang = getLanguage();
+    const ruUnit = lang === 'en' ? 'RU' : 'HE';
 
     container.innerHTML = `
       <div class="topology-header">
@@ -588,10 +600,46 @@ export class UIRenderer {
 
       <div class="topo-summary-chips">
         <div class="chip"><span>Server Chassis:</span> <strong>${serverChassis.vendor} (${serverChassis.formFactor})</strong></div>
+        <div class="chip"><span>${t('rackUnitsLabel')}</span> <strong>${selectedGpuRec.totalRackUnits} ${ruUnit} (${selectedGpuRec.racks42uNeeded}x 42U Rack${selectedGpuRec.racks42uNeeded > 1 ? 's' : ''})</strong></div>
         <div class="chip"><span>Tensor Parallelism:</span> <strong>TP = ${selectedGpuRec.tp}</strong></div>
         <div class="chip"><span>Pipeline Parallelism:</span> <strong>PP = ${selectedGpuRec.pp}</strong></div>
         <div class="chip"><span>Data Parallel Replicas:</span> <strong>DP = ${selectedGpuRec.dpReplicas}</strong></div>
         <div class="chip"><span>Interconnect:</span> <strong>${selectedGpuRec.gpu.interconnect}</strong></div>
+      </div>
+
+      <!-- Datacenter Rack Allocation Visualizer -->
+      <div class="rack-allocation-card">
+        <div class="rack-card-header">
+          <h4>📦 ${t('rackAllocationTitle')}</h4>
+          <span class="rack-badge-counter"><strong>${selectedGpuRec.racks42uNeeded}x</strong> 42U Server Rack${selectedGpuRec.racks42uNeeded > 1 ? 's' : ''} (${selectedGpuRec.totalRackUnits} ${ruUnit} Total)</span>
+        </div>
+        <div class="rack-visualizer-row">
+          ${Array.from({ length: selectedGpuRec.racks42uNeeded }).map((_, rackIdx) => {
+            const freeRu = Math.max(0, 42 - (selectedGpuRec.totalRackUnits / selectedGpuRec.racks42uNeeded));
+            return `
+              <div class="rack-frame">
+                <div class="rack-header-label">Rack #${rackIdx + 1} (42U Standard)</div>
+                <div class="rack-slot-stack">
+                  <div class="rack-slot tor-slot">
+                    <span>Top-of-Rack 400G Spine/Leaf Switch (1U-2U)</span>
+                  </div>
+                  ${Array.from({ length: Math.ceil(selectedGpuRec.nodesNeeded / selectedGpuRec.racks42uNeeded) }).map((__, nodeInRackIdx) => `
+                    <div class="rack-slot server-slot">
+                      <strong>${serverChassis.name.split(' (')[0]}</strong>
+                      <span class="slot-ru-tag">${serverChassis.heightRu} ${ruUnit}</span>
+                    </div>
+                  `).join('')}
+                  <div class="rack-slot free-slot">
+                    <span>${Math.round(freeRu)} ${ruUnit} ${lang === 'en' ? 'Available Headroom / Cable Space' : 'Freier Platz / Reserve & PDU'}</span>
+                  </div>
+                </div>
+                <div class="rack-footer-power">
+                  <span>⚡ ${lang === 'en' ? 'Power Load:' : 'Leistungsaufnahme:'} ~${(selectedGpuRec.totalPowerKw / selectedGpuRec.racks42uNeeded).toFixed(1)} kW / 25 kW Max</span>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
       </div>
 
       <div class="cluster-nodes-visual">
@@ -609,7 +657,7 @@ export class UIRenderer {
                   <strong>${serverChassis.name} - Node #${nodeIdx + 1}</strong>
                 </div>
                 <div class="server-chassis-specs-badge">
-                  <span>${serverChassis.vendor}</span> • <span>${serverChassis.formFactor}</span>
+                  <span>${serverChassis.vendor}</span> • <span>${serverChassis.formFactor}</span> • <span>${serverChassis.heightRu} ${ruUnit}</span>
                 </div>
               </div>
 

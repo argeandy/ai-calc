@@ -57,10 +57,8 @@ export class HardwareCalculator {
     let bytesPerToken = 0;
 
     if (model.id === 'deepseek-v3' || model.id === 'deepseek-r1') {
-      // DeepSeek MLA (Multi-Head Latent Attention): Compressed KV vector + Decoupled RoPE vector
       bytesPerToken = layers * 576 * kvBytes;
     } else {
-      // Standard GQA / MHA
       const kvHeads = model.kvHeads || (model.attentionHeads / 4);
       const headDim = model.headDim || (model.hiddenSize / model.attentionHeads);
       bytesPerToken = 2 * layers * kvHeads * headDim * kvBytes;
@@ -147,14 +145,20 @@ export class HardwareCalculator {
       const serverHostOverheadWatts = nodesNeeded * (serverChassis.hostIdlePowerWatts || 700);
       const totalPowerKw = (totalGpuPowerWatts + serverHostOverheadWatts) / 1000;
 
+      // Rack Units (RU / HE) & Standard 42U Datacenter Racks Calculation:
+      const serverRu = nodesNeeded * (serverChassis.heightRu || 6);
+      const networkingRu = nodesNeeded > 1 ? 2 : 0; // 2U for Top-of-Rack Switch
+      const totalRackUnits = serverRu + networkingRu;
+      // Space constraint: 42U per rack
+      const spaceRacks = Math.ceil(totalRackUnits / 42);
+      // Power density constraint: ~25kW max per standard enterprise rack
+      const powerRacks = Math.ceil(totalPowerKw / 25);
+      const racks42uNeeded = Math.max(1, spaceRacks, powerRacks);
+
       // Itemized Capex Breakdown:
-      // 1. GPU Hardware Capex
       const gpuCapex = totalGpusNeeded * gpu.capexPrice;
-      // 2. Server Chassis Capex (Dell PowerEdge / Supermicro Host nodes)
       const serverNodesCapex = nodesNeeded * serverChassis.baseChassisPrice;
-      // 3. Cluster Inter-Node High-Speed Switching (e.g. 400G InfiniBand Spine/Leaf switches if nodes > 1)
       const networkingCapex = nodesNeeded > 1 ? (nodesNeeded * 4000 + 8000) : 0;
-      // Total Turnkey Capex
       const hardwareCapex = gpuCapex + serverNodesCapex + networkingCapex;
 
       // Cloud Costs
@@ -176,6 +180,11 @@ export class HardwareCalculator {
         gpusPerInstance,
         totalGpusNeeded,
         nodesNeeded,
+        // Rack Units & Racks
+        totalRackUnits,
+        serverRu,
+        networkingRu,
+        racks42uNeeded,
         totalVramAvailableGb: totalGpusNeeded * gpu.vram,
         vramUtilizationPercent: Math.min(99, Math.round((totalVramRecommendedGb / (gpusPerInstance * gpu.vram)) * 100)),
         singleStreamDecodeTps,

@@ -73,10 +73,13 @@ export const TRANSLATIONS = {
     powerLabel: 'Leistung:',
     vramUtilization: 'Auslastung',
     serverChassisLabel: 'Server-Node:',
+    rackUnitsLabel: 'Rack-Bedarf:',
 
     colGpuName: 'GPU / Beschleuniger',
     colGpuCount: 'Anzahl GPUs',
     colServerChassis: 'Host-Server (Dell / Supermicro)',
+    colRackUnits: 'Höheneinheiten (HE)',
+    colRacksCount: '42U Racks',
     colTopology: 'Topology (TP/PP/DP)',
     colVramTotal: 'VRAM Gesamt',
     colVramUtil: 'VRAM Auslastung',
@@ -123,14 +126,16 @@ export const TRANSLATIONS = {
 
     // Topology Tab
     topologyTitle: 'Cluster-Topologie & Server-Architektur',
-    topologyDesc: 'Visuelle Aufteilung von GPUs auf zertifizierte Server-Nodes (Dell PowerEdge / Supermicro)',
+    topologyDesc: 'Visuelle Aufteilung von GPUs auf zertifizierte Server-Nodes (Dell PowerEdge / Supermicro) und Rack-Belegung',
     serverNode: 'Server Node',
     hostCpuLabel: 'Host-CPU:',
     hostMemoryLabel: 'Host-RAM:',
     hostStorageLabel: 'NVMe Storage:',
     hostNetworkingLabel: 'Cluster-Netzwerk:',
     hostPsuLabel: 'Stromversorgung:',
+    rackUnitSpecLabel: 'Formfaktor / HE:',
     cloudInstancesTitle: 'Äquivalente Cloud-Instanzen',
+    rackAllocationTitle: 'Datacenter Rack-Belegung & Höheneinheiten (HE)',
 
     // Export Tab
     exportTitle: 'Bericht & Konfiguration exportieren',
@@ -212,10 +217,13 @@ export const TRANSLATIONS = {
     powerLabel: 'Power:',
     vramUtilization: 'Utilization',
     serverChassisLabel: 'Server Node:',
+    rackUnitsLabel: 'Rack Units:',
 
     colGpuName: 'GPU / Accelerator',
     colGpuCount: 'GPU Count',
     colServerChassis: 'Host Server (Dell / Supermicro)',
+    colRackUnits: 'Rack Units (RU)',
+    colRacksCount: '42U Racks',
     colTopology: 'Topology (TP/PP/DP)',
     colVramTotal: 'Total VRAM',
     colVramUtil: 'VRAM Utilization',
@@ -262,14 +270,16 @@ export const TRANSLATIONS = {
 
     // Topology Tab
     topologyTitle: 'Cluster Topology & Server Architecture',
-    topologyDesc: 'Visual partitioning of GPUs across certified host server nodes (Dell PowerEdge / Supermicro)',
+    topologyDesc: 'Visual partitioning of GPUs across certified host server nodes (Dell PowerEdge / Supermicro) & Rack space allocation',
     serverNode: 'Server Node',
     hostCpuLabel: 'Host CPU:',
     hostMemoryLabel: 'Host RAM:',
     hostStorageLabel: 'NVMe Storage:',
     hostNetworkingLabel: 'Cluster Network:',
     hostPsuLabel: 'Power Supply:',
+    rackUnitSpecLabel: 'Form Factor / RU:',
     cloudInstancesTitle: 'Equivalent Cloud Instances',
+    rackAllocationTitle: 'Datacenter Rack Allocation & Rack Units (RU)',
 
     // Export Tab
     exportTitle: 'Export Report & Configuration',

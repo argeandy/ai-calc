@@ -7,6 +7,7 @@ export const SERVER_CHASSIS_CATALOG = [
     name: 'Dell PowerEdge XE9680 (8x SXM HGX)',
     vendor: 'Dell Technologies',
     formFactor: '6U Rackmount',
+    heightRu: 6, // 6 Rack Units (HE)
     maxGpus: 8,
     gpuType: 'SXM / OAM',
     hostCpu: 'Dual AMD EPYC 9654 (2x 64-Cores, 128 Threads)',
@@ -14,7 +15,7 @@ export const SERVER_CHASSIS_CATALOG = [
     hostStorage: '30.7 TB PCIe Gen5 NVMe Enterprise SSDs',
     psu: '6x 3000W Titanium Redundant (Hot-plug 3+3)',
     networking: '8x NVIDIA ConnectX-7 400Gb/s InfiniBand / RoCE NICs',
-    baseChassisPrice: 34000, // EUR estimated base server without GPUs
+    baseChassisPrice: 34000,
     hostIdlePowerWatts: 850,
     description: 'High-Performance 8-GPU Datacenter Server für H100, H200 und B200 SXM Module mit voller NVLink 4/5 NVSwitch Mesh Architektur.',
     descriptionEn: 'Flagship 8-GPU datacenter server for H100, H200, and B200 SXM modules with complete NVLink NVSwitch mesh.'
@@ -24,6 +25,7 @@ export const SERVER_CHASSIS_CATALOG = [
     name: 'Supermicro GPU SuperServer (8x SXM)',
     vendor: 'Supermicro',
     formFactor: '8U Rackmount',
+    heightRu: 8, // 8 Rack Units (HE)
     maxGpus: 8,
     gpuType: 'SXM / OAM',
     hostCpu: 'Dual Intel Xeon Platinum 8480+ (2x 56-Cores)',
@@ -40,7 +42,8 @@ export const SERVER_CHASSIS_CATALOG = [
     id: 'dell-r760xa',
     name: 'Dell PowerEdge R760xa (4x PCIe Gen5)',
     vendor: 'Dell Technologies',
-    formFactor: '2U / 4U Rackmount',
+    formFactor: '4U Rackmount',
+    heightRu: 4, // 4 Rack Units (HE)
     maxGpus: 4,
     gpuType: 'PCIe Dual-Width',
     hostCpu: 'Dual Intel Xeon Gold 6430 (2x 32-Cores)',
@@ -58,6 +61,7 @@ export const SERVER_CHASSIS_CATALOG = [
     name: 'Supermicro A+ Server (8x PCIe)',
     vendor: 'Supermicro',
     formFactor: '4U Rackmount',
+    heightRu: 4, // 4 Rack Units (HE)
     maxGpus: 8,
     gpuType: 'PCIe Dual-Width',
     hostCpu: 'Dual AMD EPYC 9354 (2x 32-Cores)',
@@ -74,7 +78,8 @@ export const SERVER_CHASSIS_CATALOG = [
     id: 'dell-precision-7960',
     name: 'Dell Precision 7960 Workstation',
     vendor: 'Dell Technologies',
-    formFactor: 'Tower / 5U Rackable',
+    formFactor: '5U Rackable Tower',
+    heightRu: 5, // 5 Rack Units (HE)
     maxGpus: 2,
     gpuType: 'PCIe Workstation',
     hostCpu: 'Intel Xeon w7-3465X (28-Core High Clock)',
@@ -91,7 +96,8 @@ export const SERVER_CHASSIS_CATALOG = [
     id: 'apple-silicon-studio',
     name: 'Apple Mac Studio (All-in-One Chassis)',
     vendor: 'Apple Inc.',
-    formFactor: 'Compact Desktop (7.7" x 7.7")',
+    formFactor: 'Compact Desktop / 1U Shelf',
+    heightRu: 1, // 1U Shelf Tray
     maxGpus: 1,
     gpuType: 'Integrated Unified Memory SoC',
     hostCpu: 'Apple M2/M4 Ultra (24/32-Core CPU)',
@@ -99,7 +105,7 @@ export const SERVER_CHASSIS_CATALOG = [
     hostStorage: '2 TB - 4 TB Integrated High-Speed SSD',
     psu: '370W Internal Power Supply',
     networking: '10GbE Ethernet + Wi-Fi 6E',
-    baseChassisPrice: 0, // Chassis and CPU/RAM are integrated into device price
+    baseChassisPrice: 0,
     hostIdlePowerWatts: 25,
     description: 'Integrierte Desktop-Hardware mit Shared Unified Memory zwischen CPU und GPU. Extrem leise und energieeffizient (~150W Peak).',
     descriptionEn: 'Integrated compact device with high-bandwidth unified memory. Silent and ultra energy-efficient (~150W peak).'

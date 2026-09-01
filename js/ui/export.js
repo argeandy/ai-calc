@@ -20,6 +20,7 @@ export class ExportManager {
 - **Target Model**: ${model.name} (${model.parameters}B Parameters, ${model.isMoE ? `${model.activeParameters}B Active MoE` : 'Dense'})
 - **Quantization**: Weights: ${quant.name} | KV Cache: ${kvQuant.name}
 - **Recommended Compute Infrastructure**: **${rec.totalGpusNeeded}x ${rec.gpu.name}** housed in **${rec.nodesNeeded}x ${server.name}**
+- **Datacenter Rack Footprint**: **${rec.totalRackUnits} RU** across **${rec.racks42uNeeded}x 42U Standard Server Rack${rec.racks42uNeeded > 1 ? 's' : ''}**
 - **Server Host Specs**: ${server.hostCpu} | ${server.hostMemory} | ${server.hostStorage}
 - **Parallelism Strategy**: Tensor Parallelism (TP=${rec.tp}), Pipeline Parallelism (PP=${rec.pp}), Data Parallelism Replicas (DP=${rec.dpReplicas})
 - **Estimated Generation Speed**: ~**${rec.singleStreamDecodeTps} tokens/s** per stream (Est. TTFT: ~**${rec.estimatedTtftMs} ms**)
@@ -63,9 +64,11 @@ export class ExportManager {
 
 ---
 
-## 5. Hardware Sizing & Server Architecture
+## 5. Hardware Sizing & Datacenter Rack Architecture
 - **Selected GPU Model**: ${rec.gpu.name} (${rec.gpu.vram} GB ${rec.gpu.vramType}, ${rec.gpu.bandwidth} GB/s Memory Bandwidth)
 - **Host Server Nodes**: ${rec.nodesNeeded}x ${server.name} (${server.vendor}, ${server.formFactor})
+- **Rack Units Required**: **${rec.totalRackUnits} RU** (${rec.nodesNeeded * server.heightRu} RU Server Nodes + ${rec.networkingRu} RU ToR Switches)
+- **Standard 42U Racks**: **${rec.racks42uNeeded}x 42U Server Rack${rec.racks42uNeeded > 1 ? 's' : ''}** (Power density: ~${(rec.totalPowerKw / rec.racks42uNeeded).toFixed(1)} kW / Rack)
 - **Host CPUs & Memory**: ${server.hostCpu}, ${server.hostMemory}
 - **Storage & Power**: ${server.hostStorage}, ${server.psu}
 - **Total Power Consumption**: ~**${rec.totalPowerKw.toFixed(1)} kW**
@@ -99,6 +102,7 @@ export class ExportManager {
 - **Ziel-Modell**: ${model.name} (${model.parameters}B Parameter, ${model.isMoE ? `${model.activeParameters}B Active MoE` : 'Dense'})
 - **Quantisierung**: Gewichte: ${quant.name} | KV Cache: ${kvQuant.name}
 - **Empfohlene Recheninfrastruktur**: **${rec.totalGpusNeeded}x ${rec.gpu.name}** in **${rec.nodesNeeded}x ${server.name}**
+- **Datacenter Rack-Bedarf**: **${rec.totalRackUnits} HE** in **${rec.racks42uNeeded}x 42U Standard-Server-Rack${rec.racks42uNeeded > 1 ? 's' : ''}**
 - **Host-Server Spezifikationen**: ${server.hostCpu} | ${server.hostMemory} | ${server.hostStorage}
 - **Parallelismus-Strategie**: Tensor Parallelism (TP=${rec.tp}), Pipeline Parallelism (PP=${rec.pp}), Data Parallelism Replicas (DP=${rec.dpReplicas})
 - **Geschätzte Generierungsrate**: ~**${rec.singleStreamDecodeTps} tokens/s** pro Stream (Est. TTFT: ~**${rec.estimatedTtftMs} ms**)
@@ -142,9 +146,11 @@ export class ExportManager {
 
 ---
 
-## 5. Hardware-Sizing & Server-Architektur
+## 5. Hardware-Sizing & Datacenter Rack-Architektur
 - **Gewähltes GPU-Modell**: ${rec.gpu.name} (${rec.gpu.vram} GB ${rec.gpu.vramType}, ${rec.gpu.bandwidth} GB/s Speicherbandbreite)
 - **Host-Server Nodes**: ${rec.nodesNeeded}x ${server.name} (${server.vendor}, ${server.formFactor})
+- **Benötigte Höheneinheiten (HE)**: **${rec.totalRackUnits} HE** (${rec.nodesNeeded * server.heightRu} HE Server + ${rec.networkingRu} HE ToR-Switches)
+- **Standard 42U Racks**: **${rec.racks42uNeeded}x 42U Server-Rack${rec.racks42uNeeded > 1 ? 's' : ''}** (Leistungsdichte: ~${(rec.totalPowerKw / rec.racks42uNeeded).toFixed(1)} kW / Rack)
 - **Host-CPUs & Arbeitsspeicher**: ${server.hostCpu}, ${server.hostMemory}
 - **NVMe-Storage & Netzteile**: ${server.hostStorage}, ${server.psu}
 - **Gesamte Leistungsaufnahme**: ~**${rec.totalPowerKw.toFixed(1)} kW**
@@ -175,7 +181,7 @@ export class ExportManager {
    */
   static downloadJsonConfig(state, calcResult) {
     const data = {
-      version: '1.1.0',
+      version: '1.2.0',
       exportedAt: new Date().toISOString(),
       configuration: state,
       summary: {
@@ -186,6 +192,8 @@ export class ExportManager {
           count: calcResult.highlights.bestEnterprise.totalGpusNeeded,
           serverChassis: calcResult.highlights.bestEnterprise.serverChassis.name,
           nodes: calcResult.highlights.bestEnterprise.nodesNeeded,
+          totalRackUnits: calcResult.highlights.bestEnterprise.totalRackUnits,
+          racks42uNeeded: calcResult.highlights.bestEnterprise.racks42uNeeded,
           tp: calcResult.highlights.bestEnterprise.tp,
           capexTotal: calcResult.highlights.bestEnterprise.hardwareCapex
         }
