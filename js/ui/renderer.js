@@ -3,13 +3,13 @@
  * Safe DOM manipulation, Server Chassis & Rack Units Integration, 100% Bilingual (DE / EN)
  */
 
-import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js';
-import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js';
-import { USECASE_PRESETS } from '../data/presets.js';
-import { TcoCalculator } from '../engine/tco.js';
-import { stateManager } from './state.js';
-import { ExportManager } from './export.js';
-import { t, getLanguage } from './i18n.js';
+import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-900445b';
+import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js?v=v1.3.1-900445b';
+import { USECASE_PRESETS, PRESET_CATEGORIES } from '../data/presets.js?v=v1.3.1-900445b';
+import { TcoCalculator } from '../engine/tco.js?v=v1.3.1-900445b';
+import { stateManager } from './state.js?v=v1.3.1-900445b';
+import { ExportManager } from './export.js?v=v1.3.1-900445b';
+import { t, getLanguage } from './i18n.js?v=v1.3.1-900445b';
 
 export class UIRenderer {
   /**
@@ -17,6 +17,8 @@ export class UIRenderer {
    */
   static renderAll(state, calcResult, containerElements) {
     this.updateStaticLabels();
+    this.renderModeSwitch(state);
+    this.renderPresetFilters(state);
     this.renderPresets(state, containerElements.presetsContainer);
     this.renderFormInputs(state, containerElements);
     this.renderVramBreakdown(calcResult, containerElements.vramContainer);
@@ -25,6 +27,55 @@ export class UIRenderer {
     this.renderTcoTab(state, calcResult, containerElements.tcoContainer);
     this.renderTopologyTab(state, calcResult, containerElements.topologyContainer);
     this.renderExportTab(state, calcResult, containerElements.exportContainer);
+  }
+
+  /**
+   * Switch between Basic and Advanced UI mode
+   */
+  static renderModeSwitch(state) {
+    const layout = document.getElementById('calculator-layout');
+    const mode = state.mode || 'basic';
+    if (layout) {
+      layout.setAttribute('data-calc-mode', mode);
+    }
+
+    const btnBasic = document.getElementById('mode-btn-basic');
+    const btnAdvanced = document.getElementById('mode-btn-advanced');
+    if (btnBasic && btnAdvanced) {
+      const isBasic = mode === 'basic';
+      btnBasic.classList.toggle('active', isBasic);
+      btnBasic.setAttribute('aria-checked', isBasic ? 'true' : 'false');
+      btnAdvanced.classList.toggle('active', !isBasic);
+      btnAdvanced.setAttribute('aria-checked', !isBasic ? 'true' : 'false');
+    }
+  }
+
+  /**
+   * Render Category Filter Tabs for Presets
+   */
+  static renderPresetFilters(state) {
+    const container = document.getElementById('presets-filter-bar');
+    if (!container) return;
+    container.innerHTML = '';
+    const lang = getLanguage();
+    const activeCat = state.activePresetCategory || 'all';
+
+    PRESET_CATEGORIES.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `filter-pill ${activeCat === cat.id ? 'active' : ''}`;
+      btn.setAttribute('data-category', cat.id);
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-selected', activeCat === cat.id ? 'true' : 'false');
+
+      const count = cat.id === 'all'
+        ? USECASE_PRESETS.length
+        : USECASE_PRESETS.filter(p => p.category === cat.id).length;
+
+      const label = (lang === 'en' && cat.nameEn) ? cat.nameEn : cat.name;
+      btn.innerHTML = `<span class="filter-pill-icon">${cat.icon}</span> <span class="filter-pill-text">${label}</span> <span class="filter-pill-count">${count}</span>`;
+      container.appendChild(btn);
+    });
   }
 
   /**
@@ -47,22 +98,46 @@ export class UIRenderer {
   }
 
   /**
-   * Render Usecase Presets
+   * Render Usecase Presets (filtered by active category)
    */
   static renderPresets(state, container) {
     if (!container) return;
     container.innerHTML = '';
     const lang = getLanguage();
+    const activeCat = state.activePresetCategory || 'all';
 
-    USECASE_PRESETS.forEach(preset => {
+    const presetsToRender = activeCat === 'all'
+      ? USECASE_PRESETS
+      : USECASE_PRESETS.filter(p => p.category === activeCat);
+
+    presetsToRender.forEach(preset => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = `preset-card ${state.activePresetId === preset.id ? 'active' : ''}`;
       btn.setAttribute('data-preset-id', preset.id);
 
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'preset-card-top';
+
       const iconSpan = document.createElement('span');
       iconSpan.className = 'preset-icon';
       iconSpan.textContent = preset.icon;
+
+      const tagSpan = document.createElement('span');
+      tagSpan.className = 'preset-badge-model';
+      // Nicely formatted short model name
+      const shortModel = preset.modelId
+        .replace('llama-3.3-70b', 'Llama 3.3 70B')
+        .replace('llama-3.1-8b', 'Llama 3.1 8B')
+        .replace('deepseek-r1', 'DeepSeek R1')
+        .replace('qwen-2.5-32b', 'Qwen 32B')
+        .replace('qwen-2.5-72b', 'Qwen 72B')
+        .replace('qwen-2.5-14b', 'Qwen 14B')
+        .replace('mistral-large-2', 'Mistral Large');
+      tagSpan.textContent = shortModel;
+
+      headerDiv.appendChild(iconSpan);
+      headerDiv.appendChild(tagSpan);
 
       const infoDiv = document.createElement('div');
       infoDiv.className = 'preset-info';
@@ -75,33 +150,61 @@ export class UIRenderer {
       descDiv.className = 'preset-desc';
       descDiv.textContent = (lang === 'en' && preset.descriptionEn) ? preset.descriptionEn : preset.description;
 
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'preset-metrics-summary';
+      metaDiv.textContent = `👥 ${preset.totalUsers.toLocaleString()} User · ⚡ ${preset.requestsPerUserPerDay} Req/d`;
+
       infoDiv.appendChild(titleDiv);
       infoDiv.appendChild(descDiv);
+      infoDiv.appendChild(metaDiv);
 
-      btn.appendChild(iconSpan);
+      btn.appendChild(headerDiv);
       btn.appendChild(infoDiv);
       container.appendChild(btn);
     });
   }
 
   /**
-   * Sync form input values with current state
+   * Sync form input values with current state (Both Basic & Advanced)
    */
   static renderFormInputs(state, elements) {
-    // Model Select
+    const lang = getLanguage();
+    const langChanged = this.currentLang !== lang;
+    if (langChanged) {
+      this.currentLang = lang;
+    }
+
+    // Model Select (Advanced)
     if (elements.modelSelect) {
-      elements.modelSelect.innerHTML = '';
-      MODEL_CATALOG.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m.id;
-        opt.textContent = `${m.name} (${m.parameters}B${m.isMoE ? ` / ${m.activeParameters}B MoE` : ''}) - ${m.provider}`;
-        elements.modelSelect.appendChild(opt);
-      });
-      const customOpt = document.createElement('option');
-      customOpt.value = 'custom';
-      customOpt.textContent = `⚙️ ${t('customModel')}`;
-      elements.modelSelect.appendChild(customOpt);
+      if (elements.modelSelect.options.length === 0 || langChanged) {
+        elements.modelSelect.innerHTML = '';
+        MODEL_CATALOG.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.id;
+          opt.textContent = `${m.name} (${m.parameters}B${m.isMoE ? ` / ${m.activeParameters}B MoE` : ''}) - ${m.provider}`;
+          elements.modelSelect.appendChild(opt);
+        });
+        const customOpt = document.createElement('option');
+        customOpt.value = 'custom';
+        customOpt.textContent = `⚙️ ${t('customModel')}`;
+        elements.modelSelect.appendChild(customOpt);
+      }
       elements.modelSelect.value = state.modelId;
+    }
+
+    // Model Select (Basic - simplified, clean names)
+    const basicModelSelect = elements.basicModelSelect || document.getElementById('basic-model-select');
+    if (basicModelSelect) {
+      if (basicModelSelect.options.length === 0 || langChanged) {
+        basicModelSelect.innerHTML = '';
+        MODEL_CATALOG.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.id;
+          opt.textContent = `${m.name} (${m.parameters}B${m.isMoE ? ' MoE' : ''}) - ${m.category}`;
+          basicModelSelect.appendChild(opt);
+        });
+      }
+      basicModelSelect.value = state.modelId;
     }
 
     // Custom model fields visibility
@@ -118,25 +221,29 @@ export class UIRenderer {
 
     // Quantization Select
     if (elements.quantSelect) {
-      elements.quantSelect.innerHTML = '';
-      QUANTIZATION_TYPES.forEach(q => {
-        const opt = document.createElement('option');
-        opt.value = q.id;
-        opt.textContent = `${q.name} (${q.bytesPerParam} B/param) - ${q.qualityRetention}`;
-        elements.quantSelect.appendChild(opt);
-      });
+      if (elements.quantSelect.options.length === 0 || langChanged) {
+        elements.quantSelect.innerHTML = '';
+        QUANTIZATION_TYPES.forEach(q => {
+          const opt = document.createElement('option');
+          opt.value = q.id;
+          opt.textContent = `${q.name} (${q.bytesPerParam} B/param) - ${q.qualityRetention}`;
+          elements.quantSelect.appendChild(opt);
+        });
+      }
       elements.quantSelect.value = state.quantId;
     }
 
     // KV Cache Select
     if (elements.kvQuantSelect) {
-      elements.kvQuantSelect.innerHTML = '';
-      KV_CACHE_PRECISIONS.forEach(kq => {
-        const opt = document.createElement('option');
-        opt.value = kq.id;
-        opt.textContent = `${kq.name}`;
-        elements.kvQuantSelect.appendChild(opt);
-      });
+      if (elements.kvQuantSelect.options.length === 0 || langChanged) {
+        elements.kvQuantSelect.innerHTML = '';
+        KV_CACHE_PRECISIONS.forEach(kq => {
+          const opt = document.createElement('option');
+          opt.value = kq.id;
+          opt.textContent = `${kq.name}`;
+          elements.kvQuantSelect.appendChild(opt);
+        });
+      }
       elements.kvQuantSelect.value = state.kvQuantId;
     }
 
@@ -148,6 +255,7 @@ export class UIRenderer {
       if (sliderEl && document.activeElement !== sliderEl) sliderEl.value = val;
     };
 
+    // Advanced inputs
     syncField('total-users-input', 'total-users-slider', state.totalUsers);
     syncField('req-user-input', 'req-user-slider', state.requestsPerUserPerDay);
     syncField('work-hours-input', 'work-hours-slider', state.workHours);
@@ -157,6 +265,29 @@ export class UIRenderer {
     syncField('target-ttft-input', 'target-ttft-slider', state.targetTtftMs);
     syncField('target-tps-input', 'target-tps-slider', state.targetTpsPerStream);
     syncField('gpu-mem-util-input', 'gpu-mem-util-slider', state.gpuMemoryUtilization);
+
+    // Basic inputs
+    syncField('basic-users-input', 'basic-users-slider', state.totalUsers);
+
+    // Sync basic pills
+    const pillButtons = document.querySelectorAll('.pill-btn');
+    pillButtons.forEach(btn => {
+      const u = Number(btn.getAttribute('data-users'));
+      btn.classList.toggle('active', u === state.totalUsers);
+    });
+
+    // Sync basic intensity
+    const intensityButtons = document.querySelectorAll('.intensity-btn');
+    intensityButtons.forEach(btn => {
+      const r = Number(btn.getAttribute('data-reqs'));
+      const isActive = (r === state.requestsPerUserPerDay) ||
+        (r === 5 && state.requestsPerUserPerDay <= 8) ||
+        (r === 20 && state.requestsPerUserPerDay > 8 && state.requestsPerUserPerDay <= 35) ||
+        (r === 60 && state.requestsPerUserPerDay > 35 && state.requestsPerUserPerDay <= 100) ||
+        (r === 150 && state.requestsPerUserPerDay > 100);
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+    });
   }
 
   /**

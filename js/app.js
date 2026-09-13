@@ -3,13 +3,14 @@
  * Event Listeners, State Binding & UI Updates
  */
 
-import { stateManager } from './ui/state.js';
-import { HardwareCalculator } from './engine/calculator.js';
-import { TcoCalculator } from './engine/tco.js';
-import { GPU_CATALOG } from './data/gpus.js';
-import { UIRenderer } from './ui/renderer.js';
-import { ExportManager } from './ui/export.js';
-import { t, setLanguage, getLanguage } from './ui/i18n.js';
+import { stateManager } from './ui/state.js?v=v1.3.1-900445b';
+import { HardwareCalculator } from './engine/calculator.js?v=v1.3.1-900445b';
+import { TcoCalculator } from './engine/tco.js?v=v1.3.1-900445b';
+import { GPU_CATALOG } from './data/gpus.js?v=v1.3.1-900445b';
+import { MODEL_CATALOG } from './data/models.js?v=v1.3.1-900445b';
+import { UIRenderer } from './ui/renderer.js?v=v1.3.1-900445b';
+import { ExportManager } from './ui/export.js?v=v1.3.1-900445b';
+import { t, setLanguage, getLanguage } from './ui/i18n.js?v=v1.3.1-900445b';
 
 class App {
   constructor() {
@@ -30,6 +31,9 @@ class App {
 
     // Initial calculation and render
     this.recalculateAndRender(stateManager.getState());
+
+    // Initialize background version checker
+    this.initVersionChecker();
   }
 
   cacheDomElements() {
@@ -44,10 +48,14 @@ class App {
       topologyContainer: document.getElementById('topology-tab-content'),
       exportContainer: document.getElementById('export-tab-content'),
       modelSelect: document.getElementById('model-select'),
+      basicModelSelect: document.getElementById('basic-model-select'),
       quantSelect: document.getElementById('quant-select'),
       kvQuantSelect: document.getElementById('kv-quant-select'),
       tabButtons: document.querySelectorAll('.nav-tab-btn'),
-      tabPanes: document.querySelectorAll('.tab-pane')
+      tabPanes: document.querySelectorAll('.tab-pane'),
+      updateBanner: document.getElementById('app-update-banner'),
+      btnReloadApp: document.getElementById('btn-reload-app'),
+      btnDismissUpdate: document.getElementById('btn-dismiss-update')
     };
   }
 
@@ -73,6 +81,36 @@ class App {
       });
     }
 
+    // Mode Switch (Basic / Advanced)
+    const modeBtnBasic = document.getElementById('mode-btn-basic');
+    const modeBtnAdvanced = document.getElementById('mode-btn-advanced');
+    if (modeBtnBasic) {
+      modeBtnBasic.addEventListener('click', () => {
+        stateManager.updateState({ mode: 'basic' });
+        localStorage.setItem('ai_calc_mode', 'basic');
+      });
+    }
+    if (modeBtnAdvanced) {
+      modeBtnAdvanced.addEventListener('click', () => {
+        stateManager.updateState({ mode: 'advanced' });
+        localStorage.setItem('ai_calc_mode', 'advanced');
+      });
+    }
+
+    // Preset Category Filter Bar Click
+    const presetsFilterBar = document.getElementById('presets-filter-bar');
+    if (presetsFilterBar) {
+      presetsFilterBar.addEventListener('click', (e) => {
+        const filterBtn = e.target.closest('.filter-pill');
+        if (filterBtn) {
+          const category = filterBtn.getAttribute('data-category');
+          if (category) {
+            stateManager.updateState({ activePresetCategory: category });
+          }
+        }
+      });
+    }
+
     // Tab Navigation
     this.elements.tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -92,11 +130,28 @@ class App {
       });
     }
 
-    // Model Select
+    // Model Select Change Handler
+    const handleModelChange = (e) => {
+      const modelId = e.target.value;
+      if (!modelId) return;
+      const selectedModel = MODEL_CATALOG.find(m => m.id === modelId);
+      const updates = { modelId, activePresetId: null };
+      if (selectedModel && selectedModel.recommendedQuant) {
+        updates.quantId = selectedModel.recommendedQuant.toLowerCase();
+      }
+      stateManager.updateState(updates);
+    };
+
+    // Model Select (Advanced)
     if (this.elements.modelSelect) {
-      this.elements.modelSelect.addEventListener('change', (e) => {
-        stateManager.updateState({ modelId: e.target.value, activePresetId: null });
-      });
+      this.elements.modelSelect.addEventListener('change', handleModelChange);
+      this.elements.modelSelect.addEventListener('input', handleModelChange);
+    }
+
+    // Model Select (Basic)
+    if (this.elements.basicModelSelect) {
+      this.elements.basicModelSelect.addEventListener('change', handleModelChange);
+      this.elements.basicModelSelect.addEventListener('input', handleModelChange);
     }
 
     // Custom Model Inputs
@@ -121,19 +176,23 @@ class App {
 
     // Quantization Select
     if (this.elements.quantSelect) {
-      this.elements.quantSelect.addEventListener('change', (e) => {
+      const handleQuantChange = (e) => {
         stateManager.updateState({ quantId: e.target.value, activePresetId: null });
-      });
+      };
+      this.elements.quantSelect.addEventListener('change', handleQuantChange);
+      this.elements.quantSelect.addEventListener('input', handleQuantChange);
     }
 
     // KV Cache Select
     if (this.elements.kvQuantSelect) {
-      this.elements.kvQuantSelect.addEventListener('change', (e) => {
+      const handleKvQuantChange = (e) => {
         stateManager.updateState({ kvQuantId: e.target.value, activePresetId: null });
-      });
+      };
+      this.elements.kvQuantSelect.addEventListener('change', handleKvQuantChange);
+      this.elements.kvQuantSelect.addEventListener('input', handleKvQuantChange);
     }
 
-    // Numeric Sliders & Inputs 2-way binding
+    // Numeric Sliders & Inputs 2-way binding (Advanced)
     this.bindNumericPair('total-users-input', 'total-users-slider', 'totalUsers');
     this.bindNumericPair('req-user-input', 'req-user-slider', 'requestsPerUserPerDay');
     this.bindNumericPair('work-hours-input', 'work-hours-slider', 'workHours');
@@ -144,8 +203,29 @@ class App {
     this.bindNumericPair('target-tps-input', 'target-tps-slider', 'targetTpsPerStream');
     this.bindNumericPair('gpu-mem-util-input', 'gpu-mem-util-slider', 'gpuMemoryUtilization');
 
-    // Global click delegate for GPU Table Row selection
+    // Numeric Sliders & Inputs 2-way binding (Basic)
+    this.bindNumericPair('basic-users-input', 'basic-users-slider', 'totalUsers');
+
+    // Global click delegate for GPU Table Row selection, Pills, Intensity buttons
     document.addEventListener('click', (e) => {
+      // Basic Quick Pills for Users
+      const pillBtn = e.target.closest('.pill-btn');
+      if (pillBtn) {
+        const users = Number(pillBtn.getAttribute('data-users'));
+        if (users) {
+          stateManager.updateState({ totalUsers: users, activePresetId: null });
+        }
+      }
+
+      // Basic Daily Intensity Buttons
+      const intensityBtn = e.target.closest('.intensity-btn');
+      if (intensityBtn) {
+        const reqs = Number(intensityBtn.getAttribute('data-reqs'));
+        if (reqs) {
+          stateManager.updateState({ requestsPerUserPerDay: reqs, activePresetId: null });
+        }
+      }
+
       const gpuRow = e.target.closest('.gpu-row');
       if (gpuRow) {
         const gpuId = gpuRow.getAttribute('data-gpu-id');
@@ -272,6 +352,57 @@ class App {
 
     // Render UI components
     UIRenderer.renderAll(state, calcResult, this.elements);
+  }
+
+  initVersionChecker() {
+    let currentBuildId = null;
+    const banner = this.elements.updateBanner;
+    const btnReload = this.elements.btnReloadApp;
+    const btnDismiss = this.elements.btnDismissUpdate;
+
+    if (btnReload) {
+      btnReload.addEventListener('click', () => {
+        window.location.reload(true);
+      });
+    }
+
+    if (btnDismiss && banner) {
+      btnDismiss.addEventListener('click', () => {
+        banner.style.display = 'none';
+      });
+    }
+
+    const checkVersion = async () => {
+      try {
+        const res = await fetch(`version.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data || !data.buildId) return;
+
+        if (!currentBuildId) {
+          currentBuildId = data.buildId;
+        } else if (currentBuildId !== data.buildId) {
+          if (banner) {
+            banner.style.display = 'block';
+          }
+        }
+      } catch {
+        // Non-intrusive: silent catch
+      }
+    };
+
+    // Initial check to register loaded build
+    setTimeout(checkVersion, 2000);
+
+    // Check on tab focus
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        checkVersion();
+      }
+    });
+
+    // Check periodically every 15 minutes
+    setInterval(checkVersion, 15 * 60 * 1000);
   }
 }
 

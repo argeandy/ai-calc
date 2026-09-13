@@ -1,0 +1,24 @@
+{
+  "name": "ai-hardware-sizing-calculator",
+  "version": "1.3.1",
+  "description": "Interactive Client-Side AI Infrastructure, GPU Sizing, VRAM & TCO Calculator for LLMs",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/cache-bust.js",
+    "cache-bust": "node scripts/cache-bust.js",
+    "clean-cache-bust": "node scripts/cache-bust.js --clean",
+    "serve": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "ai",
+    "llm",
+    "vram",
+    "gpu",
+    "calculator",
+    "tco",
+    "sizing",
+    "vllm"
+  ],
+  "author": "AI Hardware Architect",
+  "license": "MIT"
+}

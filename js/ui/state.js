@@ -2,8 +2,8 @@
  * State Management and URL Serialization for AI Sizing Calculator
  */
 
-import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js';
-import { USECASE_PRESETS } from '../data/presets.js';
+import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-900445b';
+import { USECASE_PRESETS } from '../data/presets.js?v=v1.3.1-900445b';
 
 export const DEFAULT_STATE = {
   activePresetId: 'enterprise-rag',
@@ -42,6 +42,8 @@ export const DEFAULT_STATE = {
   },
 
   activeTab: 'sizing',
+  mode: 'basic', // 'basic' | 'advanced'
+  activePresetCategory: 'all',
   theme: 'dark',
   lang: 'de'
 };
@@ -55,6 +57,12 @@ class StateManager {
   init() {
     // Check localStorage or URL hash
     this.loadFromUrlHash();
+
+    // Check saved mode preference
+    const savedMode = localStorage.getItem('ai_calc_mode');
+    if (savedMode === 'basic' || savedMode === 'advanced') {
+      this.state.mode = savedMode;
+    }
     
     // Check saved theme preference
     const savedTheme = localStorage.getItem('ai_calc_theme');
@@ -168,7 +176,9 @@ class StateManager {
         ot: this.state.outputTokens,
         tt: this.state.targetTtftMs,
         tps: this.state.targetTpsPerStream,
-        gpuU: this.state.gpuMemoryUtilization
+        gpuU: this.state.gpuMemoryUtilization,
+        mod: this.state.mode,
+        cat: this.state.activePresetCategory
       };
       if (this.state.modelId === 'custom') {
         payload.cm = this.state.customModel;
@@ -187,7 +197,7 @@ class StateManager {
         const rawJson = decodeURIComponent(hash.substring(5));
         const p = JSON.parse(rawJson);
         if (p) {
-          this.state.activePresetId = p.p || this.state.activePresetId;
+          this.state.activePresetId = p.p !== undefined ? p.p : this.state.activePresetId;
           this.state.modelId = p.m || this.state.modelId;
           this.state.quantId = p.q || this.state.quantId;
           this.state.kvQuantId = p.kq || this.state.kvQuantId;
@@ -200,6 +210,8 @@ class StateManager {
           this.state.targetTtftMs = p.tt !== undefined ? p.tt : this.state.targetTtftMs;
           this.state.targetTpsPerStream = p.tps !== undefined ? p.tps : this.state.targetTpsPerStream;
           this.state.gpuMemoryUtilization = p.gpuU !== undefined ? p.gpuU : this.state.gpuMemoryUtilization;
+          this.state.mode = p.mod || this.state.mode;
+          this.state.activePresetCategory = p.cat || this.state.activePresetCategory;
           if (p.cm) this.state.customModel = p.cm;
         }
       }

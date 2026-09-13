@@ -17,12 +17,41 @@ export const TRANSLATIONS = {
     tabTopology: 'Cluster & Topologie',
     tabExport: 'Export & Report (ADR)',
 
+    // Mode Switcher
+    modeBasic: 'Basic',
+    modeAdvanced: 'Advanced',
+    modeSwitchTitle: 'Modus wechseln (Basic / Advanced)',
+    modeBadgeBasic: 'Einfacher Modus',
+    modeBadgeAdvanced: 'Experten-Modus',
+
     // Presets & Sidebar
-    presetsTitle: 'Usecase-Vorlagen',
+    presetsTitle: 'Typische Use Cases & Vorlagen',
+    presetsSubtitle: 'Praxiserprobte Dimensionierungen für typische Unternehmens-Workloads',
     trafficTitle: '1. Benutzer & Lastprofil',
     tokenTitle: '2. Token-Verbrauch & Latenz',
     modelTitle: '3. LLM & Quantisierung',
     infraParamsTitle: '4. Engine & PagedAttention',
+
+    // Basic Mode Settings
+    basicSettingsTitle: 'Basis-Parameter',
+    basicUsersLabel: 'Anzahl Benutzer',
+    quickSelectUsers: 'Schnellwahl:',
+    basicUsageIntensity: 'Nutzungsintensität pro Tag',
+    intensityLow: 'Gering (5 Req)',
+    intensityMedium: 'Normal (20 Req)',
+    intensityHigh: 'Intensiv (60 Req)',
+    intensityExtreme: 'Extrem (150 Req)',
+    basicModelLabel: 'Modell-Klasse & LLM',
+    basicHint: 'Alle technischen Parameter (KV-Cache, vLLM Headroom, Spitzenlast-Multiplikator, TTFT-Ziele) werden für den gewählten Use Case automatisch optimiert. Für manuelle Detailkontrolle klicke oben auf "Advanced".',
+
+    // Preset Filter Categories
+    filterAll: 'Alle Vorlagen',
+    filterChat: 'Chat & RAG',
+    filterCode: 'Code & Agenten',
+    filterReasoning: 'Deep Reasoning',
+    filterAnalysis: 'Dokumente & Analyse',
+    filterSupport: 'Support & Durchsatz',
+    filterWorkstation: 'Edge & On-Prem',
 
     totalUsers: 'Potenzielle Benutzer (Total)',
     reqPerUser: 'Anfragen pro Benutzer / Tag',
@@ -145,7 +174,9 @@ export const TRANSLATIONS = {
     shareUrl: 'Link teilen (URL-Zustand kopieren)',
     printReport: 'Druckansicht / PDF erstellen',
     copiedToast: 'In die Zwischenablage kopiert!',
-    urlCopiedToast: 'Link in die Zwischenablage kopiert!'
+    urlCopiedToast: 'Link in die Zwischenablage kopiert!',
+    updateAvailable: 'Eine neuere Version ist verfügbar!',
+    reloadApp: 'Jetzt aktualisieren'
   },
   en: {
     // Header & Meta
@@ -161,12 +192,41 @@ export const TRANSLATIONS = {
     tabTopology: 'Cluster & Topology',
     tabExport: 'Export & Report (ADR)',
 
+    // Mode Switcher
+    modeBasic: 'Basic',
+    modeAdvanced: 'Advanced',
+    modeSwitchTitle: 'Switch Mode (Basic / Advanced)',
+    modeBadgeBasic: 'Basic Mode',
+    modeBadgeAdvanced: 'Advanced Mode',
+
     // Presets & Sidebar
-    presetsTitle: 'Workload Presets',
+    presetsTitle: 'Typical Workloads & Presets',
+    presetsSubtitle: 'Production-tested sizings for typical enterprise AI workloads',
     trafficTitle: '1. Users & Traffic Profile',
     tokenTitle: '2. Token Consumption & Latency',
     modelTitle: '3. LLM & Quantization',
     infraParamsTitle: '4. Engine & PagedAttention',
+
+    // Basic Mode Settings
+    basicSettingsTitle: 'Basic Parameters',
+    basicUsersLabel: 'Number of Users',
+    quickSelectUsers: 'Quick select:',
+    basicUsageIntensity: 'Daily Usage Intensity',
+    intensityLow: 'Low (5 req)',
+    intensityMedium: 'Normal (20 req)',
+    intensityHigh: 'Intensive (60 req)',
+    intensityExtreme: 'Extreme (150 req)',
+    basicModelLabel: 'Model Class & LLM',
+    basicHint: 'All technical parameters (KV cache precision, vLLM headroom, peak burst multiplier, TTFT targets) are automatically tuned for this usecase. Switch to "Advanced" above for granular manual control.',
+
+    // Preset Filter Categories
+    filterAll: 'All Presets',
+    filterChat: 'Chat & RAG',
+    filterCode: 'Code & Agents',
+    filterReasoning: 'Deep Reasoning',
+    filterAnalysis: 'Docs & Analysis',
+    filterSupport: 'Support & Throughput',
+    filterWorkstation: 'Edge & On-Prem',
 
     totalUsers: 'Total Potential Users',
     reqPerUser: 'Requests per User / Day',
@@ -289,7 +349,9 @@ export const TRANSLATIONS = {
     shareUrl: 'Share Configuration (Copy URL)',
     printReport: 'Print / Save as PDF',
     copiedToast: 'Copied to clipboard!',
-    urlCopiedToast: 'Link copied to clipboard!'
+    urlCopiedToast: 'Link copied to clipboard!',
+    updateAvailable: 'A newer version is available!',
+    reloadApp: 'Update now'
   }
 };
 

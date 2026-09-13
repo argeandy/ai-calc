@@ -7,15 +7,20 @@
   <meta name="author" content="AI Hardware Architect">
   <title>AI Hardware & Sizing Calculator | LLM GPU Infrastructure Planning</title>
 
+  <!-- Anti-Caching & Cache-Control Headers -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/main.css?v=v1.3.1-900445b">
+  <link rel="stylesheet" href="css/components.css?v=v1.3.1-900445b">
+  <link rel="stylesheet" href="css/responsive.css?v=v1.3.1-900445b">
 </head>
 <body>
   <div class="app-container">
@@ -29,6 +34,18 @@
         </div>
       </div>
       <div class="header-controls">
+        <!-- Mode Switcher (Basic / Advanced) -->
+        <div class="mode-switch-group" role="radiogroup" aria-label="Kalkulator-Modus" title="Modus wechseln (Basic / Advanced)">
+          <button type="button" class="mode-switch-btn active" data-mode="basic" id="mode-btn-basic" role="radio" aria-checked="true">
+            <span class="mode-icon">⚡</span>
+            <span class="mode-label" data-i18n="modeBasic">Basic</span>
+          </button>
+          <button type="button" class="mode-switch-btn" data-mode="advanced" id="mode-btn-advanced" role="radio" aria-checked="false">
+            <span class="mode-icon">🛠️</span>
+            <span class="mode-label" data-i18n="modeAdvanced">Advanced</span>
+          </button>
+        </div>
+
         <button type="button" class="btn-icon" id="lang-toggle-btn" title="Sprache wechseln (DE / EN)" aria-label="Sprache wechseln">
           🌐 <span id="lang-label" style="font-size: 0.75rem; font-weight: 700; margin-left: 2px;">DE</span>
         </button>
@@ -55,24 +72,101 @@
     </nav>
 
     <!-- Main Workspace Layout -->
-    <main class="calculator-layout" style="margin-top: 1.5rem;">
+    <main class="calculator-layout" id="calculator-layout" data-calc-mode="basic" style="margin-top: 1.5rem;">
       <!-- Left Configuration Sidebar -->
       <aside class="config-sidebar" aria-label="Konfigurations-Panel">
-        <!-- Workload Presets -->
-        <div class="glass-card">
+        <!-- Workload Presets (Always visible & expanded) -->
+        <div class="glass-card presets-panel-card">
           <div class="card-header">
-            <h2 class="card-title"><span>🎯</span> <span data-i18n="presetsTitle">Usecase-Vorlagen</span></h2>
+            <div>
+              <h2 class="card-title"><span>🎯</span> <span data-i18n="presetsTitle">Typische Use Cases & Vorlagen</span></h2>
+              <p class="card-subtitle" data-i18n="presetsSubtitle">Praxiserprobte Dimensionierungen für typische Unternehmens-Workloads</p>
+            </div>
           </div>
+          <!-- Category Filter Bar -->
+          <div class="presets-filter-bar" id="presets-filter-bar" role="tablist" aria-label="Kategorie filtern">
+            <!-- Dynamically injected filter buttons -->
+          </div>
+          <!-- Presets Grid -->
           <div class="presets-grid" id="presets-grid">
-            <!-- Dynamically injected preset buttons -->
+            <!-- Dynamically injected preset cards -->
           </div>
         </div>
 
-        <!-- Parameters Accordion / Card -->
-        <div class="glass-card">
+        <!-- ============================================================ -->
+        <!-- BASIC MODE CONTAINER: Streamlined Minimal Business Settings -->
+        <!-- ============================================================ -->
+        <div class="glass-card mode-basic-container" id="basic-config-container">
+          <div class="card-header">
+            <h2 class="card-title"><span>⚙️</span> <span data-i18n="basicSettingsTitle">Basis-Parameter</span></h2>
+            <span class="badge-mode-tag" data-i18n="modeBadgeBasic">Einfacher Modus</span>
+          </div>
+
+          <!-- 1. Total Users with quick pill presets -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="basic-users-slider" class="form-label" data-i18n="basicUsersLabel">Anzahl Benutzer</label>
+              <input type="number" id="basic-users-input" class="form-number-input" min="1" max="1000000" step="10" value="1000">
+            </div>
+            <div class="input-slider-pair">
+              <input type="range" id="basic-users-slider" class="form-range" min="10" max="50000" step="10" value="1000">
+            </div>
+            <div class="quick-pills-row" aria-label="Schnellwahl Benutzer">
+              <span class="quick-pills-label" data-i18n="quickSelectUsers">Schnellwahl:</span>
+              <button type="button" class="pill-btn" data-users="50">50</button>
+              <button type="button" class="pill-btn" data-users="250">250</button>
+              <button type="button" class="pill-btn active" data-users="1000">1.000</button>
+              <button type="button" class="pill-btn" data-users="5000">5.000</button>
+              <button type="button" class="pill-btn" data-users="25000">25.000</button>
+            </div>
+          </div>
+
+          <!-- 2. Usage Intensity Selection -->
+          <div class="form-group">
+            <label class="form-label" style="margin-bottom: 0.5rem; display: block;" data-i18n="basicUsageIntensity">Nutzungsintensität pro Tag</label>
+            <div class="intensity-options-grid" id="basic-intensity-group" role="radiogroup">
+              <button type="button" class="intensity-btn" data-reqs="5" role="radio" aria-checked="false">
+                <span class="intensity-name" data-i18n="intensityLow">Gering (5 Req)</span>
+                <span class="intensity-desc">Gelegentlich</span>
+              </button>
+              <button type="button" class="intensity-btn active" data-reqs="20" role="radio" aria-checked="true">
+                <span class="intensity-name" data-i18n="intensityMedium">Normal (20 Req)</span>
+                <span class="intensity-desc">Regulär</span>
+              </button>
+              <button type="button" class="intensity-btn" data-reqs="60" role="radio" aria-checked="false">
+                <span class="intensity-name" data-i18n="intensityHigh">Intensiv (60 Req)</span>
+                <span class="intensity-desc">Power-User</span>
+              </button>
+              <button type="button" class="intensity-btn" data-reqs="150" role="radio" aria-checked="false">
+                <span class="intensity-name" data-i18n="intensityExtreme">Extrem (150 Req)</span>
+                <span class="intensity-desc">Dauerlast / Bots</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Model Class Selection -->
+          <div class="form-group">
+            <label for="basic-model-select" class="form-label" style="margin-bottom: 0.35rem; display: block;" data-i18n="basicModelLabel">Modell-Klasse & LLM</label>
+            <select id="basic-model-select" class="form-select"></select>
+          </div>
+
+          <!-- 4. Smart Auto-Tuning Callout -->
+          <div class="basic-hint-box">
+            <span class="hint-icon">💡</span>
+            <p class="hint-text" data-i18n="basicHint">
+              Alle technischen Parameter (KV-Cache, vLLM Headroom, Spitzenlast-Multiplikator, TTFT-Ziele) werden für den gewählten Use Case automatisch optimiert. Für manuelle Detailkontrolle klicke oben auf "Advanced".
+            </p>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ADVANCED MODE CONTAINER: Complete granular technical sliders -->
+        <!-- ============================================================ -->
+        <div class="glass-card mode-advanced-container" id="advanced-config-container">
           <!-- 1. Traffic Profile -->
           <div class="card-header">
             <h2 class="card-title"><span>👥</span> <span data-i18n="trafficTitle">1. Benutzer & Lastprofil</span></h2>
+            <span class="badge-mode-tag" data-i18n="modeBadgeAdvanced">Experten-Modus</span>
           </div>
 
           <div class="form-group">
@@ -261,10 +355,20 @@
     </main>
   </div>
 
+  <!-- Live Version Update Banner (shown dynamically when a new build is deployed) -->
+  <div id="app-update-banner" class="app-update-banner" style="display: none;" role="alert">
+    <div class="update-banner-content">
+      <span class="update-icon">⚡</span>
+      <span class="update-text" data-i18n="updateAvailable">Eine neuere Version ist verfügbar!</span>
+      <button type="button" id="btn-reload-app" class="btn-update" data-i18n="reloadApp">Jetzt aktualisieren</button>
+      <button type="button" id="btn-dismiss-update" class="btn-dismiss" title="Schließen" aria-label="Schließen">✕</button>
+    </div>
+  </div>
+
   <!-- Toast notification element -->
   <div id="app-toast" class="app-toast"></div>
 
   <!-- App Bootstrap JS -->
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=v1.3.1-900445b"></script>
 </body>
 </html>
