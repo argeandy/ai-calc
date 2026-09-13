@@ -3,13 +3,13 @@
  * Safe DOM manipulation, Server Chassis & Rack Units Integration, 100% Bilingual (DE / EN)
  */
 
-import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-900445b';
-import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js?v=v1.3.1-900445b';
-import { USECASE_PRESETS, PRESET_CATEGORIES } from '../data/presets.js?v=v1.3.1-900445b';
-import { TcoCalculator } from '../engine/tco.js?v=v1.3.1-900445b';
-import { stateManager } from './state.js?v=v1.3.1-900445b';
-import { ExportManager } from './export.js?v=v1.3.1-900445b';
-import { t, getLanguage } from './i18n.js?v=v1.3.1-900445b';
+import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-1ff741f';
+import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js?v=v1.3.1-1ff741f';
+import { USECASE_PRESETS, PRESET_CATEGORIES } from '../data/presets.js?v=v1.3.1-1ff741f';
+import { TcoCalculator } from '../engine/tco.js?v=v1.3.1-1ff741f';
+import { stateManager } from './state.js?v=v1.3.1-1ff741f';
+import { ExportManager } from './export.js?v=v1.3.1-1ff741f';
+import { t, getLanguage } from './i18n.js?v=v1.3.1-1ff741f';
 
 export class UIRenderer {
   /**
@@ -563,10 +563,12 @@ export class UIRenderer {
    */
   static renderTcoTab(state, calcResult, container) {
     if (!container) return;
-    const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise;
-    const tcoResult = TcoCalculator.calculateTco(calcResult, selectedGpuRec, state.costParams);
     const lang = getLanguage();
     const ruUnit = lang === 'en' ? 'RU' : 'HE';
+    const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise || calcResult.gpuRecommendations[0];
+    const tcoResult = TcoCalculator.calculateTco(calcResult, selectedGpuRec, state.costParams);
+    const cloudMapping = CLOUD_INSTANCE_MAPPINGS[selectedGpuRec.gpu.id];
+    const azureInfo = cloudMapping && cloudMapping.azure ? cloudMapping.azure : null;
 
     container.innerHTML = `
       <div class="tco-header-panel">
@@ -650,12 +652,22 @@ export class UIRenderer {
         <!-- Cloud Reserved Card -->
         <div class="tco-card cloud-card">
           <div class="tco-card-badge">${t('cloudBadge')}</div>
+          ${azureInfo && azureInfo.sku ? `
+            <div class="azure-sku-badge">
+              <span>☁️ Azure:</span>
+              <code>${azureInfo.sku}</code>
+            </div>
+          ` : ''}
           <div class="tco-card-price">
             <strong>€${tcoResult.cloud.monthlyReserved1Yr.toLocaleString()}</strong>
             <span class="unit">${t('perMonth')}</span>
           </div>
           <div class="tco-price-per-token">€${tcoResult.cloud.costPer1kTokens1Yr.toFixed(4)} ${t('per1kTokens')}</div>
           <div class="tco-breakdown-list">
+            <div class="tco-breakdown-row highlight-row">
+              <span>${t('cloud1Yr')}</span>
+              <strong>€${tcoResult.cloud.monthlyReserved1Yr.toLocaleString()} / Mo</strong>
+            </div>
             <div class="tco-breakdown-row">
               <span>${t('cloud3Yr')}</span>
               <strong>€${tcoResult.cloud.monthlyReserved3Yr.toLocaleString()} / Mo</strong>
@@ -664,7 +676,13 @@ export class UIRenderer {
               <span>${t('cloudOnDemand')}</span>
               <span>€${tcoResult.cloud.monthlyOnDemand.toLocaleString()} / Mo</span>
             </div>
-            <div class="tco-breakdown-row">
+            ${azureInfo && azureInfo.hourly1Yr ? `
+              <div class="tco-sub-item" style="margin-top: 0.35rem;">
+                <span>${t('azureNodeRate')}</span>
+                <span>$${azureInfo.hourly1Yr.toFixed(2)} / h (${azureInfo.name || 'Azure VM'})</span>
+              </div>
+            ` : ''}
+            <div class="tco-breakdown-row" style="margin-top: 0.5rem;">
               <span>Hardware-Capex:</span>
               <span><strong>${t('cloudCapexZero')}</strong></span>
             </div>
@@ -672,6 +690,9 @@ export class UIRenderer {
               <span>${lang === 'en' ? 'Maintenance & Power:' : 'Wartung & Strom:'}</span>
               <span>${t('cloudMaintIncluded')}</span>
             </div>
+          </div>
+          <div class="azure-pricing-note">
+            <span>💡 ${t('azurePricingNote')}</span>
           </div>
         </div>
       </div>
@@ -714,7 +735,7 @@ export class UIRenderer {
    */
   static renderTopologyTab(state, calcResult, container) {
     if (!container) return;
-    const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise;
+    const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise || calcResult.gpuRecommendations[0];
     const serverChassis = selectedGpuRec.serverChassis;
     const cloudMapping = CLOUD_INSTANCE_MAPPINGS[selectedGpuRec.gpu.id] || { aws: 'Custom Instance', azure: 'Custom VM', gcp: 'Custom Compute' };
     const lang = getLanguage();
@@ -845,20 +866,54 @@ export class UIRenderer {
       <div class="cloud-instances-section">
         <h4>${t('cloudInstancesTitle')}</h4>
         <div class="cloud-cards-row">
+          <!-- AWS Card -->
           <div class="cloud-provider-card">
-            <span class="provider-logo aws">AWS</span>
-            <strong>${cloudMapping.aws}</strong>
-            <span class="prov-desc">Amazon EC2 Elastic Fabric Adapter (EFA)</span>
+            <div class="provider-card-header">
+              <span class="provider-logo aws">AWS</span>
+            </div>
+            <strong class="cloud-instance-title">${cloudMapping.aws?.name || cloudMapping.aws || 'EC2 Instance'}</strong>
+            <span class="prov-specs">Amazon EC2 Elastic Fabric Adapter (EFA)</span>
+            ${cloudMapping.aws?.hourly1Yr ? `
+              <div class="cloud-price-tags">
+                <span class="price-tag-item">1-Yr: <strong>$${cloudMapping.aws.hourly1Yr.toFixed(2)}/h</strong></span>
+                <span class="price-tag-item on-demand">PayGo: <strong>$${cloudMapping.aws.hourlyOnDemand.toFixed(2)}/h</strong></span>
+              </div>
+            ` : ''}
           </div>
-          <div class="cloud-provider-card">
-            <span class="provider-logo azure">Azure</span>
-            <strong>${cloudMapping.azure}</strong>
-            <span class="prov-desc">Microsoft Azure Quantum / InfiniBand</span>
+
+          <!-- Azure Card (Enhanced with Real Azure SKU & Pricing) -->
+          <div class="cloud-provider-card azure-highlight-card">
+            <div class="provider-card-header">
+              <span class="provider-logo azure">Azure</span>
+              <span class="cloud-sku-pill">${cloudMapping.azure?.sku || 'Azure VM'}</span>
+            </div>
+            <strong class="cloud-instance-title">${cloudMapping.azure?.name || cloudMapping.azure || 'Azure VM'}</strong>
+            <span class="prov-specs">${cloudMapping.azure?.specs || 'Microsoft Azure Quantum-2 / InfiniBand'}</span>
+            ${cloudMapping.azure?.hourly1Yr ? `
+              <div class="cloud-price-tags">
+                <span class="price-tag-item">1-Yr: <strong>$${cloudMapping.azure.hourly1Yr.toFixed(2)}/h</strong></span>
+                <span class="price-tag-item">3-Yr: <strong>$${cloudMapping.azure.hourly3Yr.toFixed(2)}/h</strong></span>
+                <span class="price-tag-item on-demand">PayGo: <strong>$${cloudMapping.azure.hourlyOnDemand.toFixed(2)}/h</strong></span>
+              </div>
+              <div class="cloud-cluster-est">
+                <span>${lang === 'en' ? 'Cluster Total:' : 'Cluster-Gesamt:'} <strong>${selectedGpuRec.nodesNeeded}x VM (~€${Math.round(selectedGpuRec.cloudMonthlyReserved1Yr).toLocaleString()} / Mo)</strong></span>
+              </div>
+            ` : ''}
           </div>
+
+          <!-- GCP Card -->
           <div class="cloud-provider-card">
-            <span class="provider-logo gcp">GCP</span>
-            <strong>${cloudMapping.gcp}</strong>
-            <span class="prov-desc">Google Cloud A3/G2 GPU Instance</span>
+            <div class="provider-card-header">
+              <span class="provider-logo gcp">GCP</span>
+            </div>
+            <strong class="cloud-instance-title">${cloudMapping.gcp?.name || cloudMapping.gcp || 'GCP Compute Engine'}</strong>
+            <span class="prov-specs">Google Cloud A3/G2 GPU Instance with Hyperdisk</span>
+            ${cloudMapping.gcp?.hourly1Yr ? `
+              <div class="cloud-price-tags">
+                <span class="price-tag-item">1-Yr: <strong>$${cloudMapping.gcp.hourly1Yr.toFixed(2)}/h</strong></span>
+                <span class="price-tag-item on-demand">PayGo: <strong>$${cloudMapping.gcp.hourlyOnDemand.toFixed(2)}/h</strong></span>
+              </div>
+            ` : ''}
           </div>
         </div>
       </div>
@@ -873,7 +928,7 @@ export class UIRenderer {
     const model = stateManager.getSelectedModel();
     const quant = stateManager.getSelectedQuant();
     const kvQuant = stateManager.getSelectedKvQuant();
-    const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise;
+    const selectedGpuRec = calcResult.gpuRecommendations.find(r => r.gpu.id === state.costParams.selectedGpuId) || calcResult.highlights.bestEnterprise || calcResult.gpuRecommendations[0];
     const tcoResult = TcoCalculator.calculateTco(calcResult, selectedGpuRec, state.costParams);
     const lang = getLanguage();
 

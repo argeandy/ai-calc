@@ -1330,6 +1330,112 @@
   color: var(--text-muted);
 }
 
+.azure-sku-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.azure-sku-badge code {
+  background: rgba(0, 120, 212, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.azure-pricing-note {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-subtle);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.cloud-provider-card.azure-highlight-card {
+  border-color: rgba(56, 189, 248, 0.35);
+  background: linear-gradient(145deg, var(--bg-surface-elevated), rgba(0, 120, 212, 0.08));
+}
+
+.provider-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.cloud-sku-pill {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cloud-instance-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.prov-specs {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.cloud-price-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+
+.price-tag-item {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+
+.price-tag-item strong {
+  color: #38bdf8;
+}
+
+.price-tag-item.on-demand strong {
+  color: #f59e0b;
+}
+
+.cloud-cluster-est {
+  margin-top: 0.5rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.cloud-cluster-est strong {
+  color: var(--color-success);
+  font-family: var(--font-mono);
+}
+
 /* Export Tab & Markdown Preview */
 .export-header-panel {
   display: flex;

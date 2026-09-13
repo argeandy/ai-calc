@@ -265,34 +265,108 @@ export const GPU_CATALOG = [
 ];
 
 export const CLOUD_INSTANCE_MAPPINGS = {
-  'h100-sxm': {
-    aws: 'p5.48xlarge (8x H100)',
-    azure: 'NDv5 (8x H100)',
-    gcp: 'a3-highgpu-8g (8x H100)'
+  'b200': {
+    aws: { name: 'p6.48xlarge (8x B200)', hourlyOnDemand: 140.00, hourly1Yr: 92.00 },
+    azure: {
+      sku: 'Standard_ND96is_B200_v6',
+      name: 'ND96is B200 v6 (8x B200)',
+      gpusPerNode: 8,
+      hourlyOnDemand: 44.00,
+      hourly1Yr: 28.80,
+      hourly3Yr: 19.50,
+      specs: '8x B200 192GB HBM3e · Quantum-X800 InfiniBand · 96 vCPUs'
+    },
+    gcp: { name: 'a4-highgpu-8g (8x B200)', hourlyOnDemand: 45.00, hourly1Yr: 30.00 }
   },
   'h200-sxm': {
-    aws: 'p5e.48xlarge (8x H200)',
-    azure: 'NDv5-H200 (8x H200)',
-    gcp: 'a3-megagpu-8g (8x H200)'
+    aws: { name: 'p5e.48xlarge (8x H200)', hourlyOnDemand: 115.00, hourly1Yr: 76.00 },
+    azure: {
+      sku: 'Standard_ND96is_H200_v5',
+      name: 'ND96is H200 v5 (8x H200)',
+      gpusPerNode: 8,
+      hourlyOnDemand: 34.50,
+      hourly1Yr: 22.40,
+      hourly3Yr: 15.20,
+      specs: '8x H200 141GB HBM3e · 3.2 Tbps Quantum-2 InfiniBand · 96 vCPUs · 1,900 GiB RAM'
+    },
+    gcp: { name: 'a3-megagpu-8g (8x H200)', hourlyOnDemand: 36.00, hourly1Yr: 24.00 }
   },
-  'b200': {
-    aws: 'p6.48xlarge (8x B200)',
-    azure: 'NDv6 (8x B200)',
-    gcp: 'a4-highgpu-8g (8x B200)'
+  'h100-sxm': {
+    aws: { name: 'p5.48xlarge (8x H100)', hourlyOnDemand: 98.32, hourly1Yr: 62.92 },
+    azure: {
+      sku: 'Standard_ND96isr_H100_v5',
+      name: 'ND96isr H100 v5 (8x H100)',
+      gpusPerNode: 8,
+      hourlyOnDemand: 27.20,
+      hourly1Yr: 17.50,
+      hourly3Yr: 11.83,
+      specs: '8x H100 80GB SXM5 · 3.2 Tbps Quantum-2 InfiniBand · 96 vCPUs · 1,900 GiB RAM'
+    },
+    gcp: { name: 'a3-highgpu-8g (8x H100)', hourlyOnDemand: 31.00, hourly1Yr: 19.50 }
   },
   'a100-sxm-80gb': {
-    aws: 'p4de.24xlarge (8x A100 80GB)',
-    azure: 'ND96amsr_A100_v4 (8x A100)',
-    gcp: 'a2-ultragpu-8g (8x A100)'
+    aws: { name: 'p4de.24xlarge (8x A100 80GB)', hourlyOnDemand: 40.96, hourly1Yr: 26.21 },
+    azure: {
+      sku: 'Standard_ND96amsr_A100_v4',
+      name: 'ND96amsr A100 v4 (8x A100)',
+      gpusPerNode: 8,
+      hourlyOnDemand: 27.20,
+      hourly1Yr: 14.80,
+      hourly3Yr: 9.80,
+      specs: '8x A100 80GB SXM4 · 1.6 Tbps InfiniBand · 96 vCPUs · 900 GiB RAM'
+    },
+    gcp: { name: 'a2-ultragpu-8g (8x A100)', hourlyOnDemand: 29.00, hourly1Yr: 16.00 }
+  },
+  'mi300x': {
+    aws: { name: 'Custom AMD Cluster', hourlyOnDemand: 24.00, hourly1Yr: 15.00 },
+    azure: {
+      sku: 'Standard_ND96isr_MI300X_v5',
+      name: 'ND96isr MI300X v5 (8x MI300X)',
+      gpusPerNode: 8,
+      hourlyOnDemand: 22.40,
+      hourly1Yr: 14.00,
+      hourly3Yr: 9.50,
+      specs: '8x MI300X 192GB HBM3 · Infinity Fabric · 96 vCPUs · 1,900 GiB RAM'
+    },
+    gcp: { name: 'GCP Instinct Preview', hourlyOnDemand: 24.00, hourly1Yr: 15.50 }
   },
   'l40s': {
-    aws: 'g6e.12xlarge (4x L40S)',
-    azure: 'NGads_V620 (L40S)',
-    gcp: 'g2-standard (L40S)'
+    aws: { name: 'g6e.12xlarge (4x L40S)', hourlyOnDemand: 8.50, hourly1Yr: 5.50 },
+    azure: {
+      sku: 'Standard_NG48ads_V620_v1',
+      name: 'NG48ads V620 (4x L40S)',
+      gpusPerNode: 4,
+      hourlyOnDemand: 7.20,
+      hourly1Yr: 4.60,
+      hourly3Yr: 3.00,
+      specs: '48 vCPUs · 256 GiB RAM · 4x 48GB GDDR6'
+    },
+    gcp: { name: 'g2-standard-48 (4x L40S)', hourlyOnDemand: 7.50, hourly1Yr: 4.80 }
   },
   'l4': {
-    aws: 'g6.xlarge (1x L4) / g6.12xlarge (4x L4)',
-    azure: 'NC4as_T4_v3 (similar)',
-    gcp: 'g2-standard-4 (1x L4)'
+    aws: { name: 'g6.xlarge (1x L4) / g6.12xlarge', hourlyOnDemand: 1.25, hourly1Yr: 0.85 },
+    azure: {
+      sku: 'Standard_NV36adms_A10_v5',
+      name: 'NV36adms A10 v5 (1x L4/A10)',
+      gpusPerNode: 1,
+      hourlyOnDemand: 1.45,
+      hourly1Yr: 0.95,
+      hourly3Yr: 0.65,
+      specs: '36 vCPUs · 176 GiB RAM · PCIe Gen4'
+    },
+    gcp: { name: 'g2-standard-4 (1x L4)', hourlyOnDemand: 1.30, hourly1Yr: 0.88 }
+  },
+  'rtx-6000-ada': {
+    aws: { name: 'g6e.4xlarge (1x Workstation)', hourlyOnDemand: 4.50, hourly1Yr: 2.90 },
+    azure: {
+      sku: 'Standard_NV72ads_A10_v5',
+      name: 'NV72ads A10 v5 (2x GPU Workstation)',
+      gpusPerNode: 2,
+      hourlyOnDemand: 3.80,
+      hourly1Yr: 2.45,
+      hourly3Yr: 1.70,
+      specs: '72 vCPUs · 440 GiB RAM · RTX Virtual Workstation'
+    },
+    gcp: { name: 'G2 Cloud Workstation', hourlyOnDemand: 4.20, hourly1Yr: 2.70 }
   }
 };

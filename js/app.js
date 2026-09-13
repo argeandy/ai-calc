@@ -3,14 +3,14 @@
  * Event Listeners, State Binding & UI Updates
  */
 
-import { stateManager } from './ui/state.js?v=v1.3.1-900445b';
-import { HardwareCalculator } from './engine/calculator.js?v=v1.3.1-900445b';
-import { TcoCalculator } from './engine/tco.js?v=v1.3.1-900445b';
-import { GPU_CATALOG } from './data/gpus.js?v=v1.3.1-900445b';
-import { MODEL_CATALOG } from './data/models.js?v=v1.3.1-900445b';
-import { UIRenderer } from './ui/renderer.js?v=v1.3.1-900445b';
-import { ExportManager } from './ui/export.js?v=v1.3.1-900445b';
-import { t, setLanguage, getLanguage } from './ui/i18n.js?v=v1.3.1-900445b';
+import { stateManager } from './ui/state.js?v=v1.3.1-1ff741f';
+import { HardwareCalculator } from './engine/calculator.js?v=v1.3.1-1ff741f';
+import { TcoCalculator } from './engine/tco.js?v=v1.3.1-1ff741f';
+import { GPU_CATALOG } from './data/gpus.js?v=v1.3.1-1ff741f';
+import { MODEL_CATALOG } from './data/models.js?v=v1.3.1-1ff741f';
+import { UIRenderer } from './ui/renderer.js?v=v1.3.1-1ff741f';
+import { ExportManager } from './ui/export.js?v=v1.3.1-1ff741f';
+import { t, setLanguage, getLanguage } from './ui/i18n.js?v=v1.3.1-1ff741f';
 
 class App {
   constructor() {
