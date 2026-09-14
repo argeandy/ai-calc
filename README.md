@@ -38,7 +38,7 @@
 
 - **📊 4 Integrierte Analysebereiche**:
   1. **⚡ Dimensionierung & Sizing**: Visueller VRAM-Balken, Spitzen-RPS, parallele Streams, GPU-Empfehlungsmatrix mit SLA-Checks.
-  2. **💰 TCO & Kostenanalyse**: On-Premises 3-Jahres-Eigenbetrieb (Capex, Stromkosten basierend auf TDP & PUE-Faktor, Wartung) vs. Cloud Reserved/On-Demand vs. kommerzielle Token-APIs (OpenAI GPT-4o, Claude 3.5 Sonnet, DeepSeek API) mit **Break-Even-Amortisationszeit**.
+  2. **💰 TCO & Kostenanalyse**: On-Premises 3-Jahres-Eigenbetrieb (Capex, Stromkosten basierend auf TDP & PUE-Faktor, Wartung) vs. Cloud Reserved/On-Demand vs. kommerzielle Token-APIs (Anthropic Claude 5 / 4.5, OpenAI GPT-6 / GPT-5.6, DeepSeek API) mit **Break-Even-Amortisationszeit**.
   3. **🖥️ Cluster & Topologie**: Visuelle Partitionierung auf Server-Nodes, Darstellung der GPU-Dies, Memory Bandwidth, Tensor Parallelism Ranks und äquivalente Cloud-Instanzen (AWS EC2, Azure VM, GCP).
   4. **📄 Export & ADR**: Download als JSON, zustandsbehaftetes URL-Sharing (`#cfg=...`), Druckansicht/PDF und Export als Markdown Architecture Decision Record (ADR).
 

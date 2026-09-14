@@ -4,16 +4,46 @@
 
 export const COMMERCIAL_API_PRICING = [
   {
-    id: 'openai-gpt4o',
-    name: 'OpenAI GPT-4o',
-    inputPricePerMillion: 2.50, // USD
+    id: 'anthropic-sonnet-5',
+    name: 'Anthropic Claude Sonnet 5',
+    inputPricePerMillion: 2.00, // USD
     outputPricePerMillion: 10.00
   },
   {
+    id: 'anthropic-opus-5',
+    name: 'Anthropic Claude Opus 5',
+    inputPricePerMillion: 5.00,
+    outputPricePerMillion: 25.00
+  },
+  {
+    id: 'anthropic-haiku-4-5',
+    name: 'Anthropic Claude Haiku 4.5',
+    inputPricePerMillion: 1.00,
+    outputPricePerMillion: 5.00
+  },
+  {
     id: 'anthropic-sonnet-3-5',
-    name: 'Anthropic Claude 3.5 Sonnet',
+    name: 'Anthropic Claude 3.5 Sonnet (Legacy)',
     inputPricePerMillion: 3.00,
     outputPricePerMillion: 15.00
+  },
+  {
+    id: 'openai-gpt6-astra',
+    name: 'OpenAI GPT-6 Astra',
+    inputPricePerMillion: 10.00,
+    outputPricePerMillion: 50.00
+  },
+  {
+    id: 'openai-gpt5-terra',
+    name: 'OpenAI GPT-5.6 Terra',
+    inputPricePerMillion: 2.00,
+    outputPricePerMillion: 12.00
+  },
+  {
+    id: 'openai-gpt4o',
+    name: 'OpenAI GPT-4o (Legacy)',
+    inputPricePerMillion: 2.50,
+    outputPricePerMillion: 10.00
   },
   {
     id: 'deepseek-v3-api',
