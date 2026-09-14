@@ -3,13 +3,13 @@
  * Safe DOM manipulation, Server Chassis & Rack Units Integration, 100% Bilingual (DE / EN)
  */
 
-import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-1ff741f';
-import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js?v=v1.3.1-1ff741f';
-import { USECASE_PRESETS, PRESET_CATEGORIES } from '../data/presets.js?v=v1.3.1-1ff741f';
-import { TcoCalculator } from '../engine/tco.js?v=v1.3.1-1ff741f';
-import { stateManager } from './state.js?v=v1.3.1-1ff741f';
-import { ExportManager } from './export.js?v=v1.3.1-1ff741f';
-import { t, getLanguage } from './i18n.js?v=v1.3.1-1ff741f';
+import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-243c511';
+import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js?v=v1.3.1-243c511';
+import { USECASE_PRESETS, PRESET_CATEGORIES } from '../data/presets.js?v=v1.3.1-243c511';
+import { TcoCalculator } from '../engine/tco.js?v=v1.3.1-243c511';
+import { stateManager } from './state.js?v=v1.3.1-243c511';
+import { ExportManager } from './export.js?v=v1.3.1-243c511';
+import { t, getLanguage } from './i18n.js?v=v1.3.1-243c511';
 
 export class UIRenderer {
   /**
@@ -455,6 +455,12 @@ export class UIRenderer {
       ${renderHighlightCard(highlights.bestLocal, 'badgeLocal', 'local', '💻')}
     `;
     container.appendChild(highlightsRow);
+
+    // Mobile Table Scroll Hint
+    const scrollHint = document.createElement('div');
+    scrollHint.className = 'table-scroll-hint';
+    scrollHint.innerHTML = `<span aria-hidden="true">⇄</span> <span>${t('tableScrollHint')}</span>`;
+    container.appendChild(scrollHint);
 
     // Full GPU Table
     const tableWrapper = document.createElement('div');

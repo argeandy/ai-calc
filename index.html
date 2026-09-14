@@ -18,9 +18,9 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/main.css?v=v1.3.1-1ff741f">
-  <link rel="stylesheet" href="css/components.css?v=v1.3.1-1ff741f">
-  <link rel="stylesheet" href="css/responsive.css?v=v1.3.1-1ff741f">
+  <link rel="stylesheet" href="css/main.css?v=v1.3.1-243c511">
+  <link rel="stylesheet" href="css/components.css?v=v1.3.1-243c511">
+  <link rel="stylesheet" href="css/responsive.css?v=v1.3.1-243c511">
 </head>
 <body>
   <div class="app-container">
@@ -74,9 +74,26 @@
     <!-- Main Workspace Layout -->
     <main class="calculator-layout" id="calculator-layout" data-calc-mode="basic" style="margin-top: 1.5rem;">
       <!-- Left Configuration Sidebar -->
-      <aside class="config-sidebar" aria-label="Konfigurations-Panel">
-        <!-- Workload Presets (Always visible & expanded) -->
-        <div class="glass-card presets-panel-card">
+      <aside class="config-sidebar mobile-collapsed" id="config-sidebar" aria-label="Konfigurations-Panel">
+        <!-- Mobile Collapsible Toggle Bar (visible on mobile / small screens) -->
+        <div class="sidebar-mobile-toggle-bar" id="sidebar-mobile-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="sidebar-collapsible-content">
+          <div class="sidebar-toggle-info">
+            <span class="toggle-icon">⚙️</span>
+            <div class="toggle-text-group">
+              <span class="toggle-title" data-i18n="configToggleTitle">Konfiguration & Lastprofil</span>
+              <span class="sidebar-active-summary" id="sidebar-active-summary">1.000 User • Llama 3.3 70B • Basic</span>
+            </div>
+          </div>
+          <button type="button" class="btn-sidebar-toggle" id="btn-sidebar-toggle" aria-label="Konfiguration aufklappen">
+            <span class="toggle-action-label" id="toggle-action-label" data-i18n="configToggleOpen">Anpassen</span>
+            <span class="toggle-chevron" aria-hidden="true">▾</span>
+          </button>
+        </div>
+
+        <!-- Collapsible Content Wrapper -->
+        <div class="sidebar-collapsible-content" id="sidebar-collapsible-content">
+          <!-- Workload Presets (Always visible & expanded) -->
+          <div class="glass-card presets-panel-card">
           <div class="card-header">
             <div>
               <h2 class="card-title"><span>🎯</span> <span data-i18n="presetsTitle">Typische Use Cases & Vorlagen</span></h2>
@@ -309,7 +326,9 @@
             </div>
           </div>
         </div>
-      </aside>
+        <!-- End sidebar-collapsible-content -->
+      </div>
+    </aside>
 
       <!-- Right Results Container -->
       <section class="results-main" aria-label="Berechnungsergebnisse">
@@ -369,6 +388,6 @@
   <div id="app-toast" class="app-toast"></div>
 
   <!-- App Bootstrap JS -->
-  <script type="module" src="js/app.js?v=v1.3.1-1ff741f"></script>
+  <script type="module" src="js/app.js?v=v1.3.1-243c511"></script>
 </body>
 </html>

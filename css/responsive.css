@@ -2,18 +2,75 @@
    AI Hardware Sizing Calculator - Responsive Breakpoints & Print Styles
    ========================================================================== */
 
-/* Large Tablets & Small Desktops (<= 1180px) */
+/* Global horizontal overflow lock */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Default Desktop behavior for mobile toggle */
+.sidebar-mobile-toggle-bar {
+  display: none !important;
+}
+
+.sidebar-collapsible-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.table-scroll-hint {
+  display: none;
+}
+
+/* ==========================================================================
+   Large Tablets & Laptops (<= 1180px)
+   ========================================================================== */
 @media (max-width: 1180px) {
   .calculator-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
+    gap: 1.5rem;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
   }
 
   .config-sidebar {
     order: 1;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
   }
 
   .results-main {
     order: 2;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .glass-card,
+  .tab-pane,
+  .presets-panel-card {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .presets-filter-bar {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .presets-grid {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
   }
 
   .metrics-grid {
@@ -37,16 +94,163 @@
   }
 }
 
-/* Mobile Devices (<= 768px) */
+/* ==========================================================================
+   Tablets & Mobile Viewports (<= 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  /* Mobile Collapsible Sidebar Bar */
+  .sidebar-mobile-toggle-bar {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-surface-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    user-select: none;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    touch-action: manipulation;
+  }
+
+  .sidebar-mobile-toggle-bar:hover {
+    background: var(--bg-surface-elevated);
+    border-color: var(--color-brand-primary);
+  }
+
+  .sidebar-toggle-info {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .toggle-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .toggle-text-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 0.1rem;
+  }
+
+  .toggle-title {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar-active-summary {
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    color: var(--color-brand-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .btn-sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-accent);
+    color: var(--color-brand-primary);
+    font-family: var(--font-sans);
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+  }
+
+  .toggle-chevron {
+    display: inline-block;
+    font-size: 0.7rem;
+    transition: transform var(--transition-normal);
+  }
+
+  /* Collapsed state */
+  .config-sidebar.mobile-collapsed .sidebar-collapsible-content {
+    display: none !important;
+  }
+
+  .config-sidebar:not(.mobile-collapsed) .sidebar-collapsible-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 0.75rem;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .config-sidebar:not(.mobile-collapsed) .toggle-chevron {
+    transform: rotate(180deg);
+  }
+}
+
+/* ==========================================================================
+   Mobile Devices (<= 768px)
+   ========================================================================== */
 @media (max-width: 768px) {
   .app-container {
-    padding: 1rem;
+    padding: 0.85rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .app-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .header-brand {
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .brand-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .brand-titles {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .brand-titles h1 {
+    font-size: clamp(1.2rem, 5vw, 1.45rem);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.2;
+  }
+
+  .brand-titles p {
+    font-size: 0.78rem;
+    line-height: 1.35;
   }
 
   .header-controls {
@@ -56,18 +260,53 @@
     gap: 0.5rem;
   }
 
-  .intensity-options-grid {
-    grid-template-columns: 1fr;
+  .mode-switch-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.78rem;
   }
 
+  /* Sticky Navigation Bar */
   .nav-tabs-bar {
-    flex-wrap: wrap;
+    position: sticky;
+    top: 0.4rem;
+    z-index: 100;
+    display: flex;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0.3rem;
+    gap: 0.35rem;
+    background: var(--bg-surface-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .nav-tabs-bar::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-tab-btn {
-    flex: 1 1 45%;
-    font-size: 0.85rem;
-    padding: 0.6rem 0.5rem;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.82rem;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .calculator-layout {
+    margin-top: 1rem !important;
+  }
+
+  .intensity-options-grid {
+    grid-template-columns: 1fr;
   }
 
   .metrics-grid {
@@ -78,17 +317,153 @@
     grid-template-columns: 1fr;
   }
 
+  /* Table Scroll Hint */
+  .table-scroll-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-surface-elevated);
+    border: 1px dashed var(--border-medium);
+    border-radius: var(--radius-md);
+    margin-bottom: 0.65rem;
+    text-align: center;
+  }
+
+  .gpu-table-wrapper {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Topology Cards */
+  .node-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .node-host-specs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rack-visualizer-row {
+    grid-template-columns: 1fr;
+  }
+
+  .rack-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  /* Export Tab */
   .export-header-panel {
     flex-direction: column;
     align-items: flex-start;
+    gap: 1rem;
   }
 
   .export-actions-row {
     width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .export-actions-row .btn {
+    width: 100%;
     flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .markdown-code {
+    max-height: 380px;
+    font-size: 0.76rem;
+  }
+
+  /* VRAM Card Header */
+  .vram-summary-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .vram-total-value {
+    font-size: 2rem;
+  }
+
+  .vram-quick-tags {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .pill {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+  }
+}
+
+/* ==========================================================================
+   Small Mobile Devices (<= 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 0.65rem;
+  }
+
+  .brand-titles h1 {
+    font-size: 1.15rem;
+  }
+
+  .brand-titles p {
+    font-size: 0.74rem;
+  }
+
+  .glass-card {
+    padding: 1rem;
+  }
+
+  .presets-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .highlight-perf-row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .perf-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .perf-metric .p-label {
+    font-size: 0.72rem;
+  }
+
+  .perf-metric .p-val {
+    font-size: 0.85rem;
+  }
+
+  .topo-summary-chips {
+    gap: 0.4rem;
+  }
+
+  .chip {
+    width: 100%;
+    font-size: 0.78rem;
+  }
+
+  .rack-slot {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.5rem;
   }
 }
 
@@ -106,6 +481,8 @@
   .header-controls,
   .nav-tabs-bar,
   .config-sidebar,
+  .sidebar-mobile-toggle-bar,
+  .table-scroll-hint,
   .export-actions-row,
   .tco-cost-sliders-grid,
   .btn,

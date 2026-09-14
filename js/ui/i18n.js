@@ -25,6 +25,10 @@ export const TRANSLATIONS = {
     modeBadgeAdvanced: 'Experten-Modus',
 
     // Presets & Sidebar
+    configToggleTitle: 'Konfiguration & Lastprofil',
+    configToggleOpen: 'Anpassen',
+    configToggleClose: 'Schließen',
+    tableScrollHint: '⇄ Tabelle horizontal wischen für alle Details (VRAM, Capex, SLA)',
     presetsTitle: 'Typische Use Cases & Vorlagen',
     presetsSubtitle: 'Praxiserprobte Dimensionierungen für typische Unternehmens-Workloads',
     trafficTitle: '1. Benutzer & Lastprofil',
@@ -205,6 +209,10 @@ export const TRANSLATIONS = {
     modeBadgeAdvanced: 'Advanced Mode',
 
     // Presets & Sidebar
+    configToggleTitle: 'Configuration & Workload',
+    configToggleOpen: 'Customize',
+    configToggleClose: 'Close',
+    tableScrollHint: '⇄ Swipe table horizontally for full specs (VRAM, Capex, SLA)',
     presetsTitle: 'Typical Workloads & Presets',
     presetsSubtitle: 'Production-tested sizings for typical enterprise AI workloads',
     trafficTitle: '1. Users & Traffic Profile',

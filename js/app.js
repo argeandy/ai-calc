@@ -3,14 +3,14 @@
  * Event Listeners, State Binding & UI Updates
  */
 
-import { stateManager } from './ui/state.js?v=v1.3.1-1ff741f';
-import { HardwareCalculator } from './engine/calculator.js?v=v1.3.1-1ff741f';
-import { TcoCalculator } from './engine/tco.js?v=v1.3.1-1ff741f';
-import { GPU_CATALOG } from './data/gpus.js?v=v1.3.1-1ff741f';
-import { MODEL_CATALOG } from './data/models.js?v=v1.3.1-1ff741f';
-import { UIRenderer } from './ui/renderer.js?v=v1.3.1-1ff741f';
-import { ExportManager } from './ui/export.js?v=v1.3.1-1ff741f';
-import { t, setLanguage, getLanguage } from './ui/i18n.js?v=v1.3.1-1ff741f';
+import { stateManager } from './ui/state.js?v=v1.3.1-243c511';
+import { HardwareCalculator } from './engine/calculator.js?v=v1.3.1-243c511';
+import { TcoCalculator } from './engine/tco.js?v=v1.3.1-243c511';
+import { GPU_CATALOG } from './data/gpus.js?v=v1.3.1-243c511';
+import { MODEL_CATALOG } from './data/models.js?v=v1.3.1-243c511';
+import { UIRenderer } from './ui/renderer.js?v=v1.3.1-243c511';
+import { ExportManager } from './ui/export.js?v=v1.3.1-243c511';
+import { t, setLanguage, getLanguage } from './ui/i18n.js?v=v1.3.1-243c511';
 
 class App {
   constructor() {
@@ -53,6 +53,11 @@ class App {
       kvQuantSelect: document.getElementById('kv-quant-select'),
       tabButtons: document.querySelectorAll('.nav-tab-btn'),
       tabPanes: document.querySelectorAll('.tab-pane'),
+      configSidebar: document.getElementById('config-sidebar'),
+      sidebarMobileToggle: document.getElementById('sidebar-mobile-toggle'),
+      btnSidebarToggle: document.getElementById('btn-sidebar-toggle'),
+      sidebarActiveSummary: document.getElementById('sidebar-active-summary'),
+      toggleActionLabel: document.getElementById('toggle-action-label'),
       updateBanner: document.getElementById('app-update-banner'),
       btnReloadApp: document.getElementById('btn-reload-app'),
       btnDismissUpdate: document.getElementById('btn-dismiss-update')
@@ -111,12 +116,41 @@ class App {
       });
     }
 
-    // Tab Navigation
-    this.elements.tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tabId = btn.getAttribute('data-tab');
-        this.switchTab(tabId);
+    // Mobile Sidebar Collapsible Toggle
+    const handleSidebarToggle = () => {
+      if (!this.elements.configSidebar) return;
+      const isCollapsed = this.elements.configSidebar.classList.toggle('mobile-collapsed');
+      const isExpanded = !isCollapsed;
+      if (this.elements.sidebarMobileToggle) {
+        this.elements.sidebarMobileToggle.setAttribute('aria-expanded', String(isExpanded));
+      }
+      if (this.elements.toggleActionLabel) {
+        this.elements.toggleActionLabel.textContent = isExpanded ? t('configToggleClose') : t('configToggleOpen');
+      }
+    };
+
+    if (this.elements.sidebarMobileToggle) {
+      this.elements.sidebarMobileToggle.addEventListener('click', () => {
+        handleSidebarToggle();
       });
+      this.elements.sidebarMobileToggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleSidebarToggle();
+        }
+      });
+    }
+
+    // Tab Navigation - Delegated click handler for robust mobile & desktop responsiveness
+    document.addEventListener('click', (e) => {
+      const tabBtn = e.target.closest('.nav-tab-btn');
+      if (tabBtn) {
+        e.preventDefault();
+        const tabId = tabBtn.getAttribute('data-tab');
+        if (tabId) {
+          this.switchTab(tabId);
+        }
+      }
     });
 
     // Preset Selection Click
@@ -308,11 +342,36 @@ class App {
   switchTab(tabId) {
     stateManager.updateState({ activeTab: tabId });
     this.elements.tabButtons.forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+      const isActive = btn.getAttribute('data-tab') === tabId;
+      btn.classList.toggle('active', isActive);
+      if (isActive && window.innerWidth <= 768) {
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
     });
     this.elements.tabPanes.forEach(pane => {
       pane.classList.toggle('active', pane.id === `tab-${tabId}`);
     });
+
+    // On mobile / tablet viewports, ensure tab results are immediately visible
+    if (window.innerWidth <= 1024) {
+      if (this.elements.configSidebar && !this.elements.configSidebar.classList.contains('mobile-collapsed')) {
+        this.elements.configSidebar.classList.add('mobile-collapsed');
+        if (this.elements.sidebarMobileToggle) {
+          this.elements.sidebarMobileToggle.setAttribute('aria-expanded', 'false');
+        }
+        if (this.elements.toggleActionLabel) {
+          this.elements.toggleActionLabel.textContent = t('configToggleOpen');
+        }
+      }
+
+      const resultsEl = document.querySelector('.results-main');
+      const navEl = document.querySelector('.nav-tabs-bar');
+      if (resultsEl) {
+        const navHeight = navEl ? navEl.offsetHeight : 54;
+        const targetY = resultsEl.getBoundingClientRect().top + window.scrollY - navHeight - 12;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      }
+    }
   }
 
   applyTheme(theme) {
@@ -324,6 +383,10 @@ class App {
   }
 
   updateStaticLabels() {
+    if (this.elements.configSidebar && this.elements.toggleActionLabel) {
+      const isExpanded = !this.elements.configSidebar.classList.contains('mobile-collapsed');
+      this.elements.toggleActionLabel.textContent = isExpanded ? t('configToggleClose') : t('configToggleOpen');
+    }
     // Re-render everything with new translations
     this.recalculateAndRender(stateManager.getState());
   }
@@ -349,6 +412,13 @@ class App {
     this.elements.tabPanes.forEach(pane => {
       pane.classList.toggle('active', pane.id === `tab-${state.activeTab}`);
     });
+
+    // Update mobile sidebar active summary badge
+    if (this.elements.sidebarActiveSummary) {
+      const modelName = model ? model.name : 'LLM';
+      const modeLabel = state.mode === 'basic' ? t('modeBasic') : t('modeAdvanced');
+      this.elements.sidebarActiveSummary.textContent = `${Number(state.totalUsers).toLocaleString()} User • ${modelName} • ${modeLabel}`;
+    }
 
     // Render UI components
     UIRenderer.renderAll(state, calcResult, this.elements);
