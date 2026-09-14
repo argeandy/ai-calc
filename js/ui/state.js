@@ -2,8 +2,8 @@
  * State Management and URL Serialization for AI Sizing Calculator
  */
 
-import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-243c511';
-import { USECASE_PRESETS } from '../data/presets.js?v=v1.3.1-243c511';
+import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-c1ccc50';
+import { USECASE_PRESETS } from '../data/presets.js?v=v1.3.1-c1ccc50';
 
 export const DEFAULT_STATE = {
   activePresetId: 'enterprise-rag',
@@ -55,16 +55,18 @@ class StateManager {
   }
 
   init() {
-    // Check localStorage or URL hash
+    // 1. Restore complete state from localStorage if previously saved
+    this.loadFromLocalStorage();
+
+    // 2. URL hash takes precedence if explicitly provided (e.g. shared links)
     this.loadFromUrlHash();
 
-    // Check saved mode preference
+    // 3. Fallback compatibility checks
     const savedMode = localStorage.getItem('ai_calc_mode');
     if (savedMode === 'basic' || savedMode === 'advanced') {
       this.state.mode = savedMode;
     }
     
-    // Check saved theme preference
     const savedTheme = localStorage.getItem('ai_calc_theme');
     if (savedTheme) {
       this.state.theme = savedTheme;
@@ -72,7 +74,6 @@ class StateManager {
       this.state.theme = 'light';
     }
 
-    // Check saved language
     const savedLang = localStorage.getItem('ai_calc_lang');
     if (savedLang) {
       this.state.lang = savedLang;
@@ -84,6 +85,39 @@ class StateManager {
     });
   }
 
+  saveToLocalStorage() {
+    try {
+      localStorage.setItem('ai_calc_config', JSON.stringify(this.state));
+    } catch (e) {
+      console.warn('Could not save configuration to localStorage', e);
+    }
+  }
+
+  loadFromLocalStorage() {
+    try {
+      const raw = localStorage.getItem('ai_calc_config');
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      if (saved && typeof saved === 'object') {
+        Object.keys(saved).forEach(key => {
+          if (saved[key] !== undefined && saved[key] !== null) {
+            if (key === 'costParams' && typeof saved[key] === 'object') {
+              this.state.costParams = { ...this.state.costParams, ...saved[key] };
+            } else if (key === 'customModel' && typeof saved[key] === 'object') {
+              this.state.customModel = { ...this.state.customModel, ...saved[key] };
+            } else {
+              this.state[key] = saved[key];
+            }
+          }
+        });
+        return true;
+      }
+    } catch (e) {
+      console.warn('Failed to load configuration from localStorage', e);
+    }
+    return false;
+  }
+
   getState() {
     return this.state;
   }
@@ -91,18 +125,21 @@ class StateManager {
   updateState(partial) {
     this.state = { ...this.state, ...partial };
     this.syncToUrlHash();
+    this.saveToLocalStorage();
     this.notify();
   }
 
   updateCostParams(partial) {
     this.state.costParams = { ...this.state.costParams, ...partial };
     this.syncToUrlHash();
+    this.saveToLocalStorage();
     this.notify();
   }
 
   updateCustomModel(partial) {
     this.state.customModel = { ...this.state.customModel, ...partial };
     this.syncToUrlHash();
+    this.saveToLocalStorage();
     this.notify();
   }
 
@@ -178,7 +215,9 @@ class StateManager {
         tps: this.state.targetTpsPerStream,
         gpuU: this.state.gpuMemoryUtilization,
         mod: this.state.mode,
-        cat: this.state.activePresetCategory
+        cat: this.state.activePresetCategory,
+        tab: this.state.activeTab,
+        cp: this.state.costParams
       };
       if (this.state.modelId === 'custom') {
         payload.cm = this.state.customModel;
@@ -212,6 +251,8 @@ class StateManager {
           this.state.gpuMemoryUtilization = p.gpuU !== undefined ? p.gpuU : this.state.gpuMemoryUtilization;
           this.state.mode = p.mod || this.state.mode;
           this.state.activePresetCategory = p.cat || this.state.activePresetCategory;
+          if (p.tab) this.state.activeTab = p.tab;
+          if (p.cp && typeof p.cp === 'object') this.state.costParams = { ...this.state.costParams, ...p.cp };
           if (p.cm) this.state.customModel = p.cm;
         }
       }

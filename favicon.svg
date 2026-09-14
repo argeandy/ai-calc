@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#162035" />
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.8" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Squircle -->
+  <rect x="4" y="4" width="120" height="120" rx="30" ry="30" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="3" />
+
+  <!-- Subtle grid lines accent -->
+  <path d="M4 64 H124 M64 4 V124" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1" />
+
+  <!-- AI Text with Glow -->
+  <g filter="url(#glow)">
+    <text x="64" y="87" 
+          text-anchor="middle" 
+          font-family="-apple-system, BlinkMacSystemFont, 'Outfit', 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" 
+          font-size="66" 
+          font-weight="900" 
+          fill="url(#aiGrad)" 
+          letter-spacing="-1">AI</text>
+  </g>
+
+  <!-- Energy Spark Accent on top of I -->
+  <circle cx="94" cy="36" r="4.5" fill="#06b6d4" />
+  <circle cx="94" cy="36" r="2.5" fill="#ffffff" />
+</svg>
