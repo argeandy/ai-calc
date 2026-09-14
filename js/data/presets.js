@@ -57,6 +57,27 @@ export const USECASE_PRESETS = [
     engine: 'vllm'
   },
   {
+    id: 'agentic-ai-factory',
+    category: 'code',
+    name: 'Dell AI Factory Agentic AI',
+    nameEn: 'Dell AI Factory Agentic AI',
+    icon: '🤖',
+    modelId: 'deepseek-v3',
+    quantId: 'fp8',
+    kvQuantId: 'fp8',
+    totalUsers: 500,
+    requestsPerUserPerDay: 40,
+    peakMultiplier: 2.2,
+    workHours: 12,
+    inputTokens: 8000,
+    outputTokens: 1200,
+    targetTtftMs: 500,
+    targetTpsPerStream: 45,
+    description: 'Autonome Multi-Agenten-Orchestrierung mit Tool-Use, RAG und Runtime auf Dell PowerEdge & PowerRack mit NVIDIA Vera CPUs.',
+    descriptionEn: 'Autonomous multi-agent orchestration with tool use, retrieval, and runtime on Dell PowerEdge & PowerRack with NVIDIA Vera CPUs.',
+    engine: 'sglang'
+  },
+  {
     id: 'deep-reasoning-r1',
     category: 'reasoning',
     name: 'Deep Reasoning / Math / CoT',

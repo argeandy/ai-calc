@@ -30,9 +30,10 @@
   - **KV-Cache (PagedAttention)**: GQA / MHA und DeepSeek Multi-Head Latent Attention (MLA) mit FP16-, FP8- oder INT4-Präzision.
   - **Overhead**: CUDA Context Working Memory & Activation Buffer.
 
-- **🖥️ Hardware- & GPU-Katalog**:
-  - **Datacenter**: NVIDIA B200 SXM, H200 SXM (141GB), H100 SXM (80GB), A100 80GB, AMD Instinct MI300X (192GB HBM3).
-  - **Enterprise Inference**: NVIDIA L40S (48GB), NVIDIA L4 (24GB / 72W), RTX 6000 Ada (48GB).
+- **🖥️ Hardware-, GPU- & Server-Chassis-Katalog**:
+  - **Datacenter & Frontier**: NVIDIA Rubin NVL8 (288GB HBM4 im Dell PowerRack), B200 SXM / DLC Liquid (Dell PowerEdge M9822 & XE9680), H200 SXM (141GB), H100 SXM, AMD Instinct MI300X (192GB).
+  - **Enterprise Agentic Servers**: NVIDIA RTX PRO Server (Dell PowerEdge R9822 3U mit NVIDIA Vera CPUs), NVIDIA L40S (48GB), NVIDIA L4 (24GB / 72W), RTX 6000 Ada (48GB).
+  - **Server-Chassis & Racks**: Dell PowerRack (Vera Rubin Platform DLC), Dell PowerEdge R9822 (Vera 3U Air), Dell PowerEdge M9822 (Vera 2U DLC), PowerEdge XE9680 (8x HGX), Supermicro 8U/4U, Dell Precision 7960.
   - **Workstation / DIY**: NVIDIA RTX 5090 (32GB GDDR7), RTX 4090 (24GB).
   - **Apple Silicon**: Mac Studio M2 / M4 Ultra (128GB / 192GB Unified Memory).
 

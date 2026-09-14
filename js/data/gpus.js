@@ -5,6 +5,48 @@
 export const GPU_CATALOG = [
   // --- Datacenter Frontier ---
   {
+    id: 'rubin-nvl8',
+    name: 'NVIDIA Rubin NVL8 (288GB HBM4)',
+    vendor: 'NVIDIA',
+    tier: 'Frontier Datacenter (Vera Rubin)',
+    serverChassisId: 'dell-powerrack-rubin',
+    vram: 288, // GB
+    vramType: 'HBM4',
+    bandwidth: 14000, // GB/s (14 TB/s)
+    fp16Tflops: 4500,
+    fp8Tflops: 9000,
+    tdp: 1200, // Watts (Direct Liquid Cooled)
+    interconnect: 'NVLink 6 (3600 GB/s bidirectional)',
+    interconnectBandwidth: 3600,
+    maxPerNode: 8,
+    capexPrice: 58000,
+    cloudHourlyOnDemand: 7.50,
+    cloudHourly1YrReserved: 4.90,
+    description: 'NVIDIA Rubin Flagship mit 288GB HBM4 und Vera CPU im Dell PowerRack. Konzipiert für Agentic AI und Reasoning im Terabyte-Maßstab.',
+    badges: ['Next-Gen Rubin', '288GB HBM4', '14 TB/s', 'Vera CPU']
+  },
+  {
+    id: 'b200-dlc',
+    name: 'NVIDIA B200 DLC (192GB Liquid)',
+    vendor: 'NVIDIA',
+    tier: 'Frontier Datacenter',
+    serverChassisId: 'dell-m9822',
+    vram: 192,
+    vramType: 'HBM3e',
+    bandwidth: 8000,
+    fp16Tflops: 2250,
+    fp8Tflops: 4500,
+    tdp: 1000,
+    interconnect: 'NVLink 5 (1800 GB/s bidirectional)',
+    interconnectBandwidth: 1800,
+    maxPerNode: 4,
+    capexPrice: 44000,
+    cloudHourlyOnDemand: 5.60,
+    cloudHourly1YrReserved: 3.70,
+    description: '100% Direct Liquid-Cooled B200 im 2U Dell PowerEdge M9822 mit NVIDIA Vera CPUs für maximale Packungsdichte und Kühleffizienz.',
+    badges: ['100% DLC Liquid', '2U PowerEdge M9822', 'Vera CPU']
+  },
+  {
     id: 'b200',
     name: 'NVIDIA B200 SXM',
     vendor: 'NVIDIA',
@@ -111,6 +153,27 @@ export const GPU_CATALOG = [
   },
 
   // --- Enterprise Inference & Workstation ---
+  {
+    id: 'rtx-pro-server',
+    name: 'NVIDIA RTX PRO Server (48GB)',
+    vendor: 'NVIDIA',
+    tier: 'Enterprise Agentic Server',
+    serverChassisId: 'dell-r9822',
+    vram: 48,
+    vramType: 'GDDR7 ECC',
+    bandwidth: 1440, // GB/s
+    fp16Tflops: 550,
+    fp8Tflops: 1100,
+    tdp: 350,
+    interconnect: 'PCIe Gen5 (64 GB/s)',
+    interconnectBandwidth: 64,
+    maxPerNode: 4,
+    capexPrice: 9200,
+    cloudHourlyOnDemand: 1.40,
+    cloudHourly1YrReserved: 0.90,
+    description: 'Enterprise RTX PRO Beschleuniger im luftgekühlten Dell PowerEdge R9822 3U Server mit NVIDIA Vera CPUs für Agentic Sandboxes und RAG.',
+    badges: ['RTX PRO', 'Vera CPU 3U', 'Agentic Sandbox']
+  },
   {
     id: 'l40s',
     name: 'NVIDIA L40S (48GB)',
@@ -265,6 +328,45 @@ export const GPU_CATALOG = [
 ];
 
 export const CLOUD_INSTANCE_MAPPINGS = {
+  'rubin-nvl8': {
+    aws: { name: 'p7.48xlarge (8x Rubin NVL8 Preview)', hourlyOnDemand: 180.00, hourly1Yr: 120.00 },
+    azure: {
+      sku: 'Standard_ND96is_Rubin_v7',
+      name: 'ND96is Rubin v7 (8x Rubin NVL8)',
+      gpusPerNode: 8,
+      hourlyOnDemand: 58.00,
+      hourly1Yr: 38.00,
+      hourly3Yr: 26.00,
+      specs: '8x Rubin 288GB HBM4 · Quantum-X800 InfiniBand · Vera CPU Host'
+    },
+    gcp: { name: 'a5-highgpu-8g (8x Rubin NVL8)', hourlyOnDemand: 60.00, hourly1Yr: 40.00 }
+  },
+  'b200-dlc': {
+    aws: { name: 'p6e.48xlarge (Liquid B200)', hourlyOnDemand: 145.00, hourly1Yr: 95.00 },
+    azure: {
+      sku: 'Standard_ND96is_B200_DLC_v6',
+      name: 'ND96is B200 DLC (4x/8x B200)',
+      gpusPerNode: 4,
+      hourlyOnDemand: 23.00,
+      hourly1Yr: 15.00,
+      hourly3Yr: 10.20,
+      specs: 'Direct Liquid-Cooled B200 · Vera CPU Modular Architecture'
+    },
+    gcp: { name: 'a4-highgpu-dlc', hourlyOnDemand: 24.00, hourly1Yr: 15.80 }
+  },
+  'rtx-pro-server': {
+    aws: { name: 'g7e.12xlarge (4x RTX PRO)', hourlyOnDemand: 10.50, hourly1Yr: 6.80 },
+    azure: {
+      sku: 'Standard_NG64ads_Vera_v1',
+      name: 'NG64ads Vera (4x RTX PRO)',
+      gpusPerNode: 4,
+      hourlyOnDemand: 8.80,
+      hourly1Yr: 5.60,
+      hourly3Yr: 3.70,
+      specs: '4x RTX PRO 48GB · Dual Vera CPUs · Spectrum-X 400G'
+    },
+    gcp: { name: 'g3-standard-64 (4x RTX PRO)', hourlyOnDemand: 9.00, hourly1Yr: 5.80 }
+  },
   'b200': {
     aws: { name: 'p6.48xlarge (8x B200)', hourlyOnDemand: 140.00, hourly1Yr: 92.00 },
     azure: {
