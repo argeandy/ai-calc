@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dell AI Factory Live Workshop Edition - Interaktiver Workload-Advisor & GPU-Sizing Rechner für Dell Technologies Workshops.">
-  <meta name="author" content="Dell AI Solutions Architect">
+  <meta name="description" content="Dell AI Factory Live Advisor - Dimensionierungs- und TCO-Entscheidungs-Engine für Dell Technologies AI Workshops.">
+  <meta name="author" content="Dell AI Solutions Architecture">
   <title>Dell AI Factory Live Advisor | Workshop Edition</title>
 
-  <!-- Anti-Caching & Cache-Control Headers -->
+  <!-- Anti-Caching Headers -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -17,13 +17,13 @@
   <link rel="alternate icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" href="favicon.ico">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Inter & Roboto Mono (Straight, Technical, Enterprise) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/workshop.css?v=v1.3.1-d90eee1">
+  <link rel="stylesheet" href="css/workshop.css?v=v1.3.1-cb0a6ef">
 </head>
 <body>
   <div class="workshop-container">
@@ -34,21 +34,21 @@
         <div class="brand-info">
           <h1>
             Dell AI Factory Live Advisor
-            <span class="badge-workshop">Live Workshop Edition</span>
+            <span class="badge-workshop">WORKSHOP EDITION</span>
           </h1>
-          <p>Echtzeit-Dimensionierung, Workload-Klassifikation & Dell Hardware Tiers für AI Workshops</p>
+          <p>Echtzeit-Dimensionierung, Workload-Klassifikation &amp; Dell Hardware Tiers für AI Workshops</p>
         </div>
       </div>
 
       <div class="header-actions">
         <button type="button" class="btn-theme-toggle" id="theme-toggle-btn" title="Theme wechseln (Dark / Light)" aria-label="Theme wechseln">
-          <span id="theme-icon">☀️</span> <span id="theme-label">Light</span>
+          <span id="theme-label">LIGHT MODE</span>
         </button>
-        <button type="button" class="btn-beamer-toggle" id="btn-beamer-toggle" title="Kontrast & Schriftgröße für Präsentationen optimieren">
-          <span>📽️</span> Beamer-Modus
+        <button type="button" class="btn-beamer-toggle" id="btn-beamer-toggle" title="Kontrast &amp; Schriftgröße für Beamer/Präsentationen optimieren">
+          BEAMER-MODUS
         </button>
-        <a href="index.html" class="btn-secondary-link" title="Wechsle zum detaillierten Experten-Rechner mit allen Reglern">
-          <span>🛠️</span> Vollständiger Experten-Kalkulator ↗
+        <a href="index.html" class="btn-secondary-link" title="Wechsle zum detaillierten Experten-Rechner">
+          VOLLSTÄNDIGER RECHNER ↗
         </a>
       </div>
     </header>
@@ -57,58 +57,58 @@
     <section class="hero-prompt-section" aria-label="Use Case Assistent">
       <div class="hero-intro">
         <div class="section-pill">
-          <span>🤖</span> Dell AI Sizing Copilot
+          DELL AI SIZING COPILOT
         </div>
         <h2>
           Welchen AI-Workload planst du? <br>
-          <span class="gradient-text">Beschreibe deinen Use-Case in Echtzeit</span>
+          <span class="gradient-text">Use-Case Sizing in Echtzeit</span>
         </h2>
         <p>
-          Gib deinen Anwendungsfall in natürlicher Sprache ein oder klicke einen der 4 Workshop-Archetypen.
-          Die KI analysiert Tokenomics, Gleichzeitigkeit und empfiehlt das optimale Dell AI Factory Tier.
+          Gib deinen Anwendungsfall in natürlicher Sprache ein oder wähle einen der 4 Workshop-Archetypen.
+          Die Engine analysiert Tokenomics, Gleichzeitigkeit und empfiehlt das optimale Dell AI Factory Tier.
         </p>
       </div>
 
       <!-- Quick Prompt Suggestion Chips -->
       <div class="quick-prompts-label">
-        <span>⚡</span> Klick für Sofort-Demonstration im Workshop:
+        WORKLOAD-ARCHETYPEN (SCHNELLWAHL):
       </div>
       <div class="quick-prompts-grid">
         <!-- Chip 1: Tier 1 -->
         <button type="button" class="prompt-chip" id="prompt-chip-1" data-tier="tier-1-rag" data-prompt="Wir planen einen internen RAG-Chatbot für 150 Mitarbeiter für HR, Jira und Confluence Dokumente.">
           <div class="prompt-chip-header">
-            <span class="prompt-chip-tier tier-1-pill">Tier 1 • Entry</span>
-            <span class="prompt-chip-icon">💬</span>
+            <span class="prompt-chip-tier tier-1-pill">TIER 01 / ENTRY</span>
+            <span class="prompt-chip-index">01</span>
           </div>
-          <span class="prompt-chip-title">Enterprise RAG & Interner Assistent</span>
-          <span class="prompt-chip-desc">150 User • Llama 3.1 8B • Confluence & FAQ Dokumentensuche</span>
+          <span class="prompt-chip-title">Enterprise RAG &amp; Interner Assistent</span>
+          <span class="prompt-chip-desc">150 User • Llama 3.1 8B • Confluence &amp; FAQ Dokumentensuche</span>
         </button>
 
         <!-- Chip 2: Tier 2 -->
         <button type="button" class="prompt-chip active" id="prompt-chip-2" data-tier="tier-2-copilot" data-prompt="Unsere 800 Software-Entwickler brauchen einen lokalen Code-Copilot und Legal prüft Verträge mit 70B Modell.">
           <div class="prompt-chip-header">
-            <span class="prompt-chip-tier tier-2-pill">Tier 2 • Enterprise</span>
-            <span class="prompt-chip-icon">💻</span>
+            <span class="prompt-chip-tier tier-2-pill">TIER 02 / ENTERPRISE</span>
+            <span class="prompt-chip-index">02</span>
           </div>
-          <span class="prompt-chip-title">Developer Code Copilot & Legal</span>
-          <span class="prompt-chip-desc">800 User • Llama 3.3 70B • Hohe Gleichzeitigkeit & minimale Latenz</span>
+          <span class="prompt-chip-title">Developer Code Copilot &amp; Legal</span>
+          <span class="prompt-chip-desc">800 User • Llama 3.3 70B • Hohe Gleichzeitigkeit &amp; minimale Latenz</span>
         </button>
 
         <!-- Chip 3: Tier 3 -->
         <button type="button" class="prompt-chip" id="prompt-chip-3" data-tier="tier-3-frontier" data-prompt="Wir planen autonome Agenten-Schwärme mit DeepSeek R1 671B MoE für komplexe Reasoning- und Finanzberechnungen.">
           <div class="prompt-chip-header">
-            <span class="prompt-chip-tier tier-3-pill">Tier 3 • Frontier</span>
-            <span class="prompt-chip-icon">🧠</span>
+            <span class="prompt-chip-tier tier-3-pill">TIER 03 / FRONTIER</span>
+            <span class="prompt-chip-index">03</span>
           </div>
-          <span class="prompt-chip-title">Deep Reasoning & Agenten-Schwärme</span>
-          <span class="prompt-chip-desc">3.000+ User • DeepSeek R1 671B MoE • Chain-of-Thought & DLC Liquid</span>
+          <span class="prompt-chip-title">Deep Reasoning &amp; Agenten-Schwärme</span>
+          <span class="prompt-chip-desc">3.000+ User • DeepSeek R1 671B MoE • Chain-of-Thought &amp; DLC Liquid</span>
         </button>
 
         <!-- Chip 4: Tier 4 Heavy Compute & Training / Vision -->
         <button type="button" class="prompt-chip" id="prompt-chip-4" data-tier="tier-4-heavy-compute" data-prompt="24/7 Model-Training unseres eigenen Domain-Modells und Echtzeit-Videoanalyse für 200 Fabrik-Kameras (Computer Vision Dauerlast).">
           <div class="prompt-chip-header">
-            <span class="prompt-chip-tier tier-4-pill">Tier 4 • 24/7 Heavy</span>
-            <span class="prompt-chip-icon">🎥</span>
+            <span class="prompt-chip-tier tier-4-pill">TIER 04 / CONTINUOUS</span>
+            <span class="prompt-chip-index">04</span>
           </div>
           <span class="prompt-chip-title">Model Training &amp; Realtime Vision</span>
           <span class="prompt-chip-desc">24/7 Dauerlast • 100-500 Kameras / Training • Dell XE9680 + PowerScale F900</span>
@@ -118,29 +118,29 @@
       <!-- Chat Input Field -->
       <div class="chat-input-wrapper">
         <div class="chat-input-box">
-          <span class="chat-icon-sparkle" aria-hidden="true">✨</span>
+          <span class="chat-terminal-prompt" aria-hidden="true">&gt;</span>
           <input 
             type="text" 
             id="chat-input" 
             class="chat-input-field" 
-            placeholder="Tippe deinen Use-Case frei ein (z.B. '500 Entwickler brauchen schnellen Code-Copilot' oder 'Interne HR-Suche')..." 
+            placeholder="Workload beschreiben (z.B. '500 Entwickler brauchen schnellen Code-Copilot' oder '200 Kameras Videoanalyse')..." 
             autocomplete="off"
             value="Unsere 800 Software-Entwickler brauchen einen lokalen Code-Copilot und Legal prüft Verträge mit 70B Modell."
           >
           <button type="button" id="chat-submit-btn" class="btn-chat-submit">
-            <span>⚡</span> Analysieren
+            ANALYSIEREN
           </button>
         </div>
       </div>
 
-      <!-- Simulated Agentic Pipeline Console ("KI arbeitet im Hintergrund") -->
+      <!-- Simulated Agentic Pipeline Console -->
       <div class="agentic-console" id="agentic-console" role="status" aria-live="polite">
         <div class="agentic-console-header">
           <div class="console-title">
             <span class="console-live-pulse"></span>
-            <span>Dell Agentic Reasoning Engine • Sizing Synthese</span>
+            <span>DELL AGENTIC REASONING ENGINE // SIZING SYNTHESE</span>
           </div>
-          <button type="button" class="console-skip-btn" id="console-skip-btn">⚡ Sofort anzeigen</button>
+          <button type="button" class="console-skip-btn" id="console-skip-btn">SOFORT ANZEIGEN</button>
         </div>
         <div class="console-steps-list" id="console-steps-list">
           <!-- Dynamically populated steps -->
@@ -152,22 +152,22 @@
     <main class="results-dashboard" id="results-dashboard">
       <!-- 1. Main Readiness & Decision Indicator Banner -->
       <section class="readiness-banner" aria-label="Dell AI Factory Entscheidungs-Indikator">
-        <div class="readiness-badge-corner" id="readiness-score-val">96% Score</div>
+        <div class="readiness-badge-corner" id="readiness-score-val">96% READINESS</div>
         
         <div class="readiness-header">
           <div class="readiness-pretitle">
-            <span>🏭</span> Dell AI Factory Readiness Indicator
+            DELL AI FACTORY // READINESS INDICATOR
           </div>
-          <h2 class="readiness-title" id="readiness-title">Developer Code Copilot & Enterprise Document Analytics</h2>
-          <p class="readiness-subtitle" id="readiness-subtitle">Unternehmensweite Code-Completion für Entwickler & tiefe juristische Vertragsprüfung</p>
+          <h2 class="readiness-title" id="readiness-title">Developer Code Copilot &amp; Enterprise Document Analytics</h2>
+          <p class="readiness-subtitle" id="readiness-subtitle">Unternehmensweite Code-Completion für Entwickler &amp; tiefe juristische Vertragsprüfung</p>
           
-          <div style="margin-top: 1rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <span class="prompt-chip-tier tier-2-pill" id="readiness-status-badge" style="font-size: 0.9rem; padding: 0.35rem 0.95rem;">
-              🔥 100% EMPFOHLEN: Dell AI Factory Enterprise Tier
+          <div style="margin-top: 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <span class="prompt-chip-tier tier-2-pill" id="readiness-status-badge" style="font-size: 0.82rem; padding: 0.4rem 1rem;">
+              EMPFOHLEN: DELL AI FACTORY ENTERPRISE TIER
             </span>
           </div>
 
-          <p class="readiness-subtitle" id="readiness-decision" style="margin-top: 0.85rem; color: #f1f5f9; font-weight: 500;">
+          <p class="readiness-subtitle" id="readiness-decision" style="margin-top: 1rem; color: var(--text-primary); font-weight: 500;">
             Absoluter Enterprise-Standard ab 300+ Entwicklern oder 25.000 Anfragen/Tag! Externe Cloud-Tokenkosten explodieren bei diesem Volumen. Dell AI Factory amortisiert sich in ~14 Monaten und spart über 220.000 €/Jahr.
           </p>
         </div>
@@ -175,44 +175,40 @@
         <!-- 4 Core Decision Factors Grid -->
         <div class="decision-factors-grid">
           <div class="factor-card">
-            <span class="factor-icon">💰</span>
-            <span class="factor-label">TCO Break-Even</span>
+            <span class="factor-label">TCO BREAK-EVEN</span>
             <span class="factor-value" id="factor-tco-value">~14 Monate</span>
             <span class="factor-desc" id="factor-tco-desc">Spart ca. 18.400 €/Monat ggü. Cloud API</span>
           </div>
 
           <div class="factor-card">
-            <span class="factor-icon">⚡</span>
-            <span class="factor-label">Latenz & SLA</span>
+            <span class="factor-label">LATENZ &amp; SLA</span>
             <span class="factor-value" id="factor-latency-value">&lt; 320 ms</span>
             <span class="factor-desc" id="factor-latency-desc">Konstante 50 Tok/s ohne Cloud-Drosselung</span>
           </div>
 
           <div class="factor-card">
-            <span class="factor-icon">🔒</span>
-            <span class="factor-label">Datenschutz & DSGVO</span>
+            <span class="factor-label">DATENSCHUTZ &amp; DSGVO</span>
             <span class="factor-value" id="factor-privacy-value">100% On-Prem</span>
             <span class="factor-desc" id="factor-privacy-desc">Keine Firmengeheimnisse in US-Cloud-APIs</span>
           </div>
 
           <div class="factor-card">
-            <span class="factor-icon">🖥️</span>
-            <span class="factor-label">Dell Turnkey Capex</span>
+            <span class="factor-label">TURNKEY CAPEX</span>
             <span class="factor-value" id="factor-capex-value">322.0k €</span>
             <span class="factor-desc" id="factor-capex-desc">Dell Turnkey Capex inkl. Chassis &amp; GPUs</span>
           </div>
         </div>
       </section>
 
-      <!-- 2. Tipping-Point & Break-Even Schwelle Card (Dell AI Factory Umstiegs-Indikator) -->
+      <!-- 2. Tipping-Point & Break-Even Schwelle Card -->
       <section class="tipping-point-card" id="tipping-point-card" aria-label="Dell AI Factory Umstiegs-Schwelle">
         <div class="tipping-header">
           <div class="tipping-title-group">
             <div class="tipping-pretitle">
-              <span>⚖️</span> Tipping-Point &amp; Break-Even Schwelle
+              TIPPING-POINT &amp; BREAK-EVEN ANALYSE
             </div>
-            <h3>Ab wann lohnt sich der Umstieg auf die Dell AI Factory?</h3>
-            <p>Eindeutige TCO-Schwelle, Volumengrenzen und DSGVO-Entscheidungskriterien im direkten Vergleich zur Public Cloud.</p>
+            <h3>Wirtschaftlicher Kipppunkt: Dell AI Factory vs. Public Cloud</h3>
+            <p>Eindeutige TCO-Schwelle, Volumengrenzen und DSGVO-Entscheidungskriterien im direkten TCO-Vergleich.</p>
           </div>
           <div class="roi-radial-wrapper" title="Wirtschaftlicher ROI-Index der Dell AI Factory ggü. Public Cloud">
             <svg class="roi-radial-svg" viewBox="0 0 120 120" aria-hidden="true">
@@ -221,7 +217,7 @@
             </svg>
             <div class="roi-radial-text">
               <span class="roi-radial-val" id="roi-radial-score">96%</span>
-              <span class="roi-radial-label">ROI Score</span>
+              <span class="roi-radial-label">ROI INDEX</span>
             </div>
           </div>
         </div>
@@ -230,7 +226,7 @@
         <div class="threshold-meta-row">
           <div class="threshold-status-pill" id="threshold-status-pill">
             <span class="pulse-indicator"></span>
-            <span id="threshold-status-text">DELL AI FACTORY ERREICHT BREAK-EVEN (Amortisation &lt; 14 Monate)</span>
+            <span id="threshold-status-text">DELL AI FACTORY RENTABEL (AMORTISATION &lt; 14 MONATE)</span>
           </div>
           <div class="threshold-point-badge" id="threshold-point-badge">
             Kipp-Punkt: <strong id="tipping-point-threshold-val">ab ~200 Nutzern</strong> (oder 10.000 Req/Tag)
@@ -239,10 +235,10 @@
 
         <div class="threshold-track-container">
           <div class="threshold-track">
-            <div class="threshold-zone zone-cloud">☁️ Public Cloud flexibler</div>
-            <div class="threshold-zone zone-dell">🏭 Dell AI Factory wirtschaftlich überlegen</div>
+            <div class="threshold-zone zone-cloud">PUBLIC CLOUD FLEXIBLER</div>
+            <div class="threshold-zone zone-dell">DELL AI FACTORY WIRTSCHAFTLICH ÜBERLEGEN</div>
             <div class="threshold-divider" id="threshold-divider">
-              <div class="threshold-marker-flag">Kipp-Punkt (Break-Even)</div>
+              <div class="threshold-marker-flag">BREAK-EVEN SCHWELLE</div>
             </div>
             <div class="threshold-pointer" id="threshold-pointer" style="left: 65%;">
               <div class="pointer-bubble" id="pointer-bubble">800 Nutzer (Aktuell)</div>
@@ -255,7 +251,7 @@
         <div class="triggers-grid">
           <div class="trigger-card active" id="trigger-card-vol">
             <div class="trigger-top">
-              <span class="trigger-icon">📈</span>
+              <span class="trigger-tech-label">VOLUMEN</span>
               <span class="trigger-badge pass" id="trigger-vol-badge">Schwelle überschritten</span>
             </div>
             <h4>1. Request- &amp; Token-Volumen</h4>
@@ -264,7 +260,7 @@
 
           <div class="trigger-card" id="trigger-card-privacy">
             <div class="trigger-top">
-              <span class="trigger-icon">🛡️</span>
+              <span class="trigger-tech-label">DSGVO / SEC</span>
               <label class="switch-toggle-label" title="DSGVO / Datenschutz-Priorität umschalten">
                 <input type="checkbox" id="toggle-privacy-strict" aria-label="Datenschutz-Priorität umschalten">
                 <span class="switch-slider"></span>
@@ -276,7 +272,7 @@
 
           <div class="trigger-card active" id="trigger-card-sla">
             <div class="trigger-top">
-              <span class="trigger-icon">⚡</span>
+              <span class="trigger-tech-label">LOKALE SLA</span>
               <span class="trigger-badge pass" id="trigger-sla-badge">&lt; 320ms TTFT</span>
             </div>
             <h4>3. Latenz &amp; SLA-Garantie</h4>
@@ -290,12 +286,11 @@
         <!-- Hardware Recommendation Spec Card -->
         <div class="hardware-spec-card">
           <div class="card-top-header">
-            <h3><span>🖥️</span> Empfohlenes Dell Validated Hardware-Design</h3>
-            <span class="tier-pill-badge tier-2-pill" id="tier-pill-badge">Enterprise Flagship</span>
+            <h3>DELL VALIDATED HARDWARE-DESIGN</h3>
+            <span class="tier-pill-badge tier-2-pill" id="tier-pill-badge">ENTERPRISE FLAGSHIP</span>
           </div>
 
           <div class="server-hero-display">
-            <span class="server-hero-icon" id="server-hero-icon">💻</span>
             <div class="server-hero-text">
               <h4 id="server-hero-title">Dell PowerEdge XE9680</h4>
               <p id="server-hero-subtitle">8x NVIDIA H200 SXM (141GB HBM3e) NVLink Mesh • 6U Rackmount</p>
@@ -316,21 +311,21 @@
               <span class="spec-val" id="spec-bandwidth">≥ 4.800 GB/s HBM3e</span>
             </div>
             <div class="spec-item">
-              <span class="spec-label">Host CPU & RAM</span>
+              <span class="spec-label">Host CPU &amp; RAM</span>
               <span class="spec-val" id="spec-host">Dual AMD EPYC 9654 (128 Cores), 1.5 TB DDR5</span>
             </div>
             <div class="spec-item">
-              <span class="spec-label">Interconnect & Networking</span>
+              <span class="spec-label">Interconnect &amp; Networking</span>
               <span class="spec-val" id="spec-networking">8x ConnectX-7 400Gb/s InfiniBand / RoCE</span>
             </div>
             <div class="spec-item">
-              <span class="spec-label">Formfaktor & Kühlung</span>
+              <span class="spec-label">Formfaktor &amp; Kühlung</span>
               <span class="spec-val" id="spec-formfactor">6U Rackmount (High-Density Datacenter)</span>
             </div>
           </div>
 
           <div class="dell-factory-perks">
-            <h5><span>🛡️</span> Dell AI Factory Mehrwert & Architektur-Vorteile</h5>
+            <h5>DELL AI FACTORY // ARCHITEKTUR-VORTEILE</h5>
             <ul class="perks-list" id="perks-list">
               <!-- Dynamically populated -->
             </ul>
@@ -340,16 +335,16 @@
         <!-- What-If Live Interactive Simulator -->
         <div class="whatif-simulator-card">
           <div class="whatif-header">
-            <h3><span>⚡</span> Live-Skalierung & What-If Simulator</h3>
-            <p>Verändere die Nutzeranzahl live im Workshop und beobachte, wie sich Hardware-Bedarf und TCO in Echtzeit verhalten.</p>
+            <h3>LIVE-SKALIERUNG &amp; WHAT-IF SIMULATION</h3>
+            <p>Verändere die Parameter live im Workshop und beobachte, wie sich Hardware-Bedarf und TCO in Echtzeit verhalten.</p>
           </div>
 
           <!-- Dynamic Scaling Warning Box -->
-          <div id="scaling-warning-box" style="display: none; padding: 0.85rem 1rem; border-radius: var(--radius-md); background: rgba(245, 158, 11, 0.15); border: 1px solid var(--warning-color); color: #fef3c7; font-size: 0.84rem; margin: 1rem 0;"></div>
+          <div id="scaling-warning-box"></div>
 
           <div class="slider-group-box">
             <div class="slider-label-row">
-              <span class="slider-label-title" id="slider-label-title">👥 Aktive Nutzer (Live Skalierung)</span>
+              <span class="slider-label-title" id="slider-label-title">AKTIVE NUTZER (SKALIERUNG)</span>
               <span class="slider-live-value" id="slider-live-users">800 User</span>
             </div>
             <input 
@@ -364,7 +359,7 @@
             >
             <div class="slider-scale-legend">
               <span id="slider-min-users">150 User</span>
-              <span>Schieberegler bewegen ➔</span>
+              <span>INTERAKTIVE SKALIERUNG ➔</span>
               <span id="slider-max-users">3.500 User</span>
             </div>
           </div>
@@ -372,40 +367,40 @@
           <!-- Mini Metrics Box -->
           <div class="live-metrics-box">
             <div class="live-metric-pill">
-              <span class="live-metric-label" id="live-metric-label-1">Peak Request Rate</span>
+              <span class="live-metric-label" id="live-metric-label-1">PEAK REQUEST RATE</span>
               <span class="live-metric-val" id="live-rps-val">3.3 req/s</span>
             </div>
             <div class="live-metric-pill">
-              <span class="live-metric-label" id="live-metric-label-2">Token Durchsatz</span>
+              <span class="live-metric-label" id="live-metric-label-2">TOKEN DURCHSATZ</span>
               <span class="live-metric-val" id="live-tokens-val">29.333 tok/s</span>
             </div>
             <div class="live-metric-pill">
-              <span class="live-metric-label" id="live-metric-label-3">Benötigter VRAM</span>
+              <span class="live-metric-label" id="live-metric-label-3">BENÖTIGTER VRAM</span>
               <span class="live-metric-val" id="live-vram-val">124 GB</span>
             </div>
             <div class="live-metric-pill">
-              <span class="live-metric-label" id="live-metric-label-4">Monatl. Cloud-Ersparnis</span>
-              <span class="live-metric-val" id="live-monthly-saving" style="color: #10b981;">~18.400 €/M</span>
+              <span class="live-metric-label" id="live-metric-label-4">MONATL. CLOUD-ERSPARNIS</span>
+              <span class="live-metric-val" id="live-monthly-saving" style="color: #0076CE;">~18.400 €/M</span>
             </div>
           </div>
 
-          <!-- 4-Tier Visual Gauge Bar -->
+          <!-- 4-Tier Visual Gauge Bar (Interactive Hardware-Spektrum) -->
           <div class="tier-scale-container">
             <div class="tier-scale-title">
-              <span>Dell AI Factory Hardware-Tier Spektrum</span>
-              <span id="tier-scale-label">Aktiv: Tier 2</span>
+              <span class="tier-scale-title-text">DELL AI FACTORY HARDWARE-SPEKTRUM</span>
+              <span id="tier-scale-label">AKTIV: TIER 2 // XE9680 (H200)</span>
             </div>
-            <div class="tier-scale-bar">
-              <div class="tier-seg seg-1" id="tier-seg-1" title="Tier 1: R760xa (L40S)"></div>
-              <div class="tier-seg seg-2 active" id="tier-seg-2" title="Tier 2: XE9680 (H200)"></div>
-              <div class="tier-seg seg-3" id="tier-seg-3" title="Tier 3: M9822 DLC (B200 / Rubin)"></div>
-              <div class="tier-seg seg-4" id="tier-seg-4" title="Tier 4: XE9680 (Training & Vision 24/7)"></div>
+            <div class="tier-scale-bar" role="tablist" aria-label="Dell AI Factory Hardware Tiers">
+              <button type="button" class="tier-seg seg-1" id="tier-seg-1" data-tier="tier-1-rag" title="Tier 1: Dell PowerEdge R760xa (2x L40S) • Klicken zum Wechseln" aria-label="Tier 1 R760xa"></button>
+              <button type="button" class="tier-seg seg-2 active" id="tier-seg-2" data-tier="tier-2-copilot" title="Tier 2: Dell PowerEdge XE9680 (8x H200) • Klicken zum Wechseln" aria-label="Tier 2 XE9680"></button>
+              <button type="button" class="tier-seg seg-3" id="tier-seg-3" data-tier="tier-3-frontier" title="Tier 3: Dell PowerEdge M9822 DLC (8x B200) • Klicken zum Wechseln" aria-label="Tier 3 M9822"></button>
+              <button type="button" class="tier-seg seg-4" id="tier-seg-4" data-tier="tier-4-heavy-compute" title="Tier 4: Dell PowerEdge XE9680 + PowerScale F900 (24/7 Dauerlast) • Klicken zum Wechseln" aria-label="Tier 4 24/7 Heavy"></button>
             </div>
             <div class="tier-scale-labels">
-              <span>Tier 1: RAG</span>
-              <span>Tier 2: Copilot</span>
-              <span>Tier 3: Frontier DLC</span>
-              <span>Tier 4: 24/7 Heavy</span>
+              <button type="button" class="tier-scale-btn" id="tier-scale-btn-1" data-tier="tier-1-rag" title="Zu Tier 1 wechseln">TIER 1: R760xa</button>
+              <button type="button" class="tier-scale-btn active" id="tier-scale-btn-2" data-tier="tier-2-copilot" title="Zu Tier 2 wechseln">TIER 2: XE9680</button>
+              <button type="button" class="tier-scale-btn" id="tier-scale-btn-3" data-tier="tier-3-frontier" title="Zu Tier 3 wechseln">TIER 3: M9822 DLC</button>
+              <button type="button" class="tier-scale-btn" id="tier-scale-btn-4" data-tier="tier-4-heavy-compute" title="Zu Tier 4 wechseln">TIER 4: 24/7 HEAVY</button>
             </div>
           </div>
         </div>
@@ -414,7 +409,7 @@
       <!-- 3. Bottom Summary & Action Banner -->
       <section class="tco-advantage-banner">
         <div class="tco-advantage-info">
-          <h4><span>💡</span> Bereit für die Dell AI Factory im Unternehmen?</h4>
+          <h4>DELL TECHNOLOGIES // AI FACTORY ARCHITEKTUR</h4>
           <p>
             Vom kompakten Edge-Inferenz-Server bis zum flüssigkeitsgekühlten Supercomputing-Rack: 
             Dell Validated Designs bieten garantierte Performance, Skalierbarkeit und nahtlose Integration mit NVIDIA AI Enterprise.
@@ -423,10 +418,10 @@
 
         <div class="tco-action-group">
           <button type="button" class="btn-copy-summary" id="btn-copy-summary">
-            <span>📋</span> Zusammenfassung kopieren
+            ZUSAMMENFASSUNG KOPIEREN
           </button>
           <a href="index.html" class="btn-dive-deep">
-            <span>⚙️</span> Detail-Kalkulator öffnen ➔
+            EXPERTIEN-KALKULATOR ÖFFNEN ➔
           </a>
         </div>
       </section>
@@ -437,6 +432,7 @@
   <div class="workshop-toast" id="workshop-toast" role="alert"></div>
 
   <!-- Main Controller Script -->
-  <script type="module" src="js/workshop.js?v=v1.3.1-d90eee1"></script>
+  <script type="module" src="js/workshop.js?v=v1.3.1-cb0a6ef"></script>
 </body>
 </html>
+

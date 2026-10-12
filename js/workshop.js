@@ -14,7 +14,7 @@ export const WORKLOAD_TIERS = {
     badgeClass: 'tier-1-pill',
     title: 'Enterprise RAG & Interner Wissens-Assistent',
     subtitle: 'Interne Dokumentensuche (Confluence, Jira, PDFs) & Abteilungs-Chatbot für HR und Support',
-    icon: '💬',
+    icon: '01',
     modelName: 'Llama 3.1 8B Instruct',
     modelParams: '8.0 Mrd. Parameter (FP16 / FP8 KV)',
     modelWeightsGb: 16.5,
@@ -43,7 +43,7 @@ export const WORKLOAD_TIERS = {
     tippingPointReqPerDay: '1.400 Req/Tag',
     // Comparison & Indicator
     readinessScore: 88,
-    statusText: '✅ Dell AI Factory Tier 1 (Departmental) Sinnvoll',
+    statusText: 'VALIDIERT: DELL AI FACTORY TIER 1 (ENTRY)',
     indicatorDecision: 'Sinnvoll ab 10.000 Anfragen/Monat ODER sofort, wenn DSGVO-relevante Mitarbeiter- oder Kundendaten verarbeitet werden. 100% On-Premises ohne Datenabfluss in fremde US-Clouds.',
     cloudEquivalent: 'OpenAI GPT-4o-mini / Hosted Llama 8B',
     cloudCostPer1MInput: 0.25,
@@ -67,7 +67,7 @@ export const WORKLOAD_TIERS = {
     badgeClass: 'tier-2-pill',
     title: 'Developer Code Copilot & Enterprise Document Analytics',
     subtitle: 'Unternehmensweite Code-Completion für Entwickler & tiefe juristische Vertragsprüfung',
-    icon: '💻',
+    icon: '02',
     modelName: 'Llama 3.3 70B Instruct',
     modelParams: '70.6 Mrd. Parameter (FP8 Quantized)',
     modelWeightsGb: 74.5,
@@ -96,7 +96,7 @@ export const WORKLOAD_TIERS = {
     tippingPointReqPerDay: '10.000 Req/Tag',
     // Comparison & Indicator
     readinessScore: 96,
-    statusText: '🔥 100% EMPFOHLEN: Dell AI Factory Enterprise Tier',
+    statusText: 'EMPFOHLEN: DELL AI FACTORY ENTERPRISE TIER',
     indicatorDecision: 'Absoluter Enterprise-Standard ab 300+ Entwicklern oder 25.000 Anfragen/Tag! Externe Cloud-Tokenkosten explodieren bei diesem Volumen. Dell AI Factory amortisiert sich in ~14 Monaten und spart über 220.000 €/Jahr.',
     cloudEquivalent: 'Anthropic Claude 3.5 Sonnet / OpenAI GPT-4o',
     cloudCostPer1MInput: 3.00,
@@ -120,7 +120,7 @@ export const WORKLOAD_TIERS = {
     badgeClass: 'tier-3-pill',
     title: 'Frontier Deep Reasoning, MoE & Autonome Agenten-Schwärme',
     subtitle: 'DeepSeek-R1 671B MoE, komplexe mathematische Reasoning-Ketten & 24/7 Agentic Autonomy',
-    icon: '🧠',
+    icon: '03',
     modelName: 'DeepSeek R1 (671B MoE Reasoning)',
     modelParams: '671 Mrd. MoE (37B aktiv) mit Deep Chain-of-Thought',
     modelWeightsGb: 345.0,
@@ -149,7 +149,7 @@ export const WORKLOAD_TIERS = {
     tippingPointReqPerDay: '16.500 Req/Tag',
     // Comparison & Indicator
     readinessScore: 99,
-    statusText: '🚀 MISSION CRITICAL: Dell AI Factory Frontier Tier (DLC)',
+    statusText: 'MISSION CRITICAL: DELL AI FACTORY FRONTIER TIER (DLC)',
     indicatorDecision: 'Unverzichtbar für 671B MoE Modelle und autonome Multi-Agenten-Loops! Bei 3.500 Reasoning-Tokens pro Request kosten Cloud-APIs über 65.000 €/Monat. Dell AI Factory mit Flüssigkühlung halbiert die TCO und ist nach ~7 Monaten im Plus.',
     cloudEquivalent: 'OpenAI o1 / Claude Opus 3.5 Reasoning API',
     cloudCostPer1MInput: 5.00,
@@ -173,7 +173,7 @@ export const WORKLOAD_TIERS = {
     badgeClass: 'tier-4-pill',
     title: '24/7 Continuous Model Training & Real-Time Video AI',
     subtitle: 'Unabhängig von Nutzerzahlen: 100% GPU-Dauerlast für Domain Pretraining, Fine-Tuning & hunderte 4K Video-Streams (Computer Vision)',
-    icon: '🎥',
+    icon: '04',
     modelName: 'Vision-LLM (Florence-2 / YOLOv10) & Llama 70B Training',
     modelParams: 'Continuous Multi-Stream Inferenz & Distributed PyTorch FSDP',
     modelWeightsGb: 140.0,
@@ -204,7 +204,7 @@ export const WORKLOAD_TIERS = {
     tippingPointReqPerDay: '32 Video-Streams / >12h Training',
     // Comparison & Indicator
     readinessScore: 98,
-    statusText: '🔥 100% EMPFOHLEN: Dell AI Factory Dauerlast-Champion',
+    statusText: 'EMPFOHLEN: DELL AI FACTORY DAUERLAST ARCHITEKTUR',
     indicatorDecision: 'Bei 24/7 Dauerlast (Model Training oder Videoanalyse) ist die Cloud der teuerste aller Wege! Ein gemieteter 8x H200 Cloud-Knoten kostet über 24.000 €/Monat. Die Dell AI Factory amortisiert sich in ~12 Monaten, spart monatlich über 20.000 € und garantiert <15ms Latenz direkt vor Ort.',
     cloudEquivalent: 'AWS p5.48xlarge (8x H100/H200) On-Demand / Reserved',
     breakEvenBaseMonths: 12,
@@ -291,11 +291,18 @@ class WorkshopController {
     this.liveMonthlySaving = document.getElementById('live-monthly-saving');
 
     // Tier Scale & Labels
+    this.tierSegs = document.querySelectorAll('.tier-seg');
     this.tierSeg1 = document.getElementById('tier-seg-1');
     this.tierSeg2 = document.getElementById('tier-seg-2');
     this.tierSeg3 = document.getElementById('tier-seg-3');
     this.tierSeg4 = document.getElementById('tier-seg-4');
+    this.tierScaleBtns = document.querySelectorAll('.tier-scale-btn');
+    this.tierScaleBtn1 = document.getElementById('tier-scale-btn-1');
+    this.tierScaleBtn2 = document.getElementById('tier-scale-btn-2');
+    this.tierScaleBtn3 = document.getElementById('tier-scale-btn-3');
+    this.tierScaleBtn4 = document.getElementById('tier-scale-btn-4');
     this.tierScaleLabel = document.getElementById('tier-scale-label');
+    this.scalingWarningBox = document.getElementById('scaling-warning-box');
     this.sliderLabelTitle = document.getElementById('slider-label-title');
     this.liveMetricLabel1 = document.getElementById('live-metric-label-1');
     this.liveMetricLabel2 = document.getElementById('live-metric-label-2');
@@ -336,10 +343,10 @@ class WorkshopController {
   applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     if (this.themeIcon) {
-      this.themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      this.themeIcon.textContent = '';
     }
     if (this.themeLabel) {
-      this.themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+      this.themeLabel.textContent = theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE';
     }
     if (this.themeToggleBtn) {
       this.themeToggleBtn.title = theme === 'dark' ? 'Zu Light Mode wechseln' : 'Zu Dark Mode wechseln';
@@ -380,6 +387,41 @@ class WorkshopController {
       });
     });
 
+    // Hardware-Spektrum Interactive Segment & Button Clicks
+    const handleDirectTierSwitch = (targetTierKey) => {
+      if (!targetTierKey || !WORKLOAD_TIERS[targetTierKey]) return;
+      this.selectTier(targetTierKey, null, true);
+    };
+
+    if (this.tierSegs) {
+      this.tierSegs.forEach(seg => {
+        seg.addEventListener('click', () => {
+          const tierKey = seg.getAttribute('data-tier');
+          handleDirectTierSwitch(tierKey);
+        });
+      });
+    }
+
+    if (this.tierScaleBtns) {
+      this.tierScaleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tierKey = btn.getAttribute('data-tier');
+          handleDirectTierSwitch(tierKey);
+        });
+      });
+    }
+
+    // Scaling warning box 1-click quick switch delegation
+    if (this.scalingWarningBox) {
+      this.scalingWarningBox.addEventListener('click', (e) => {
+        const switchBtn = e.target.closest('.btn-tier-quick-switch');
+        if (switchBtn) {
+          const tierKey = switchBtn.getAttribute('data-tier');
+          handleDirectTierSwitch(tierKey);
+        }
+      });
+    }
+
     // Console Skip
     if (this.consoleSkipBtn) {
       this.consoleSkipBtn.addEventListener('click', () => {
@@ -399,9 +441,9 @@ class WorkshopController {
         document.body.classList.toggle('beamer-mode');
         const isActive = document.body.classList.contains('beamer-mode');
         this.btnBeamerToggle.classList.toggle('active', isActive);
-        this.btnBeamerToggle.innerHTML = isActive 
-          ? '<span>📽️</span> Beamer-Modus AN' 
-          : '<span>📽️</span> Beamer-Modus';
+        this.btnBeamerToggle.textContent = isActive 
+          ? 'BEAMER-MODUS AN' 
+          : 'BEAMER-MODUS';
       });
     }
 
@@ -441,8 +483,8 @@ class WorkshopController {
   classifyPrompt(text) {
     const lower = text.toLowerCase().trim();
 
-    // 1. Check for explicit numbers of users/streams/cameras (e.g., "500 Entwickler", "200 Kameras", "3000 User")
-    const userMatch = lower.match(/(\d+[\.\d]*)\s*(user|benutzer|mitarbeiter|entwickler|people|clients|agents|nutzer|kamera|kameras|camera|cameras|streams|feeds|cams|batches)/i);
+    // 1. Check for explicit numbers of users/streams/cameras/workplaces
+    const userMatch = lower.match(/(\d+[\.\d]*)\s*(user|benutzer|mitarbeiter|mitarbeiterinnen|entwickler|people|clients|agents|nutzer|personen|person|leute|kollegen|kolleginnen|arbeitsplätze|arbeitsplaetze|teams|seats|instanzen|kamera|kameras|camera|cameras|streams|feeds|cams|batches)/i);
     let extractedUsers = null;
     if (userMatch && userMatch[1]) {
       const cleanNum = parseInt(userMatch[1].replace(/\./g, ''), 10);
@@ -451,35 +493,35 @@ class WorkshopController {
       }
     }
 
-    // 2. Strict Keyword Classification
-    // Case 4 triggers: Heavy Compute, 24/7 Dauerlast, Training, Fine-Tuning, Video, Videoanalyse, Kameras, Computer Vision, YOLO, Streams, Fabrik
-    const tier4Regex = /\b(training|trainieren|train|fine-?tuning|finetuning|pre-?training|video|videoanalyse|kamera|kameras|camera|cameras|stream|streams|streaming|vision|computer vision|yolo|rtsp|surveillance|fertigung|fabrik|produktion|dauerlast|24\/7|non-stop|batch|florence|opencv)\b/i;
+    // 2. Strict Keyword & Hardware Model Classification
+    // Case 4 triggers: Tier 4, PowerScale, F900, Training, Fine-Tuning, Video, Videoanalyse, Kameras, Computer Vision, YOLO, Streams, Fabrik
+    const tier4Regex = /\b(tier\s*4|tier\s*04|tier4|t4|heavy\s*compute|powerscale|f900|training|trainieren|train|fine-?tuning|finetuning|pre-?training|video|videoanalyse|kamera|kameras|camera|cameras|stream|streams|streaming|vision|computer\s*vision|yolo|rtsp|surveillance|überwachung|ueberwachung|fertigung|fabrik|produktion|dauerlast|dauerbetrieb|24\/7|non-stop|batch|batches|florence|opencv)\b/i;
     if (tier4Regex.test(lower)) {
       return { tierKey: 'tier-4-heavy-compute', extractedUsers: extractedUsers || 256 };
     }
 
-    // Case 3 triggers: DeepSeek, R1, V3, MoE, Reasoning, Chain-of-Thought, Agenten, Swarm, Frontier, Liquid, DLC
-    const tier3Regex = /\b(deepseek|r1|v3|moe|reasoning|cot|agent|agenten|agentic|swarm|schwärme|schwarm|frontier|hyperscale|supercomputer|liquid|dlc|rubin|blackwell|b200|671b)\b/i;
+    // Case 3 triggers: Tier 3, M9822, DeepSeek, R1, V3, MoE, Reasoning, Chain-of-Thought, Agenten, Swarm, Frontier, Liquid, DLC, B200, Rubin, Blackwell
+    const tier3Regex = /\b(tier\s*3|tier\s*03|tier3|t3|m9822|deepseek|r1|v3|moe|reasoning|cot|chain-of-thought|agent|agenten|agentic|swarm|schwärme|schwarm|frontier|hyperscale|supercomputer|supercomputing|liquid|flüssigkühlung|fluessigkuehlung|dlc|rubin|blackwell|b200|671b)\b/i;
     if (tier3Regex.test(lower)) {
       return { tierKey: 'tier-3-frontier', extractedUsers: extractedUsers || 3000 };
     }
 
-    // Case 2 triggers: Copilot, Code, Coding, Entwickler, Legal, Vertrag, Verträge, Audit, Finance, 70B, Llama 3.3, Qwen
-    const tier2Regex = /\b(copilot|code|coding|entwickler|programmierer|developer|legal|vertrag|verträge|audit|finance|finanzen|70b|72b|llama\s*3\.3|qwen)\b/i;
-    if (tier2Regex.test(lower)) {
-      return { tierKey: 'tier-2-copilot', extractedUsers: extractedUsers || 800 };
-    }
-
-    // Case 1 triggers: RAG, Confluence, FAQ, HR, Chatbot, Intern, Support, Helpdesk, Klein, Einstieg, 8B, 14B
-    const tier1Regex = /\b(rag|confluence|faq|hr|chatbot|intern|interner|support|helpdesk|klein|einstieg|department|8b|14b|assist|suche|ticket|sharepoint|wissen|abteilung|dokumente)\b/i;
+    // Case 1 triggers: Tier 1, R760, R760xa, L40S, RAG, Confluence, FAQ, HR, Chatbot, Intern, Support, Helpdesk, Klein, Einstieg, 8B, 14B, Abteilung
+    const tier1Regex = /\b(tier\s*1|tier\s*01|tier1|t1|r760|r760xa|l40|l40s|rag|confluence|faq|hr|chatbot|intern|interner|support|helpdesk|klein|einstieg|entry|department|8b|14b|assist|assistent|suche|ticket|sharepoint|wissen|abteilung|dokumente|günstig|guenstig|budget)\b/i;
     if (tier1Regex.test(lower)) {
       return { tierKey: 'tier-1-rag', extractedUsers: extractedUsers || 150 };
+    }
+
+    // Case 2 triggers: Tier 2, XE9680, H200, H100, Copilot, Code, Coding, Entwickler, Legal, Vertrag, Verträge, Audit, Finance, 70B, Llama 3.3, Qwen
+    const tier2Regex = /\b(tier\s*2|tier\s*02|tier2|t2|xe9680|h200|h100|copilot|code|coding|entwickler|programmierer|developer|legal|vertrag|verträge|audit|finance|finanzen|70b|72b|llama\s*3\.3|qwen|flagship|enterprise)\b/i;
+    if (tier2Regex.test(lower)) {
+      return { tierKey: 'tier-2-copilot', extractedUsers: extractedUsers || 800 };
     }
 
     // Default intelligent fallback based on user count if detected
     if (extractedUsers) {
       if (extractedUsers >= 2000) return { tierKey: 'tier-3-frontier', extractedUsers };
-      if (extractedUsers >= 400) return { tierKey: 'tier-2-copilot', extractedUsers };
+      if (extractedUsers >= 350) return { tierKey: 'tier-2-copilot', extractedUsers };
       return { tierKey: 'tier-1-rag', extractedUsers };
     }
 
@@ -502,7 +544,7 @@ class WorkshopController {
     this.isComputing = true;
     this.skipConsoleAnimation = false;
     this.chatSubmitBtn.disabled = true;
-    this.chatSubmitBtn.innerHTML = '<span>⚡</span> Berechne...';
+    this.chatSubmitBtn.textContent = 'BERECHNE...';
 
     // Highlight matching chip if matches
     this.promptChips.forEach(chip => {
@@ -523,27 +565,27 @@ class WorkshopController {
     if (tierKey === 'tier-4-heavy-compute') {
       steps = [
         {
-          icon: '🔍',
+          icon: '01',
           text: `Phase 1: Intent & Domain Parsing`,
           detail: `Erkannt: "${tier.title}" • Skalierungsziel: ca. ${userCount} Streams / Batches (24/7 Dauerlast)`
         },
         {
-          icon: '🎥',
+          icon: '02',
           text: `Phase 2: Multi-Stream & GPU Duty-Cycle Modellierung`,
           detail: `Modell: ${tier.modelName} • 100% GPU-Dauerlast (Non-Stop Compute) • Zero-Copy GPUDirect I/O`
         },
         {
-          icon: '🧮',
+          icon: '03',
           text: `Phase 3: VRAM-Bandbreite & Storage Throughput`,
           detail: `1.128 GB HBM3e VRAM Pool • InfiniBand 400Gb/s Fabric • Dell PowerScale F900 NVMe All-Flash`
         },
         {
-          icon: '🏭',
+          icon: '04',
           text: `Phase 4: Dell AI Factory Validated Architecture Mapping`,
           detail: `Ziel-Chassis: ${tier.dellChassis} • ${tier.chassisType}`
         },
         {
-          icon: '💰',
+          icon: '05',
           text: `Phase 5: TCO Dauerlast-Paradoxon & Break-Even Synthese`,
           detail: `Cloud-Miete (~24.000 €/M) explodiert • Dell Break-Even: ~${tier.breakEvenBaseMonths} Monate • DSGVO: 100% On-Premises`
         }
@@ -551,27 +593,27 @@ class WorkshopController {
     } else {
       steps = [
         {
-          icon: '🔍',
+          icon: '01',
           text: `Phase 1: Intent & Domain Parsing`,
           detail: `Erkannt: "${tier.title}" • Skalierungsziel: ca. ${userCount} Nutzer`
         },
         {
-          icon: '⚡',
+          icon: '02',
           text: `Phase 2: Tokenomics & Concurrency Modellierung`,
           detail: `Modell: ${tier.modelName} • Kontext: ${tier.inputTokens.toLocaleString('de-DE')} In / ${tier.outputTokens.toLocaleString('de-DE')} Out Tokens`
         },
         {
-          icon: '🧮',
+          icon: '03',
           text: `Phase 3: VRAM & Bandbreiten-Kalkulation`,
           detail: `Gewichte-VRAM: ~${tier.modelWeightsGb} GB • PagedAttention KV-Cache • Min. Bandbreite: ${tier.minBandwidthGbps} GB/s`
         },
         {
-          icon: '🏭',
+          icon: '04',
           text: `Phase 4: Dell AI Factory Validated Architecture Mapping`,
           detail: `Ziel-Chassis: ${tier.dellChassis} (${tier.gpuModel}) • ${tier.chassisType}`
         },
         {
-          icon: '✅',
+          icon: '05',
           text: `Phase 5: TCO & Readiness Synthese`,
           detail: `Break-Even: ~${tier.breakEvenBaseMonths} Monate • DSGVO-Validierung: 100% On-Premises`
         }
@@ -613,7 +655,7 @@ class WorkshopController {
 
     this.isComputing = false;
     this.chatSubmitBtn.disabled = false;
-    this.chatSubmitBtn.innerHTML = '<span>⚡</span> Analysieren';
+    this.chatSubmitBtn.textContent = 'ANALYSIEREN';
 
     // Smooth scroll to results
     this.resultsDashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -622,14 +664,22 @@ class WorkshopController {
   selectTier(tierKey, userCount, animate = true) {
     this.currentTierKey = tierKey;
     const tier = WORKLOAD_TIERS[tierKey];
+    if (!tier) return;
+
+    // Sync prompt chips active highlight
+    if (this.promptChips) {
+      this.promptChips.forEach(chip => {
+        chip.classList.toggle('active', chip.getAttribute('data-tier') === tierKey);
+      });
+    }
 
     // Configure slider boundaries
     this.currentUserCount = Math.max(tier.minUsers, Math.min(tier.maxUsers, userCount || tier.defaultUsers));
     this.userSlider.min = tier.minUsers;
     this.userSlider.max = tier.maxUsers;
     this.userSlider.value = this.currentUserCount;
-    this.sliderMinUsers.textContent = `${tier.minUsers} User`;
-    this.sliderMaxUsers.textContent = `${tier.maxUsers} User`;
+    this.sliderMinUsers.textContent = tier.tierNumber === 4 ? `${tier.minUsers} Streams` : `${tier.minUsers} User`;
+    this.sliderMaxUsers.textContent = tier.tierNumber === 4 ? `${tier.maxUsers} Streams` : `${tier.maxUsers} User`;
 
     // Render Tier Details
     this.renderTierDetails(tier);
@@ -640,49 +690,57 @@ class WorkshopController {
 
   renderTierDetails(tier) {
     // 1. Readiness Banner
-    this.readinessStatusBadge.textContent = tier.statusText;
-    this.readinessScoreVal.textContent = `${tier.readinessScore}% Score`;
-    this.readinessTitle.textContent = tier.title;
-    this.readinessSubtitle.textContent = tier.subtitle;
-    this.readinessDecision.textContent = tier.indicatorDecision;
+    if (this.readinessStatusBadge) this.readinessStatusBadge.textContent = tier.statusText;
+    if (this.readinessScoreVal) this.readinessScoreVal.textContent = `${tier.readinessScore}% Score`;
+    if (this.readinessTitle) this.readinessTitle.textContent = tier.title;
+    if (this.readinessSubtitle) this.readinessSubtitle.textContent = tier.subtitle;
+    if (this.readinessDecision) this.readinessDecision.textContent = tier.indicatorDecision;
 
     // 2. Hardware Spec Card
-    this.tierPillBadge.textContent = tier.tierBadge;
-    this.tierPillBadge.className = `tier-pill-badge ${tier.badgeClass}`;
-    this.serverHeroIcon.textContent = tier.icon;
-    this.serverHeroTitle.textContent = tier.dellChassis;
-    this.serverHeroSubtitle.textContent = `${tier.gpuModel} • ${tier.chassisType}`;
+    if (this.tierPillBadge) {
+      this.tierPillBadge.textContent = tier.tierBadge;
+      this.tierPillBadge.className = `tier-pill-badge ${tier.badgeClass}`;
+    }
+    if (this.serverHeroIcon) this.serverHeroIcon.textContent = tier.icon || '';
+    if (this.serverHeroTitle) this.serverHeroTitle.textContent = tier.dellChassis;
+    if (this.serverHeroSubtitle) this.serverHeroSubtitle.textContent = `${tier.gpuModel} • ${tier.chassisType}`;
 
-    this.specGpu.textContent = tier.gpuModel;
-    this.specVram.textContent = `${tier.totalVramGb} GB VRAM (${tier.modelName})`;
-    this.specBandwidth.textContent = `≥ ${tier.minBandwidthGbps} GB/s Memory Bandwidth`;
-    this.specHost.textContent = tier.hostSpecs;
-    this.specNetworking.textContent = tier.networking;
-    this.specFormfactor.textContent = tier.chassisType;
+    if (this.specGpu) this.specGpu.textContent = tier.gpuModel;
+    if (this.specVram) this.specVram.textContent = `${tier.totalVramGb} GB VRAM (${tier.modelName})`;
+    if (this.specBandwidth) this.specBandwidth.textContent = `≥ ${tier.minBandwidthGbps} GB/s Memory Bandwidth`;
+    if (this.specHost) this.specHost.textContent = tier.hostSpecs;
+    if (this.specNetworking) this.specNetworking.textContent = tier.networking;
+    if (this.specFormfactor) this.specFormfactor.textContent = tier.chassisType;
 
     // Perks
-    this.perksList.innerHTML = tier.perks.map(p => `<li>${p}</li>`).join('');
+    if (this.perksList) {
+      this.perksList.innerHTML = tier.perks.map(p => `<li>${p}</li>`).join('');
+    }
 
-    // Update 4-tier visual scale
-    this.tierSeg1.classList.toggle('active', tier.tierNumber === 1);
-    this.tierSeg2.classList.toggle('active', tier.tierNumber === 2);
-    this.tierSeg3.classList.toggle('active', tier.tierNumber === 3);
+    // Update 4-tier visual scale bar and buttons
+    if (this.tierSeg1) this.tierSeg1.classList.toggle('active', tier.tierNumber === 1);
+    if (this.tierSeg2) this.tierSeg2.classList.toggle('active', tier.tierNumber === 2);
+    if (this.tierSeg3) this.tierSeg3.classList.toggle('active', tier.tierNumber === 3);
     if (this.tierSeg4) this.tierSeg4.classList.toggle('active', tier.tierNumber === 4);
-    this.tierScaleLabel.textContent = `Aktiv: ${tier.tierName}`;
+
+    if (this.tierScaleBtn1) this.tierScaleBtn1.classList.toggle('active', tier.tierNumber === 1);
+    if (this.tierScaleBtn2) this.tierScaleBtn2.classList.toggle('active', tier.tierNumber === 2);
+    if (this.tierScaleBtn3) this.tierScaleBtn3.classList.toggle('active', tier.tierNumber === 3);
+    if (this.tierScaleBtn4) this.tierScaleBtn4.classList.toggle('active', tier.tierNumber === 4);
 
     // Dynamic UI labels for Stream / Heavy Compute vs Normal User
     if (tier.tierNumber === 4) {
-      if (this.sliderLabelTitle) this.sliderLabelTitle.textContent = '📹 24/7 Dauerlast-Skalierung (Kamera-Streams & Batches)';
-      if (this.liveMetricLabel1) this.liveMetricLabel1.textContent = 'GPU Duty-Cycle';
-      if (this.liveMetricLabel2) this.liveMetricLabel2.textContent = 'Video Inferenz Rate';
-      if (this.liveMetricLabel3) this.liveMetricLabel3.textContent = 'Aktiver VRAM-Pool';
+      if (this.sliderLabelTitle) this.sliderLabelTitle.textContent = '24/7 DAUERLAST-SKALIERUNG (KAMERA-STREAMS & BATCHES)';
+      if (this.liveMetricLabel1) this.liveMetricLabel1.textContent = 'GPU DUTY-CYCLE';
+      if (this.liveMetricLabel2) this.liveMetricLabel2.textContent = 'VIDEO INFERENZ RATE';
+      if (this.liveMetricLabel3) this.liveMetricLabel3.textContent = 'AKTIVER VRAM-POOL';
       this.sliderMinUsers.textContent = '32 Streams';
       this.sliderMaxUsers.textContent = '1.024 Streams';
     } else {
-      if (this.sliderLabelTitle) this.sliderLabelTitle.textContent = '👥 Aktive Nutzer (Live Skalierung)';
-      if (this.liveMetricLabel1) this.liveMetricLabel1.textContent = 'Peak Request Rate';
-      if (this.liveMetricLabel2) this.liveMetricLabel2.textContent = 'Token Durchsatz';
-      if (this.liveMetricLabel3) this.liveMetricLabel3.textContent = 'Benötigter VRAM';
+      if (this.sliderLabelTitle) this.sliderLabelTitle.textContent = 'AKTIVE NUTZER (SKALIERUNG)';
+      if (this.liveMetricLabel1) this.liveMetricLabel1.textContent = 'PEAK REQUEST RATE';
+      if (this.liveMetricLabel2) this.liveMetricLabel2.textContent = 'TOKEN DURCHSATZ';
+      if (this.liveMetricLabel3) this.liveMetricLabel3.textContent = 'BENÖTIGTER VRAM';
       this.sliderMinUsers.textContent = `${tier.minUsers} User`;
       this.sliderMaxUsers.textContent = `${tier.maxUsers} User`;
     }
@@ -890,7 +948,7 @@ class WorkshopController {
         this.thresholdStatusPill.className = 'threshold-status-pill mandatory-mode';
       }
       if (this.thresholdStatusText) {
-        this.thresholdStatusText.innerHTML = '🚨 <strong>DATENSCHUTZ-PRIORITÄT:</strong> 100% On-Premises zwingend (Kein Datenabfluss an Cloud)';
+        this.thresholdStatusText.innerHTML = '<strong>DATENSCHUTZ-VORGABE:</strong> 100% ON-PREMISES MANDATORISCH (KEIN CLOUD-DATENABFLUSS)';
       }
       if (this.triggerCardPrivacy) this.triggerCardPrivacy.classList.add('active');
       if (this.triggerPrivacyText) {
@@ -917,7 +975,7 @@ class WorkshopController {
         this.thresholdStatusPill.className = 'threshold-status-pill';
       }
       if (this.thresholdStatusText) {
-        this.thresholdStatusText.innerHTML = `✅ <strong>DELL AI FACTORY LOHNT SICH VOLL</strong> (Break-Even nach ~${breakEvenMonths} Monaten)`;
+        this.thresholdStatusText.innerHTML = `<strong>DELL AI FACTORY RENTABEL</strong> (BREAK-EVEN NACH ~${breakEvenMonths} MONATEN)`;
       }
       if (this.triggerCardPrivacy) this.triggerCardPrivacy.classList.remove('active');
       if (this.triggerPrivacyText) {
@@ -954,7 +1012,7 @@ class WorkshopController {
         this.thresholdStatusPill.className = 'threshold-status-pill warning-mode';
       }
       if (this.thresholdStatusText) {
-        this.thresholdStatusText.innerHTML = `☁️ <strong>PUBLIC CLOUD NOCH GÜNSTIGER</strong> (Kipp-Punkt liegt bei ~${tippingUsers} ${tier.tierNumber === 4 ? 'Streams' : 'Nutzern'})`;
+        this.thresholdStatusText.innerHTML = `<strong>PUBLIC CLOUD FLEXIBLER</strong> (KIPP-PUNKT BEI ~${tippingUsers} ${tier.tierNumber === 4 ? 'STREAMS' : 'NUTZERN'})`;
       }
       if (this.triggerCardPrivacy) this.triggerCardPrivacy.classList.remove('active');
       if (this.triggerPrivacyText) {
@@ -1000,21 +1058,75 @@ class WorkshopController {
       this.animateNumber(this.roiRadialScore, prevScore, roiScore, 300, (n) => `${Math.round(n)}%`);
     }
 
+    // Dynamic Hardware Spectrum Live Indicator & Sizing Recommendations
+    let hardwareStatusText = '';
+
+    // Clear previous recommendation styling on segments and buttons
+    [this.tierSeg1, this.tierSeg2, this.tierSeg3, this.tierSeg4].forEach(s => s && s.classList.remove('recommended'));
+    [this.tierScaleBtn1, this.tierScaleBtn2, this.tierScaleBtn3, this.tierScaleBtn4].forEach(b => b && b.classList.remove('recommended'));
+
+    if (tier.tierNumber === 4) {
+      // 24/7 Heavy Compute (Video Streams or Model Training)
+      if (users <= 600) {
+        hardwareStatusText = `AKTIV: TIER 4 // XE9680 + POWERSCALE (OPTIMAL FÜR ${users} STREAMS)`;
+      } else {
+        hardwareStatusText = `AKTIV: TIER 4 // MULTI-NODE CLUSTER EMPFOHLEN (${users} STREAMS)`;
+      }
+    } else {
+      // Interactive user inference sizing
+      if (this.currentTierKey === 'tier-1-rag') {
+        if (users <= 350) {
+          hardwareStatusText = `AKTIV: TIER 1 // R760xa (OPTIMAL FÜR ${users} USER)`;
+        } else {
+          hardwareStatusText = `AKTIV: TIER 1 • EMPFOHLEN: TIER 2 (XE9680) AB 350 USER`;
+          if (this.tierSeg2) this.tierSeg2.classList.add('recommended');
+          if (this.tierScaleBtn2) this.tierScaleBtn2.classList.add('recommended');
+        }
+      } else if (this.currentTierKey === 'tier-2-copilot') {
+        if (users <= 300) {
+          hardwareStatusText = `AKTIV: TIER 2 • EMPFOHLEN: TIER 1 (R760xa) FÜR ${users} USER`;
+          if (this.tierSeg1) this.tierSeg1.classList.add('recommended');
+          if (this.tierScaleBtn1) this.tierScaleBtn1.classList.add('recommended');
+        } else if (users >= 2000) {
+          hardwareStatusText = `AKTIV: TIER 2 • EMPFOHLEN: TIER 3 (M9822 DLC) AB 2.000 USER`;
+          if (this.tierSeg3) this.tierSeg3.classList.add('recommended');
+          if (this.tierScaleBtn3) this.tierScaleBtn3.classList.add('recommended');
+        } else {
+          hardwareStatusText = `AKTIV: TIER 2 // XE9680 (OPTIMAL FÜR ${users} USER)`;
+        }
+      } else if (this.currentTierKey === 'tier-3-frontier') {
+        if (users < 1500) {
+          hardwareStatusText = `AKTIV: TIER 3 // HÖCHSTE RESERVEN (FÜR ${users} USER REICHT TIER 2)`;
+          if (this.tierSeg2) this.tierSeg2.classList.add('recommended');
+          if (this.tierScaleBtn2) this.tierScaleBtn2.classList.add('recommended');
+        } else {
+          hardwareStatusText = `AKTIV: TIER 3 // M9822 DLC (OPTIMAL FÜR ${users.toLocaleString('de-DE')} USER)`;
+        }
+      }
+    }
+
+    if (this.tierScaleLabel) {
+      this.tierScaleLabel.textContent = hardwareStatusText;
+    }
+
     // Dynamic Scaling Alert Banner if slider exceeds tier sweetspot
-    const scaleAlertEl = document.getElementById('scaling-warning-box');
+    const scaleAlertEl = this.scalingWarningBox || document.getElementById('scaling-warning-box');
     if (scaleAlertEl) {
-      if (tier.tierNumber === 1 && users > 500) {
+      if (this.currentTierKey === 'tier-1-rag' && users > 350) {
         scaleAlertEl.style.display = 'block';
-        scaleAlertEl.innerHTML = `⚠️ <strong>Skalierungs-Hinweis:</strong> Bei ${users} Nutzern stößt die L40S PCIe Bandbreite an ihre Grenzen. Upgrade auf <strong>Tier 2 (Dell PowerEdge XE9680 mit H200)</strong> empfohlen!`;
-      } else if (tier.tierNumber === 2 && users < 100) {
+        scaleAlertEl.innerHTML = `<strong>SKALIERUNGS-HINWEIS:</strong> Bei ${users} Nutzern stößt die L40S PCIe Bandbreite an Grenzen. Upgrade auf <strong>Tier 2 (Dell PowerEdge XE9680 mit 8x H200)</strong> bietet 10x Durchsatz! <button type="button" class="btn-tier-quick-switch" data-tier="tier-2-copilot">AUF TIER 2 WECHSELN</button>`;
+      } else if (this.currentTierKey === 'tier-2-copilot' && users <= 300) {
         scaleAlertEl.style.display = 'block';
-        scaleAlertEl.innerHTML = `💡 <strong>Effizienz-Tipp:</strong> Für nur ${users} Nutzer ist ein 8x H200 System überdimensioniert. <strong>Tier 1 (Dell PowerEdge R760xa)</strong> spart ca. 290.000 € Anschaffungskosten!`;
-      } else if (tier.tierNumber === 3 && users < 400) {
+        scaleAlertEl.innerHTML = `<strong>EFFIZIENZ-EMPFEHLUNG:</strong> Für ${users} Nutzer ist ein 8x H200 System überdimensioniert. <strong>Tier 1 (Dell PowerEdge R760xa)</strong> spart ca. 290.000 € Anschaffungskosten bei voller Funktionalität! <button type="button" class="btn-tier-quick-switch" data-tier="tier-1-rag">AUF TIER 1 WECHSELN</button>`;
+      } else if (this.currentTierKey === 'tier-2-copilot' && users >= 2000) {
         scaleAlertEl.style.display = 'block';
-        scaleAlertEl.innerHTML = `💡 <strong>Kapazitäts-Hinweis:</strong> Dieses Frontier DLC-System hat massive Reserven für bis zu 10.000 gleichzeitige Nutzer oder 24/7 Agenten-Schwärme.`;
-      } else if (tier.tierNumber === 4 && users > 800) {
+        scaleAlertEl.innerHTML = `<strong>HIGH-CONCURRENCY HINWEIS:</strong> Bei ${users.toLocaleString('de-DE')} Entwicklern und Enterprise-Last bietet <strong>Tier 3 (Dell PowerEdge M9822 DLC)</strong> flüssigkeitsgekühlte Spitzen-Effizienz (PUE 1.12) und 1.5 TB VRAM! <button type="button" class="btn-tier-quick-switch" data-tier="tier-3-frontier">AUF TIER 3 WECHSELN</button>`;
+      } else if (this.currentTierKey === 'tier-3-frontier' && users < 1000) {
         scaleAlertEl.style.display = 'block';
-        scaleAlertEl.innerHTML = `💡 <strong>Multi-Node Cluster Empfehlung:</strong> Bei über ${users} parallelen 4K Video-Streams oder großem Pretraining empfiehlt sich ein Multi-Node Cluster aus 2-4x Dell PowerEdge XE9680 mit InfiniBand Fabric.`;
+        scaleAlertEl.innerHTML = `<strong>KAPAZITÄTS-STATUS:</strong> Dieses Frontier DLC-System hat massive Reserven für bis zu 10.000 gleichzeitige Nutzer oder 24/7 Agenten-Schwärme. Für kleinere Teams reicht <strong>Tier 2</strong>. <button type="button" class="btn-tier-quick-switch" data-tier="tier-2-copilot">AUF TIER 2 WECHSELN</button>`;
+      } else if (this.currentTierKey === 'tier-4-heavy-compute' && users > 600) {
+        scaleAlertEl.style.display = 'block';
+        scaleAlertEl.innerHTML = `<strong>CLUSTER-EMPFEHLUNG:</strong> Bei über ${users} parallelen 4K Video-Streams oder großem Pretraining empfiehlt sich ein Multi-Node Cluster aus 2-4x Dell PowerEdge XE9680 mit InfiniBand Fabric und PowerScale F900 NVMe.`;
       } else {
         scaleAlertEl.style.display = 'none';
       }
@@ -1038,7 +1150,7 @@ Erstellt mit der Dell AI Factory Live Workshop Edition
 `.trim();
 
     navigator.clipboard.writeText(text).then(() => {
-      this.showToast('📋 Architektur-Zusammenfassung in die Zwischenablage kopiert!');
+      this.showToast('Architektur-Zusammenfassung in die Zwischenablage kopiert.');
     }).catch(() => {
       this.showToast('Fehler beim Kopieren.');
     });

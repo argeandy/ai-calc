@@ -1,7 +1,7 @@
 /**
  * AI Hardware Sizing and Compute Calculation Engine
  */
-import { SERVER_CHASSIS_CATALOG } from '../data/servers.js?v=v1.3.1-d90eee1';
+import { SERVER_CHASSIS_CATALOG } from '../data/servers.js?v=v1.3.1-cb0a6ef';
 
 export class HardwareCalculator {
   /**

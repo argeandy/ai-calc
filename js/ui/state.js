@@ -2,8 +2,8 @@
  * State Management and URL Serialization for AI Sizing Calculator
  */
 
-import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-d90eee1';
-import { USECASE_PRESETS } from '../data/presets.js?v=v1.3.1-d90eee1';
+import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-cb0a6ef';
+import { USECASE_PRESETS } from '../data/presets.js?v=v1.3.1-cb0a6ef';
 
 export const DEFAULT_STATE = {
   activePresetId: 'enterprise-rag',
