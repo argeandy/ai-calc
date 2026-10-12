@@ -56,10 +56,14 @@ if (isClean) {
 }
 console.log(`========================================\n`);
 
-// 1. Process index.html
-const indexPath = path.join(ROOT_DIR, 'index.html');
-if (fs.existsSync(indexPath)) {
-  let indexHtml = fs.readFileSync(indexPath, 'utf-8');
+// 1. Process HTML entrypoints (index.html, workshop.html)
+const htmlFilesToProcess = ['index.html', 'workshop.html'];
+
+htmlFilesToProcess.forEach(htmlFile => {
+  const filePath = path.join(ROOT_DIR, htmlFile);
+  if (!fs.existsSync(filePath)) return;
+
+  let htmlContent = fs.readFileSync(filePath, 'utf-8');
 
   // A. Ensure Anti-Caching Meta Tags are present
   const metaHeaders = `  <!-- Anti-Caching & Cache-Control Headers -->
@@ -67,25 +71,25 @@ if (fs.existsSync(indexPath)) {
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">`;
 
-  if (!indexHtml.includes('http-equiv="Cache-Control"')) {
-    indexHtml = indexHtml.replace('  <!-- Google Fonts -->', `${metaHeaders}\n\n  <!-- Google Fonts -->`);
+  if (!htmlContent.includes('http-equiv="Cache-Control"')) {
+    htmlContent = htmlContent.replace('  <!-- Google Fonts -->', `${metaHeaders}\n\n  <!-- Google Fonts -->`);
   }
 
   // B. Update CSS links
   const cssRegex = /(href=["']css\/[a-zA-Z0-9_-]+\.css)(?:\?v=[a-zA-Z0-9._-]+)?(["'])/g;
-  indexHtml = indexHtml.replace(cssRegex, (match, prefix, quote) => {
+  htmlContent = htmlContent.replace(cssRegex, (match, prefix, quote) => {
     return isClean ? `${prefix}${quote}` : `${prefix}?v=${buildId}${quote}`;
   });
 
   // C. Update script tags
   const jsRegex = /(src=["']js\/[a-zA-Z0-9_-]+\.js)(?:\?v=[a-zA-Z0-9._-]+)?(["'])/g;
-  indexHtml = indexHtml.replace(jsRegex, (match, prefix, quote) => {
+  htmlContent = htmlContent.replace(jsRegex, (match, prefix, quote) => {
     return isClean ? `${prefix}${quote}` : `${prefix}?v=${buildId}${quote}`;
   });
 
-  fs.writeFileSync(indexPath, indexHtml, 'utf-8');
-  console.log(`✅ Updated index.html (Meta tags, Stylesheets, Main entrypoint)`);
-}
+  fs.writeFileSync(filePath, htmlContent, 'utf-8');
+  console.log(`✅ Updated ${htmlFile} (Meta tags, Stylesheets, Main entrypoint)`);
+});
 
 // 2. Recursively patch ES Module imports in js/
 const jsDir = path.join(ROOT_DIR, 'js');
