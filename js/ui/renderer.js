@@ -3,13 +3,13 @@
  * Safe DOM manipulation, Server Chassis & Rack Units Integration, 100% Bilingual (DE / EN)
  */
 
-import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-8987723';
-import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js?v=v1.3.1-8987723';
-import { USECASE_PRESETS, PRESET_CATEGORIES } from '../data/presets.js?v=v1.3.1-8987723';
-import { TcoCalculator } from '../engine/tco.js?v=v1.3.1-8987723';
-import { stateManager } from './state.js?v=v1.3.1-8987723';
-import { ExportManager } from './export.js?v=v1.3.1-8987723';
-import { t, getLanguage } from './i18n.js?v=v1.3.1-8987723';
+import { MODEL_CATALOG, QUANTIZATION_TYPES, KV_CACHE_PRECISIONS } from '../data/models.js?v=v1.3.1-f87346d';
+import { GPU_CATALOG, CLOUD_INSTANCE_MAPPINGS } from '../data/gpus.js?v=v1.3.1-f87346d';
+import { USECASE_PRESETS, PRESET_CATEGORIES } from '../data/presets.js?v=v1.3.1-f87346d';
+import { TcoCalculator } from '../engine/tco.js?v=v1.3.1-f87346d';
+import { stateManager } from './state.js?v=v1.3.1-f87346d';
+import { ExportManager } from './export.js?v=v1.3.1-f87346d';
+import { t, getLanguage } from './i18n.js?v=v1.3.1-f87346d';
 
 export class UIRenderer {
   /**

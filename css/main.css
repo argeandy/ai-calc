@@ -10,16 +10,23 @@
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --color-brand-primary: #6366f1; /* Indigo */
-  --color-brand-secondary: #06b6d4; /* Cyan */
-  --color-brand-accent: #8b5cf6; /* Purple */
+  --color-brand-primary: #6366f1;
+  /* Indigo */
+  --color-brand-secondary: #06b6d4;
+  /* Cyan */
+  --color-brand-accent: #8b5cf6;
+  /* Purple */
   --color-brand-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
   --color-brand-glow: rgba(99, 102, 241, 0.35);
 
-  --color-weights: #3b82f6; /* Blue */
-  --color-kv: #10b981; /* Emerald */
-  --color-overhead: #f59e0b; /* Amber */
-  --color-danger: #ef4444; /* Red */
+  --color-weights: #3b82f6;
+  /* Blue */
+  --color-kv: #10b981;
+  /* Emerald */
+  --color-overhead: #f59e0b;
+  /* Amber */
+  --color-danger: #ef4444;
+  /* Red */
 
   /* Dark Theme Tokens (Default) */
   --bg-app: #090d16;
@@ -78,7 +85,9 @@
 }
 
 /* CSS Reset & Base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -92,7 +101,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  background-image: 
+  background-image:
     radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
     radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 45%);
   background-attachment: fixed;
@@ -131,6 +140,36 @@ body {
   justify-content: center;
   font-size: 1.6rem;
   box-shadow: var(--shadow-glow);
+}
+
+.insight-brand-wrapper {
+  height: 48px;
+  padding: 0 0.75rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.insight-brand-wrapper svg {
+  height: 20px;
+  width: auto;
+  display: block;
+}
+
+.insight-brand-wrapper svg .insight-wordmark {
+  fill: var(--text-primary);
+}
+
+[data-theme="light"] .insight-brand-wrapper {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .insight-brand-wrapper svg .insight-wordmark {
+  fill: #111827;
 }
 
 .brand-titles h1 {
@@ -173,7 +212,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  min-width: 0; /* Prevents overflow */
+  min-width: 0;
+  /* Prevents overflow */
 }
 
 /* Navigation Tabs */
@@ -238,6 +278,13 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

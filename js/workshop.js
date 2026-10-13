@@ -1137,6 +1137,7 @@ class WorkshopController {
     const tier = WORKLOAD_TIERS[this.currentTierKey];
     const text = `
 === Dell AI Factory Architecture Summary ===
+Presented by Dell Technologies & Insight
 Workshop Sizing: ${tier.title} (${tier.tierBadge})
 - ${tier.isStreamWorkload ? '24/7 Kamera-Streams / Batches' : 'Aktive Nutzer'}: ${this.currentUserCount.toLocaleString('de-DE')}
 - Modell: ${tier.modelName} (${tier.modelParams})
@@ -1146,7 +1147,7 @@ Workshop Sizing: ${tier.title} (${tier.tierBadge})
 - TCO Break-Even: ca. ${this.factorTcoValue.textContent}
 - Vorteil: ${tier.indicatorDecision}
 ============================================
-Erstellt mit der Dell AI Factory Live Workshop Edition
+Erstellt mit der Dell AI Factory Live Workshop Edition • Insight & Dell Technologies
 `.trim();
 
     navigator.clipboard.writeText(text).then(() => {
