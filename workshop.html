@@ -23,7 +23,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/workshop.css?v=v1.3.1-cb0a6ef">
+  <link rel="stylesheet" href="css/workshop.css?v=v1.3.1-8987723">
 </head>
 <body>
   <div class="workshop-container">
@@ -94,24 +94,24 @@
           <span class="prompt-chip-desc">800 User • Llama 3.3 70B • Hohe Gleichzeitigkeit &amp; minimale Latenz</span>
         </button>
 
-        <!-- Chip 3: Tier 3 -->
-        <button type="button" class="prompt-chip" id="prompt-chip-3" data-tier="tier-3-frontier" data-prompt="Wir planen autonome Agenten-Schwärme mit DeepSeek R1 671B MoE für komplexe Reasoning- und Finanzberechnungen.">
+        <!-- Chip 3: Tier 3 Heavy Compute & Training / Vision -->
+        <button type="button" class="prompt-chip" id="prompt-chip-3" data-tier="tier-3-heavy-compute" data-prompt="24/7 Model-Training unseres eigenen Domain-Modells und Echtzeit-Videoanalyse für 200 Fabrik-Kameras (Computer Vision Dauerlast).">
           <div class="prompt-chip-header">
-            <span class="prompt-chip-tier tier-3-pill">TIER 03 / FRONTIER</span>
+            <span class="prompt-chip-tier tier-3-pill">TIER 03 / CONTINUOUS</span>
             <span class="prompt-chip-index">03</span>
-          </div>
-          <span class="prompt-chip-title">Deep Reasoning &amp; Agenten-Schwärme</span>
-          <span class="prompt-chip-desc">3.000+ User • DeepSeek R1 671B MoE • Chain-of-Thought &amp; DLC Liquid</span>
-        </button>
-
-        <!-- Chip 4: Tier 4 Heavy Compute & Training / Vision -->
-        <button type="button" class="prompt-chip" id="prompt-chip-4" data-tier="tier-4-heavy-compute" data-prompt="24/7 Model-Training unseres eigenen Domain-Modells und Echtzeit-Videoanalyse für 200 Fabrik-Kameras (Computer Vision Dauerlast).">
-          <div class="prompt-chip-header">
-            <span class="prompt-chip-tier tier-4-pill">TIER 04 / CONTINUOUS</span>
-            <span class="prompt-chip-index">04</span>
           </div>
           <span class="prompt-chip-title">Model Training &amp; Realtime Vision</span>
           <span class="prompt-chip-desc">24/7 Dauerlast • 100-500 Kameras / Training • Dell XE9680 + PowerScale F900</span>
+        </button>
+
+        <!-- Chip 4: Tier 4 Frontier / Supercomputing DLC -->
+        <button type="button" class="prompt-chip" id="prompt-chip-4" data-tier="tier-4-frontier" data-prompt="Wir planen autonome Agenten-Schwärme mit DeepSeek R1 671B MoE für komplexe Reasoning- und Finanzberechnungen.">
+          <div class="prompt-chip-header">
+            <span class="prompt-chip-tier tier-4-pill">TIER 04 / FRONTIER DLC</span>
+            <span class="prompt-chip-index">04</span>
+          </div>
+          <span class="prompt-chip-title">Deep Reasoning &amp; Agenten-Schwärme</span>
+          <span class="prompt-chip-desc">3.000+ User • DeepSeek R1 671B MoE • Chain-of-Thought &amp; DLC Liquid</span>
         </button>
       </div>
 
@@ -393,14 +393,14 @@
             <div class="tier-scale-bar" role="tablist" aria-label="Dell AI Factory Hardware Tiers">
               <button type="button" class="tier-seg seg-1" id="tier-seg-1" data-tier="tier-1-rag" title="Tier 1: Dell PowerEdge R760xa (2x L40S) • Klicken zum Wechseln" aria-label="Tier 1 R760xa"></button>
               <button type="button" class="tier-seg seg-2 active" id="tier-seg-2" data-tier="tier-2-copilot" title="Tier 2: Dell PowerEdge XE9680 (8x H200) • Klicken zum Wechseln" aria-label="Tier 2 XE9680"></button>
-              <button type="button" class="tier-seg seg-3" id="tier-seg-3" data-tier="tier-3-frontier" title="Tier 3: Dell PowerEdge M9822 DLC (8x B200) • Klicken zum Wechseln" aria-label="Tier 3 M9822"></button>
-              <button type="button" class="tier-seg seg-4" id="tier-seg-4" data-tier="tier-4-heavy-compute" title="Tier 4: Dell PowerEdge XE9680 + PowerScale F900 (24/7 Dauerlast) • Klicken zum Wechseln" aria-label="Tier 4 24/7 Heavy"></button>
+              <button type="button" class="tier-seg seg-3" id="tier-seg-3" data-tier="tier-3-heavy-compute" title="Tier 3: Dell PowerEdge XE9680 + PowerScale F900 (24/7 Dauerlast) • Klicken zum Wechseln" aria-label="Tier 3 24/7 Heavy"></button>
+              <button type="button" class="tier-seg seg-4" id="tier-seg-4" data-tier="tier-4-frontier" title="Tier 4: Dell PowerEdge M9822 DLC (8x B200 Liquid) • Klicken zum Wechseln" aria-label="Tier 4 Frontier DLC"></button>
             </div>
             <div class="tier-scale-labels">
               <button type="button" class="tier-scale-btn" id="tier-scale-btn-1" data-tier="tier-1-rag" title="Zu Tier 1 wechseln">TIER 1: R760xa</button>
               <button type="button" class="tier-scale-btn active" id="tier-scale-btn-2" data-tier="tier-2-copilot" title="Zu Tier 2 wechseln">TIER 2: XE9680</button>
-              <button type="button" class="tier-scale-btn" id="tier-scale-btn-3" data-tier="tier-3-frontier" title="Zu Tier 3 wechseln">TIER 3: M9822 DLC</button>
-              <button type="button" class="tier-scale-btn" id="tier-scale-btn-4" data-tier="tier-4-heavy-compute" title="Zu Tier 4 wechseln">TIER 4: 24/7 HEAVY</button>
+              <button type="button" class="tier-scale-btn" id="tier-scale-btn-3" data-tier="tier-3-heavy-compute" title="Zu Tier 3 wechseln">TIER 3: 24/7 HEAVY</button>
+              <button type="button" class="tier-scale-btn" id="tier-scale-btn-4" data-tier="tier-4-frontier" title="Zu Tier 4 wechseln">TIER 4: FRONTIER DLC</button>
             </div>
           </div>
         </div>
@@ -432,7 +432,7 @@
   <div class="workshop-toast" id="workshop-toast" role="alert"></div>
 
   <!-- Main Controller Script -->
-  <script type="module" src="js/workshop.js?v=v1.3.1-cb0a6ef"></script>
+  <script type="module" src="js/workshop.js?v=v1.3.1-8987723"></script>
 </body>
 </html>
 

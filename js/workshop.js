@@ -111,69 +111,16 @@ export const WORKLOAD_TIERS = {
     ]
   },
 
-  'tier-3-frontier': {
-    id: 'tier-3-frontier',
+  'tier-3-heavy-compute': {
+    id: 'tier-3-heavy-compute',
     tierNumber: 3,
-    tierName: 'Tier 3: Frontier / Supercomputing Factory (Liquid Cooled)',
-    tierBadge: 'Frontier / DLC Liquid',
+    tierName: 'Tier 3: 24/7 Heavy Compute (Training & Vision AI)',
+    tierBadge: '24/7 Heavy Compute / Training',
     tierClass: 'tier-3',
     badgeClass: 'tier-3-pill',
-    title: 'Frontier Deep Reasoning, MoE & Autonome Agenten-Schwärme',
-    subtitle: 'DeepSeek-R1 671B MoE, komplexe mathematische Reasoning-Ketten & 24/7 Agentic Autonomy',
-    icon: '03',
-    modelName: 'DeepSeek R1 (671B MoE Reasoning)',
-    modelParams: '671 Mrd. MoE (37B aktiv) mit Deep Chain-of-Thought',
-    modelWeightsGb: 345.0,
-    defaultUsers: 3000,
-    minUsers: 500,
-    maxUsers: 10000,
-    requestsPerUser: 30,
-    peakMultiplier: 2.2,
-    inputTokens: 16000,
-    outputTokens: 3500,
-    targetTtftMs: 650,
-    targetTps: 32,
-    minBandwidthGbps: 8000,
-    // Dell Hardware
-    dellChassis: 'Dell PowerEdge M9822 DLC / Dell PowerRack',
-    chassisType: '2U Direct Liquid Cooled (DLC) Modular Rack Unit',
-    gpuModel: '8x NVIDIA B200 DLC (192GB Liquid) oder Rubin NVL8',
-    gpuCount: 8,
-    totalVramGb: 1536,
-    hostSpecs: 'NVIDIA Vera CPUs (Liquid Cooled), 2.0 TB High-Bandwidth Memory, 61.4 TB Gen6 NVMe',
-    networking: '8x NVIDIA Quantum-X800 800Gb/s InfiniBand / Spectrum-X800',
-    totalCapex: 420000,
-    monthlyPowerWatts: 8200,
-    // Tipping Point & Decision Metrics
-    tippingPointUsers: 550,
-    tippingPointReqPerDay: '16.500 Req/Tag',
-    // Comparison & Indicator
-    readinessScore: 99,
-    statusText: 'MISSION CRITICAL: DELL AI FACTORY FRONTIER TIER (DLC)',
-    indicatorDecision: 'Unverzichtbar für 671B MoE Modelle und autonome Multi-Agenten-Loops! Bei 3.500 Reasoning-Tokens pro Request kosten Cloud-APIs über 65.000 €/Monat. Dell AI Factory mit Flüssigkühlung halbiert die TCO und ist nach ~7 Monaten im Plus.',
-    cloudEquivalent: 'OpenAI o1 / Claude Opus 3.5 Reasoning API',
-    cloudCostPer1MInput: 5.00,
-    cloudCostPer1MOutput: 25.00,
-    breakEvenBaseMonths: 7,
-    monthlyTcoSavings: 58000,
-    perks: [
-      '100% Direct Liquid Cooling (DLC): PUE 1.12 spart bis zu 40% Kühlenergie',
-      'Massiver VRAM-Pool (1.5 TB+ HBM3e/HBM4) für MLA Multi-Head Latent Attention',
-      'Autonome 24/7 Agenten-Ausführung ohne Rate-Limits oder Token-Abrechnung',
-      'Break-Even bereits nach ~7 Monaten dank extremer Cloud-Reasoning-Tokenpreise'
-    ]
-  },
-
-  'tier-4-heavy-compute': {
-    id: 'tier-4-heavy-compute',
-    tierNumber: 4,
-    tierName: 'Tier 4: 24/7 Heavy Compute (Training & Vision AI)',
-    tierBadge: '24/7 Heavy Compute / Training',
-    tierClass: 'tier-4',
-    badgeClass: 'tier-4-pill',
     title: '24/7 Continuous Model Training & Real-Time Video AI',
     subtitle: 'Unabhängig von Nutzerzahlen: 100% GPU-Dauerlast für Domain Pretraining, Fine-Tuning & hunderte 4K Video-Streams (Computer Vision)',
-    icon: '04',
+    icon: '03',
     modelName: 'Vision-LLM (Florence-2 / YOLOv10) & Llama 70B Training',
     modelParams: 'Continuous Multi-Stream Inferenz & Distributed PyTorch FSDP',
     modelWeightsGb: 140.0,
@@ -214,6 +161,59 @@ export const WORKLOAD_TIERS = {
       'Extremer Kostenvorteil: Cloud-Miete für 8x H200 (~24.000 €/Monat) übersteigt Anschaffungskosten nach ca. 12-14 Monaten',
       'Ultra-Low-Latency (<15ms): Echtzeit-Videoanalyse direkt an der Fertigungslinie ohne Cloud-Streaming-Latenz',
       'DSGVO & IP-Schutz: Proprietäre Trainingsdaten, biometrische Video-Feeds und Werksgeheimnisse bleiben 100% On-Premises'
+    ]
+  },
+
+  'tier-4-frontier': {
+    id: 'tier-4-frontier',
+    tierNumber: 4,
+    tierName: 'Tier 4: Frontier / Supercomputing Factory (Liquid Cooled)',
+    tierBadge: 'Frontier / DLC Liquid',
+    tierClass: 'tier-4',
+    badgeClass: 'tier-4-pill',
+    title: 'Frontier Deep Reasoning, MoE & Autonome Agenten-Schwärme',
+    subtitle: 'DeepSeek-R1 671B MoE, komplexe mathematische Reasoning-Ketten & 24/7 Agentic Autonomy',
+    icon: '04',
+    modelName: 'DeepSeek R1 (671B MoE Reasoning)',
+    modelParams: '671 Mrd. MoE (37B aktiv) mit Deep Chain-of-Thought',
+    modelWeightsGb: 345.0,
+    defaultUsers: 3000,
+    minUsers: 500,
+    maxUsers: 10000,
+    requestsPerUser: 30,
+    peakMultiplier: 2.2,
+    inputTokens: 16000,
+    outputTokens: 3500,
+    targetTtftMs: 650,
+    targetTps: 32,
+    minBandwidthGbps: 8000,
+    // Dell Hardware
+    dellChassis: 'Dell PowerEdge M9822 DLC / Dell PowerRack',
+    chassisType: '2U Direct Liquid Cooled (DLC) Modular Rack Unit',
+    gpuModel: '8x NVIDIA B200 DLC (192GB Liquid) oder Rubin NVL8',
+    gpuCount: 8,
+    totalVramGb: 1536,
+    hostSpecs: 'NVIDIA Vera CPUs (Liquid Cooled), 2.0 TB High-Bandwidth Memory, 61.4 TB Gen6 NVMe',
+    networking: '8x NVIDIA Quantum-X800 800Gb/s InfiniBand / Spectrum-X800',
+    totalCapex: 420000,
+    monthlyPowerWatts: 8200,
+    // Tipping Point & Decision Metrics
+    tippingPointUsers: 550,
+    tippingPointReqPerDay: '16.500 Req/Tag',
+    // Comparison & Indicator
+    readinessScore: 99,
+    statusText: 'MISSION CRITICAL: DELL AI FACTORY FRONTIER TIER (DLC)',
+    indicatorDecision: 'Unverzichtbar für 671B MoE Modelle und autonome Multi-Agenten-Loops! Bei 3.500 Reasoning-Tokens pro Request kosten Cloud-APIs über 65.000 €/Monat. Dell AI Factory mit Flüssigkühlung halbiert die TCO und ist nach ~7 Monaten im Plus.',
+    cloudEquivalent: 'OpenAI o1 / Claude Opus 3.5 Reasoning API',
+    cloudCostPer1MInput: 5.00,
+    cloudCostPer1MOutput: 25.00,
+    breakEvenBaseMonths: 7,
+    monthlyTcoSavings: 58000,
+    perks: [
+      '100% Direct Liquid Cooling (DLC): PUE 1.12 spart bis zu 40% Kühlenergie',
+      'Massiver VRAM-Pool (1.5 TB+ HBM3e/HBM4) für MLA Multi-Head Latent Attention',
+      'Autonome 24/7 Agenten-Ausführung ohne Rate-Limits oder Token-Abrechnung',
+      'Break-Even bereits nach ~7 Monaten dank extremer Cloud-Reasoning-Tokenpreise'
     ]
   }
 };
@@ -468,9 +468,9 @@ class WorkshopController {
     if (tierParam === '1') {
       this.selectTier('tier-1-rag', 150, false);
     } else if (tierParam === '3') {
-      this.selectTier('tier-3-frontier', 3000, false);
+      this.selectTier('tier-3-heavy-compute', 256, false);
     } else if (tierParam === '4') {
-      this.selectTier('tier-4-heavy-compute', 256, false);
+      this.selectTier('tier-4-frontier', 3000, false);
     } else {
       // Default initial tier is Tier 2 (Developer Copilot)
       this.selectTier('tier-2-copilot', 800, false);
@@ -494,16 +494,16 @@ class WorkshopController {
     }
 
     // 2. Strict Keyword & Hardware Model Classification
-    // Case 4 triggers: Tier 4, PowerScale, F900, Training, Fine-Tuning, Video, Videoanalyse, Kameras, Computer Vision, YOLO, Streams, Fabrik
-    const tier4Regex = /\b(tier\s*4|tier\s*04|tier4|t4|heavy\s*compute|powerscale|f900|training|trainieren|train|fine-?tuning|finetuning|pre-?training|video|videoanalyse|kamera|kameras|camera|cameras|stream|streams|streaming|vision|computer\s*vision|yolo|rtsp|surveillance|überwachung|ueberwachung|fertigung|fabrik|produktion|dauerlast|dauerbetrieb|24\/7|non-stop|batch|batches|florence|opencv)\b/i;
-    if (tier4Regex.test(lower)) {
-      return { tierKey: 'tier-4-heavy-compute', extractedUsers: extractedUsers || 256 };
+    // Case 3 triggers: Tier 3, PowerScale, F900, Training, Fine-Tuning, Video, Videoanalyse, Kameras, Computer Vision, YOLO, Streams, Fabrik
+    const tier3Regex = /\b(tier\s*3|tier\s*03|tier3|t3|heavy\s*compute|powerscale|f900|training|trainieren|train|fine-?tuning|finetuning|pre-?training|video|videoanalyse|kamera|kameras|camera|cameras|stream|streams|streaming|vision|computer\s*vision|yolo|rtsp|surveillance|überwachung|ueberwachung|fertigung|fabrik|produktion|dauerlast|dauerbetrieb|24\/7|non-stop|batch|batches|florence|opencv)\b/i;
+    if (tier3Regex.test(lower)) {
+      return { tierKey: 'tier-3-heavy-compute', extractedUsers: extractedUsers || 256 };
     }
 
-    // Case 3 triggers: Tier 3, M9822, DeepSeek, R1, V3, MoE, Reasoning, Chain-of-Thought, Agenten, Swarm, Frontier, Liquid, DLC, B200, Rubin, Blackwell
-    const tier3Regex = /\b(tier\s*3|tier\s*03|tier3|t3|m9822|deepseek|r1|v3|moe|reasoning|cot|chain-of-thought|agent|agenten|agentic|swarm|schwärme|schwarm|frontier|hyperscale|supercomputer|supercomputing|liquid|flüssigkühlung|fluessigkuehlung|dlc|rubin|blackwell|b200|671b)\b/i;
-    if (tier3Regex.test(lower)) {
-      return { tierKey: 'tier-3-frontier', extractedUsers: extractedUsers || 3000 };
+    // Case 4 triggers: Tier 4, M9822, DeepSeek, R1, V3, MoE, Reasoning, Chain-of-Thought, Agenten, Swarm, Frontier, Liquid, DLC, B200, Rubin, Blackwell
+    const tier4Regex = /\b(tier\s*4|tier\s*04|tier4|t4|m9822|deepseek|r1|v3|moe|reasoning|cot|chain-of-thought|agent|agenten|agentic|swarm|schwärme|schwarm|frontier|hyperscale|supercomputer|supercomputing|liquid|flüssigkühlung|fluessigkuehlung|dlc|rubin|blackwell|b200|671b)\b/i;
+    if (tier4Regex.test(lower)) {
+      return { tierKey: 'tier-4-frontier', extractedUsers: extractedUsers || 3000 };
     }
 
     // Case 1 triggers: Tier 1, R760, R760xa, L40S, RAG, Confluence, FAQ, HR, Chatbot, Intern, Support, Helpdesk, Klein, Einstieg, 8B, 14B, Abteilung
@@ -520,7 +520,7 @@ class WorkshopController {
 
     // Default intelligent fallback based on user count if detected
     if (extractedUsers) {
-      if (extractedUsers >= 2000) return { tierKey: 'tier-3-frontier', extractedUsers };
+      if (extractedUsers >= 2000) return { tierKey: 'tier-4-frontier', extractedUsers };
       if (extractedUsers >= 350) return { tierKey: 'tier-2-copilot', extractedUsers };
       return { tierKey: 'tier-1-rag', extractedUsers };
     }
@@ -562,7 +562,7 @@ class WorkshopController {
 
     // Step definitions
     let steps;
-    if (tierKey === 'tier-4-heavy-compute') {
+    if (tierKey === 'tier-3-heavy-compute') {
       steps = [
         {
           icon: '01',
@@ -729,7 +729,7 @@ class WorkshopController {
     if (this.tierScaleBtn4) this.tierScaleBtn4.classList.toggle('active', tier.tierNumber === 4);
 
     // Dynamic UI labels for Stream / Heavy Compute vs Normal User
-    if (tier.tierNumber === 4) {
+    if (tier.isStreamWorkload) {
       if (this.sliderLabelTitle) this.sliderLabelTitle.textContent = '24/7 DAUERLAST-SKALIERUNG (KAMERA-STREAMS & BATCHES)';
       if (this.liveMetricLabel1) this.liveMetricLabel1.textContent = 'GPU DUTY-CYCLE';
       if (this.liveMetricLabel2) this.liveMetricLabel2.textContent = 'VIDEO INFERENZ RATE';
@@ -753,7 +753,7 @@ class WorkshopController {
       this.triggerSlaBadge.textContent = `< ${tier.targetTtftMs}ms TTFT`;
     }
     if (this.triggerSlaText) {
-      this.triggerSlaText.textContent = tier.tierNumber === 4
+      this.triggerSlaText.textContent = tier.isStreamWorkload
         ? `< 15ms Ultra-Low-Latency Edge/On-Prem Inferenz direkt an der Fabrik / im Campus vor Ort ohne Cloud-Latenz.`
         : `Garantierte Latenz von < ${tier.targetTtftMs}ms und ${tier.targetTps} Tok/s ohne Cloud-Drosselung oder Rate-Limits.`;
     }
@@ -819,7 +819,7 @@ class WorkshopController {
     // 1. Calculations by Workload Type (Normal User vs 24/7 Stream/Training Heavy Compute)
     let peakRps, peakTokensSec, totalEstimatedVram, monthlySavings, breakEvenMonths;
 
-    if (tier.tierNumber === 4) {
+    if (tier.isStreamWorkload) {
       // 24/7 Heavy Compute (Video Streams or Model Training)
       const streams = users;
       const totalFps = streams * 30; // 30 FPS realtime
@@ -1065,12 +1065,12 @@ class WorkshopController {
     [this.tierSeg1, this.tierSeg2, this.tierSeg3, this.tierSeg4].forEach(s => s && s.classList.remove('recommended'));
     [this.tierScaleBtn1, this.tierScaleBtn2, this.tierScaleBtn3, this.tierScaleBtn4].forEach(b => b && b.classList.remove('recommended'));
 
-    if (tier.tierNumber === 4) {
+    if (tier.isStreamWorkload) {
       // 24/7 Heavy Compute (Video Streams or Model Training)
       if (users <= 600) {
-        hardwareStatusText = `AKTIV: TIER 4 // XE9680 + POWERSCALE (OPTIMAL FÜR ${users} STREAMS)`;
+        hardwareStatusText = `AKTIV: TIER 3 // XE9680 + POWERSCALE (OPTIMAL FÜR ${users} STREAMS)`;
       } else {
-        hardwareStatusText = `AKTIV: TIER 4 // MULTI-NODE CLUSTER EMPFOHLEN (${users} STREAMS)`;
+        hardwareStatusText = `AKTIV: TIER 3 // MULTI-NODE CLUSTER EMPFOHLEN (${users} STREAMS)`;
       }
     } else {
       // Interactive user inference sizing
@@ -1088,19 +1088,19 @@ class WorkshopController {
           if (this.tierSeg1) this.tierSeg1.classList.add('recommended');
           if (this.tierScaleBtn1) this.tierScaleBtn1.classList.add('recommended');
         } else if (users >= 2000) {
-          hardwareStatusText = `AKTIV: TIER 2 • EMPFOHLEN: TIER 3 (M9822 DLC) AB 2.000 USER`;
-          if (this.tierSeg3) this.tierSeg3.classList.add('recommended');
-          if (this.tierScaleBtn3) this.tierScaleBtn3.classList.add('recommended');
+          hardwareStatusText = `AKTIV: TIER 2 • EMPFOHLEN: TIER 4 (M9822 DLC) AB 2.000 USER`;
+          if (this.tierSeg4) this.tierSeg4.classList.add('recommended');
+          if (this.tierScaleBtn4) this.tierScaleBtn4.classList.add('recommended');
         } else {
           hardwareStatusText = `AKTIV: TIER 2 // XE9680 (OPTIMAL FÜR ${users} USER)`;
         }
-      } else if (this.currentTierKey === 'tier-3-frontier') {
+      } else if (this.currentTierKey === 'tier-4-frontier') {
         if (users < 1500) {
-          hardwareStatusText = `AKTIV: TIER 3 // HÖCHSTE RESERVEN (FÜR ${users} USER REICHT TIER 2)`;
+          hardwareStatusText = `AKTIV: TIER 4 // HÖCHSTE RESERVEN (FÜR ${users} USER REICHT TIER 2)`;
           if (this.tierSeg2) this.tierSeg2.classList.add('recommended');
           if (this.tierScaleBtn2) this.tierScaleBtn2.classList.add('recommended');
         } else {
-          hardwareStatusText = `AKTIV: TIER 3 // M9822 DLC (OPTIMAL FÜR ${users.toLocaleString('de-DE')} USER)`;
+          hardwareStatusText = `AKTIV: TIER 4 // M9822 DLC (OPTIMAL FÜR ${users.toLocaleString('de-DE')} USER)`;
         }
       }
     }
@@ -1120,11 +1120,11 @@ class WorkshopController {
         scaleAlertEl.innerHTML = `<strong>EFFIZIENZ-EMPFEHLUNG:</strong> Für ${users} Nutzer ist ein 8x H200 System überdimensioniert. <strong>Tier 1 (Dell PowerEdge R760xa)</strong> spart ca. 290.000 € Anschaffungskosten bei voller Funktionalität! <button type="button" class="btn-tier-quick-switch" data-tier="tier-1-rag">AUF TIER 1 WECHSELN</button>`;
       } else if (this.currentTierKey === 'tier-2-copilot' && users >= 2000) {
         scaleAlertEl.style.display = 'block';
-        scaleAlertEl.innerHTML = `<strong>HIGH-CONCURRENCY HINWEIS:</strong> Bei ${users.toLocaleString('de-DE')} Entwicklern und Enterprise-Last bietet <strong>Tier 3 (Dell PowerEdge M9822 DLC)</strong> flüssigkeitsgekühlte Spitzen-Effizienz (PUE 1.12) und 1.5 TB VRAM! <button type="button" class="btn-tier-quick-switch" data-tier="tier-3-frontier">AUF TIER 3 WECHSELN</button>`;
-      } else if (this.currentTierKey === 'tier-3-frontier' && users < 1000) {
+        scaleAlertEl.innerHTML = `<strong>HIGH-CONCURRENCY HINWEIS:</strong> Bei ${users.toLocaleString('de-DE')} Entwicklern und Enterprise-Last bietet <strong>Tier 4 (Dell PowerEdge M9822 DLC)</strong> flüssigkeitsgekühlte Spitzen-Effizienz (PUE 1.12) und 1.5 TB VRAM! <button type="button" class="btn-tier-quick-switch" data-tier="tier-4-frontier">AUF TIER 4 WECHSELN</button>`;
+      } else if (this.currentTierKey === 'tier-4-frontier' && users < 1000) {
         scaleAlertEl.style.display = 'block';
         scaleAlertEl.innerHTML = `<strong>KAPAZITÄTS-STATUS:</strong> Dieses Frontier DLC-System hat massive Reserven für bis zu 10.000 gleichzeitige Nutzer oder 24/7 Agenten-Schwärme. Für kleinere Teams reicht <strong>Tier 2</strong>. <button type="button" class="btn-tier-quick-switch" data-tier="tier-2-copilot">AUF TIER 2 WECHSELN</button>`;
-      } else if (this.currentTierKey === 'tier-4-heavy-compute' && users > 600) {
+      } else if (this.currentTierKey === 'tier-3-heavy-compute' && users > 600) {
         scaleAlertEl.style.display = 'block';
         scaleAlertEl.innerHTML = `<strong>CLUSTER-EMPFEHLUNG:</strong> Bei über ${users} parallelen 4K Video-Streams oder großem Pretraining empfiehlt sich ein Multi-Node Cluster aus 2-4x Dell PowerEdge XE9680 mit InfiniBand Fabric und PowerScale F900 NVMe.`;
       } else {
@@ -1138,7 +1138,7 @@ class WorkshopController {
     const text = `
 === Dell AI Factory Architecture Summary ===
 Workshop Sizing: ${tier.title} (${tier.tierBadge})
-- ${tier.tierNumber === 4 ? '24/7 Kamera-Streams / Batches' : 'Aktive Nutzer'}: ${this.currentUserCount.toLocaleString('de-DE')}
+- ${tier.isStreamWorkload ? '24/7 Kamera-Streams / Batches' : 'Aktive Nutzer'}: ${this.currentUserCount.toLocaleString('de-DE')}
 - Modell: ${tier.modelName} (${tier.modelParams})
 - Hardware: ${tier.dellChassis} (${tier.gpuModel})
 - VRAM & Durchsatz: ${tier.totalVramGb} GB VRAM • ${this.liveTokensVal.textContent}
